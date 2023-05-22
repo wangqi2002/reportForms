@@ -4,8 +4,18 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/HomeView.vue')
+    component: () => import('../views/HomeView.vue'),
+    children: [{
+      path: 'luckysheet',
+      name: 'luckysheet',
+      component: () => import('@/components/Luckysheet'),
+    }]
   },
+  // {
+  //   path: '/',
+  //   name: 'Luckysheet',
+  //   component: () => import('@/components/Luckysheet'),
+  // },
 ]
 
 const router = createRouter({
