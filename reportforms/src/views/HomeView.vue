@@ -1,6 +1,8 @@
 <template>
   <el-container class="containerBox">
-    <el-aside class="sidebarBox">Aside</el-aside>
+    <el-aside class="sidebarBox">
+      <Option></Option>
+    </el-aside>
     <el-main class="contentBox">
       <Luckysheet></Luckysheet>
     </el-main>
@@ -9,10 +11,12 @@
 
 <script>
 import Luckysheet from "@/components/Luckysheet.vue";
+import Option from "@/components/Option.vue";
 export default {
   name: "HomeView",
   components: {
     Luckysheet,
+    Option,
   },
 };
 </script>
@@ -25,8 +29,7 @@ export default {
   width: 100vw;
   height: 100vh;
   .sidebarBox {
-    width: 200px;
-    background-color: aqua;
+    width: 300px;
   }
   .contentBox {
     padding: 0;
