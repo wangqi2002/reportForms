@@ -1,0 +1,152 @@
+.option_box {
+    height: 100%;
+    width: 100%;
+    background-color: #eaeaeb;
+    font-family: "Times New Roman", Times, serif;
+
+    .title_box {
+        height: 30px;
+        line-height: 30px;
+        font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+        font-size: 24px;
+        font-weight: bolder;
+        text-align: center;
+    }
+
+    .report_style {
+        $radio_content_item-height: 22px;
+        height: 14%;
+
+        .reprot_item {
+            height: 30px;
+            line-height: 30px;
+            text-align: start;
+            border-bottom: 1px solid #b8b8b8;
+        }
+        .new_report {
+            .radio_defined {
+                .radio_content {
+                    color: #60627c;
+                }
+            }
+        }
+        .history_report {
+            .radio_defined {
+                .radio_content {
+                    color: #60627c;
+                    float: left;
+                    .el-select {
+                        width: calc(100% - 65px);
+                        line-height: $radio_content_item-height;
+                        .el-input {
+                            height: $radio_content_item-height;
+                            line-height: $radio_content_item-height;
+                            .el-input__wrapper {
+                                padding: 0 8px;
+                                .el-input__inner {
+                                    height: calc($radio_content_item-height - 4px);
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                        .el-input :focus {
+                            border: none;
+                        }
+                    }
+                }
+            }
+        }
+        .excle_report {
+            border-bottom: none;
+            .radio_defined {
+                .radio_content {
+                    color: #60627c;
+                    float: left;
+                    .upload_btn {
+                        height: calc($radio_content_item-height - 4px);
+                        line-height: calc($radio_content_item-height - 4px);
+                        width: calc(100% - 67px);
+                        background-color: white;
+                        color: #60627c;
+                        font-size: 12px;
+                        border: 1px solid transparent;
+                        border-radius: 3px;
+                    }
+                }
+            }
+        }
+    }
+    .report_type {
+        $btn_line-height: 28px;
+        height: 22%;
+        border-bottom: 1px solid black;
+        text-align: center;
+
+        .btn_line {
+            width: 100%;
+            height: $btn_line-height;
+            line-height: $btn_line-height;
+            text-align: center;
+            .el-radio-button__inner {
+                width: 100px;
+                height: calc($btn_line-height - 8px);
+                line-height: calc($btn_line-height - 22px);
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+                border: none;
+                border: 1px solid transparent;
+                border-radius: 4px;
+            }
+            .report_type_btn:first-child {
+                margin-right: 10px;
+            }
+            .report_type_btn:last-child {
+                margin-left: 10px;
+            }
+        }
+        .el-date-editor {
+            width: calc(100% - 9px);
+            height: calc($btn_line-height - 4px);
+            line-height: calc($btn_line-height - 4px);
+            margin: 5px 0 0;
+            padding: 0 10px;
+            .el-input__inner {
+                height: 100%;
+            }
+        }
+    }
+}
+.el-divider--horizontal {
+    margin: 10px 0 5px;
+    border-top: 1px solid black;
+
+    .el-divider__text {
+        background-color: #eaeaeb;
+        padding: 0 5px;
+        font-size: 13px;
+    }
+}
+.radio_defined {
+    height: 100%;
+    text-align: start;
+
+    .radio_box {
+        height: 100%;
+        float: left;
+    }
+    .radio_content {
+        width: calc(100% - 40px);
+        height: 100%;
+        margin-left: 10px;
+        color: #60627c;
+        font-size: 12px;
+        float: left;
+    }
+}
+.el-popper.el-select__popper {
+    .el-select-dropdown__item {
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+    }
+}

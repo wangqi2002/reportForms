@@ -1,9 +1,9 @@
 <template>
-  <el-container class="containerBox">
-    <el-aside class="sidebarBox">
+  <el-container class="container_box">
+    <el-aside class="option_box">
       <Option></Option>
     </el-aside>
-    <el-main class="contentBox">
+    <el-main class="content_box">
       <Luckysheet></Luckysheet>
     </el-main>
   </el-container>
@@ -21,19 +21,21 @@ export default {
 };
 </script>
 <style lang="scss">
+$option: 250px;
 * {
   padding: 0;
   margin: 0;
 }
-.containerBox {
-  width: 100vw;
-  height: 100vh;
-  .sidebarBox {
-    width: 300px;
+.container_box {
+  width: 100%;
+  height: 100%;
+  .option_box {
+    width: $option;
   }
-  .contentBox {
+  .content_box {
+    width: calc(100% - $option);
+    height: 100%;
     padding: 0;
-    height: 100vh;
   }
 }
 </style>

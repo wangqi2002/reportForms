@@ -1,5 +1,5 @@
 <template>
-  <div class="luckysheetBox">
+  <div class="luckysheet_box">
     <div id="luckysheet"></div>
   </div>
 </template>
@@ -79,7 +79,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.luckysheetBox {
+.luckysheet_box {
   width: 100%;
   height: 100%;
 
