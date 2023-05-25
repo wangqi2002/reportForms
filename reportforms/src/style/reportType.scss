@@ -1,0 +1,71 @@
+.report_type {
+    $select_type-height: 28px;
+    height: 130px;
+    border-bottom: 1px solid black;
+    text-align: center;
+    font-size: 14px;
+
+    .date_type {
+        margin: 5px 0px;
+        color: #60627c;
+        font-size: 12px;
+        float: left;
+        .select_line {
+            height: calc($select_type-height - 4px);
+            line-height: calc($select_type-height - 4px);
+            vertical-align: middle;
+            .el-select {
+                width: calc(100% - 95px);
+                line-height: calc($select_type-height - 4px);
+                .el-input {
+                    height: calc($select_type-height - 4px);
+                    line-height: calc($select_type-height - 4px);
+                    .el-input__wrapper {
+                        padding: 0 8px;
+                        .el-input__inner {
+                            height: calc($select_type-height - 8px);
+                            font-size: 12px;
+                        }
+                    }
+                }
+                .el-input :focus {
+                    border: none;
+                }
+            }
+        }
+        .el-date-editor {
+            width: calc(100% - 9px);
+            height: calc($select_type-height - 6px);
+            line-height: calc($select_type-height - 6px);
+            margin: 5px 0 0;
+            padding: 0 10px;
+            .el-input__inner {
+                height: 100%;
+            }
+        }
+    }
+    .shift_range {
+        margin: 5px 0px;
+        color: #60627c;
+        font-size: 12px;
+        float: left;
+        .el-select {
+            width: calc(100% - 95px);
+            line-height: calc($select_type-height - 6px);
+            .el-input {
+                height: calc($select_type-height - 6px);
+                line-height: calc($select_type-height - 6px);
+                .el-input__wrapper {
+                    padding: 0 8px;
+                    .el-input__inner {
+                        height: calc($select_type-height - 10px);
+                        font-size: 12px;
+                    }
+                }
+            }
+            .el-input :focus {
+                border: none;
+            }
+        }
+    }
+}

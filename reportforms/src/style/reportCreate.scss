@@ -1,0 +1,94 @@
+.report_style {
+    $radio_content_item-height: 22px;
+    height: 135px;
+    font-size: 14px;
+
+    .reprot_item {
+        height: 30px;
+        line-height: 30px;
+        text-align: start;
+        border-bottom: 1px solid #b8b8b8;
+    }
+    .new_report {
+        .radio_defined {
+            .radio_content {
+                color: #60627c;
+            }
+        }
+    }
+    .history_report {
+        .radio_defined {
+            .radio_content {
+                color: #60627c;
+                float: left;
+                .el-select {
+                    width: calc(100% - 65px);
+                    line-height: $radio_content_item-height;
+                    .el-input {
+                        height: $radio_content_item-height;
+                        line-height: $radio_content_item-height;
+                        .el-input__wrapper {
+                            padding: 0 8px;
+                            .el-input__inner {
+                                height: calc($radio_content_item-height - 4px);
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                    .el-input :focus {
+                        border: none;
+                    }
+                }
+            }
+        }
+    }
+    .excle_report {
+        .radio_defined {
+            .radio_content {
+                color: #60627c;
+                float: left;
+                .upload_btn {
+                    height: calc($radio_content_item-height - 4px);
+                    line-height: calc($radio_content_item-height - 4px);
+                    width: calc(100% - 67px);
+                    background-color: white;
+                    color: #60627c;
+                    font-size: 12px;
+                    border: 1px solid transparent;
+                    border-radius: 3px;
+                }
+            }
+        }
+    }
+    .save_report {
+        border-bottom: none;
+        text-align: center;
+        .save_btn {
+            height: calc($radio_content_item-height);
+            line-height: calc($radio_content_item-height);
+            width: calc(100% - 100px);
+            background-color: white;
+            color: #60627c;
+            font-size: 12px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+        }
+    }
+}
+.radio_defined {
+    height: 100%;
+    text-align: start;
+
+    .radio_box {
+        height: 100%;
+        float: left;
+    }
+    .radio_content {
+        width: calc(100% - 40px);
+        height: 100%;
+        margin-left: 10px;
+        color: #60627c;
+        font-size: 12px;
+        float: left;
+    }
+}
