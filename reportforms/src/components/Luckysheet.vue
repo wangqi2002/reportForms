@@ -24,8 +24,8 @@ const excleOptions = {
       index: 0,
     },
   ],
-  column: 20,
-  row: 40,
+  column: 25,
+  row: 50,
   showtoolbar: false,
   showtoolbarConfig: {
     undoRedo: true, //撤销重做，注意撤消重做是两个按钮，由这一个配置决定显示还是隐藏
@@ -69,6 +69,7 @@ const excleOptions = {
   },
   showinfobar: false,
   sheetFormulaBar: false,
+  // showsheetbar: false,
   showstatisticBar: false,
 };
 
@@ -82,12 +83,12 @@ onMounted(() => {
 .luckysheet_box {
   width: 100%;
   height: 100%;
+  margin: 0px;
+  padding: 0px;
 
   #luckysheet {
     width: 100%;
     height: 100%;
-    margin: 0px;
-    padding: 0px;
   }
 }
 </style>

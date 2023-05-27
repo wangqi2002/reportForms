@@ -1,0 +1,59 @@
+#fill_report_box {
+    $fill_header-height: 20px;
+    $fill_bottom-height: 30px;
+    width: 50vw;
+    height: 50vh;
+    margin: 0px;
+    padding: 0px;
+    font-family: "Times New Roman", Times, serif;
+    color: #60627c;
+    background-color: antiquewhite;
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    z-index: 999;
+    .fill_header {
+        width: 100%;
+        height: $fill_header-height;
+        line-height: $fill_header-height;
+        background-color: aquamarine;
+        .fill_title {
+            height: $fill_header-height;
+            line-height: $fill_header-height;
+            padding-left: 5px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #60627c;
+        }
+        .fill_exit {
+            width: $fill_header-height;
+            height: $fill_header-height;
+            margin-right: 3px;
+            float: right;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+    .fill_content {
+        height: calc(100% - $fill_bottom-height - $fill_header-height);
+    }
+    .fill_bottom {
+        height: $fill_bottom-height;
+        background-color: white;
+        .fillBtn {
+            width: 60px;
+            height: 20px;
+            margin: 4px 10px;
+            background-color: white;
+            border: 1px solid #60627c;
+            float: right;
+            border-radius: 3px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .confirm {
+            margin-right: 15px;
+            background-color: #77b8fa;
+            border: none;
+        }
+    }
+}

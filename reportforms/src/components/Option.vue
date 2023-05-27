@@ -3,8 +3,10 @@
     <div class="title_box">多用报表</div>
     <Reportcreate></Reportcreate>
     <Reporttype></Reporttype>
+    <Reportconfig></Reportconfig>
     <div class="download_box">
-      <button class="download_btn" @click="downloadExcel">报表下载</button>
+      <button class="download_btn" @click="downloadReport">导出报表</button>
+      <button class="print_btn" @click="printReport">打印报表</button>
     </div>
     <!-- <button @click="handleFun">测试API</button> -->
   </div>
@@ -12,11 +14,11 @@
   
 <script setup>
 import { ref } from "vue";
-import { exportExcel } from "./export";
-import LuckyExcel from "luckyexcel";
+import { exportExcel } from "@/unit/export";
 
 import Reportcreate from "@/components/Reportcreate.vue";
 import Reporttype from "@/components/Reporttype.vue";
+import Reportconfig from "@/components/Reportconfig.vue";
 
 const jsonData = ref({});
 
@@ -30,8 +32,11 @@ const jsonData = ref({});
   // luckysheet.setRangeShow([{row:[0,1],column:[0,1]},{row:[2,2],column:[3,8]}])
 }; */
 
-const downloadExcel = () => {
+const downloadReport = () => {
   exportExcel(luckysheet.getAllSheets(), "万能图表");
+};
+const printReport = () => {
+  window.print();
 };
 </script>
   

@@ -9,16 +9,39 @@
   </el-container>
 </template>
 
-<script>
+<script setup>
+import { ref, provide, createApp, onMounted } from "vue";
+import emitter from "@/unit/mittBus";
+
 import Luckysheet from "@/components/Luckysheet.vue";
+import Reportfill from "@/components/Reportfill.vue";
 import Option from "@/components/Option.vue";
-export default {
-  name: "HomeView",
-  components: {
-    Luckysheet,
-    Option,
-  },
+
+const reportfillInstance = createApp(Reportfill);
+const mountNode = document.createElement("div");
+let flag = false;
+
+const handleFillbox = () => {
+  const el = document.getElementById("fill_report_box");
+  if (el == null) {
+    document.body.appendChild(mountNode);
+    if (!flag) {
+      reportfillInstance.mount(mountNode);
+      flag = !flag;
+    }
+  }
 };
+const handleRemovefillbox = () => {
+  document.body.removeChild(mountNode);
+};
+
+provide("handleFillbox", handleFillbox);
+provide("handleRemovefillbox", handleRemovefillbox);
+onMounted(() => {
+  emitter.on("exitfill", (e) => {
+    handleRemovefillbox();
+  });
+});
 </script>
 <style lang="scss">
 $option: 250px;

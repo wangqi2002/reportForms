@@ -30,3 +30,20 @@
         font-size: 12px;
     }
 }
+.radio_defined {
+    height: 100%;
+    text-align: start;
+
+    .radio_box {
+        height: 100%;
+        float: left;
+    }
+    .radio_content {
+        width: calc(100% - 40px);
+        height: 100%;
+        margin-left: 10px;
+        color: #60627c;
+        font-size: 12px;
+        float: left;
+    }
+}
