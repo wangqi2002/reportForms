@@ -51,7 +51,6 @@ async function readFromSource(type, fileName, options) {
                 }
                 return result
             }
-            break
         case 'excel':
             {
                 let data = await readExcel(fileName, {})
@@ -62,7 +61,6 @@ async function readFromSource(type, fileName, options) {
                 let format = options.format ? options.format : 'column'
                 return toJSON(result, { format: format })
             }
-            break
         case 'csv':
             {
                 let data = await readCSV(fileName)
@@ -73,7 +71,6 @@ async function readFromSource(type, fileName, options) {
                 let format = options.format ? options.format : 'column'
                 return toJSON(result, { format: format })
             }
-            break
         default:
             return 'not supported type of source file'
     }
@@ -134,7 +131,7 @@ let f = async () => {
         rowRange: { from: '0', to: '3' },
         format: 'column',
     })
-    let a = await readFromSource('sqlite', '../../../databases/data.db', {
+    let a = await readFromSource('sqlite', './data.db', {
         onlyTable: true,
         tableName: 'week_2023_3_3s',
         fields: ['id', 'value'],
