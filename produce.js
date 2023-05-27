@@ -81,14 +81,21 @@ class DataProducer {
     }
 
     /**
-     * @param {any} data
+     * @param {DataFrame|object[]} data
      * 通常情况下应当是object[]
      * @param {string | number} column
      * 列名,可以是数字或者名字
      * @param {(x:any)=>boolean} filter
      * 筛选器,由调用者决定,只需接收x参数并且返回boolean即可,当x满足条件返回true,此时保留DataFrame本行,否则为false且删除本行
      * @example
-     * filterData(jsonData[], 'columnName', (x)=>{return x==1})
+     * filterData(
+        [
+            { columnName: 1, otherColumn: 'ok' },
+            { columnName: 12, otherColumn: 'nice' },
+        ],
+        'columnName',
+        (x) => {return x == 1}
+        )
      * @returns
      */
     static filterData(data, column, filter) {

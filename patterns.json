@@ -1,8 +1,0 @@
-{
-    "date": {
-        "today": "^${params[0]}[/.-:]${params[1]}[/.-:]${params[2]}",
-        "thisMonth": "^${params[0]}[/.-:]${params[1]}[/.-:]",
-        "thisYear": "^${params[0]}"
-    },
-    "class": { "simple": "^${params[0]}$" }
-}
