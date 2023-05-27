@@ -29,7 +29,7 @@ function generatePattern(raw, params) {
  * @param {{start:Date|string,end:Date|string}} [range]
  * @returns
  */
-function changeCurrentPattern(purpose, range, options) {
+function configurePattern(purpose, range, options) {
     switch (purpose) {
         case 'today':
             pattern = new RegExp(generatePattern(patternTemplate.today, [year, month, day]))
