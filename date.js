@@ -4,11 +4,10 @@ let patternTemplate = {
     thisYear: '^${params[0]}',
 } //注意正则表达式中-需要放到边界,否则会被误会为范围
 
-let currentDate = new Date()
+let currentDate = new Date(options.date ? options.date : null)
 let year = currentDate.getFullYear()
 let month = currentDate.getMonth() + 1
 let day = currentDate.getDate()
-
 let pattern = new RegExp(generatePattern(patternTemplate.today, [year, month, day]))
 
 /**
@@ -30,7 +29,7 @@ function generatePattern(raw, params) {
  * @param {{start:Date|string,end:Date|string}} [range]
  * @returns
  */
-function changeCurrentPattern(purpose, range) {
+function changeCurrentPattern(purpose, range, options) {
     switch (purpose) {
         case 'today':
             pattern = new RegExp(generatePattern(patternTemplate.today, [year, month, day]))
@@ -39,7 +38,9 @@ function changeCurrentPattern(purpose, range) {
             {
                 //并非使用正则表达式,而是替换了pattern.test方法
                 const oneDayTime = 1000 * 60 * 60 * 24
-                const week = parseInt((parseInt(new Date().getTime() / oneDayTime) + 4) / 7)
+                const week = parseInt(
+                    (parseInt(new Date(options.date ? options.date : null).getTime() / oneDayTime) + 4) / 7
+                )
                 pattern.test = (x) => {
                     let xDate = parseInt(new Date(x).getTime() / oneDayTime)
                     return parseInt((xDate + 4) / 7) == week
@@ -76,12 +77,13 @@ function changeCurrentPattern(purpose, range) {
 function filter(value) {
     return pattern.test(value)
 }
-changeCurrentPattern()
 
-// console.log(pattern)
-// changeCurrentPattern('range', { start: new Date('2022/5/1'), end: new Date('2023-4-20') })
-// console.log(pattern)
-// console.log(filter('2023 05 27'))
-// console.log(getRangeString('2017', '2022'))
-changeCurrentPattern('thisWeek')
-console.log(filter('2023 5 22'))
+// changeCurrentPattern()
+
+// // console.log(pattern)
+// // changeCurrentPattern('range', { start: new Date('2022/5/1'), end: new Date('2023-4-20') })
+// // console.log(pattern)
+// // console.log(filter('2023 05 27'))
+// // console.log(getRangeString('2017', '2022'))
+// changeCurrentPattern('thisWeek')
+// console.log(filter('2023 5 22'))

@@ -1,4 +1,4 @@
-const { DataFrame, readExcel, toCSV, toExcel, readCSV, toJSON } = require('danfojs-node')
+const { DataFrame, readExcel, readCSV, toJSON } = require('danfojs-node')
 const Database = require('better-sqlite3')
 
 class DataProducer {
@@ -85,67 +85,42 @@ class DataProducer {
      * 通常情况下应当是object[]
      * @param {string | number} column
      * 列名,可以是数字或者名字
-     * @param {string | RegExp} reg
-     * 如果列中有某个数据patter.test()返回为false即不满足正则条件,那么去除该行
-     * @param {string} rawPattern
-     * @param {any[]} params
+     * @param {(x:any)=>boolean} filter
+     * 筛选器,由调用者决定,只需接收x参数并且返回boolean即可,当x满足条件返回true,此时保留DataFrame本行,否则为false且删除本行
      * @example
-     * filterData(jsonData[], 'columnName', '^1$')
+     * filterData(jsonData[], 'columnName', (x)=>{return x==1})
      * @returns
      */
-    static filterData(data, column, reg, rawPattern, params) {
-        let pattern = reg ? reg : DataProducer.producePattern(rawPattern, params)
+    static filterData(data, column, filter) {
         let df = new DataFrame(data)
-        if (df.columns.includes(column) && pattern) {
-            let patt = new RegExp(pattern)
+        if (df.columns.includes(column) && filter) {
             df.index.forEach((index) => {
-                let isRequired = patt.test(df.at(index, column))
-                if (!isRequired) df.drop({ index: [index], inplace: true })
+                if (!filter(df.at(index, column))) df.drop({ index: [index], inplace: true })
             })
         }
         return df.toJSON()
     }
-
-    static exportToFile(type, filePath, df, options) {
-        try {
-            switch (type) {
-                case 'excel':
-                    {
-                        toExcel(df, { filePath: filePath, ...options })
-                    }
-                    break
-                case 'csv':
-                    {
-                        toCSV(df, { filePath: filePath, ...options })
-                    }
-                    break
-            }
-            return true
-        } catch (e) {
-            throw e
-        }
-    }
 }
 
-let f = async () => {
-    let data = await DataProducer.readFromSource('excel', './nice.xlsx', {
-        columnRange: { from: '0', to: '3' },
-        rowRange: { from: '0', to: '3' },
-        format: 'column',
-    })
-    let a = await DataProducer.readFromSource('sqlite', '../../../databases/data.db', {
-        onlyTable: false,
-        tableName: 'week_2023_3_3s',
-        fields: ['id', 'value', 'dataType'],
-        limit: '10',
-    })
-    let b = DataProducer.filterData(a, 'value', '^1$')
-    console.log(a)
-    // exportToFile('csv', './nice2.csv', df)
-}
-let pa = require('./patterns.json')
-let a = '^${params[0]}[/.-]${params[1]}[/.-]${params[2]}'
-let p = DataProducer.producePattern(a, ['2023', '5', '27'])
-console.log(p)
-let c = new RegExp(p)
-console.log(c.test('2023.5.27'))
+// let f = async () => {
+//     let data = await DataProducer.readFromSource('excel', './nice.xlsx', {
+//         columnRange: { from: '0', to: '3' },
+//         rowRange: { from: '0', to: '3' },
+//         format: 'column',
+//     })
+//     let a = await DataProducer.readFromSource('sqlite', '../../../databases/data.db', {
+//         onlyTable: false,
+//         tableName: 'week_2023_3_3s',
+//         fields: ['id', 'value', 'dataType'],
+//         limit: '10',
+//     })
+//     let b = DataProducer.filterData(a, 'value', '^1$')
+//     console.log(a)
+//     // exportToFile('csv', './nice2.csv', df)
+// }
+// let pa = require('./patterns.json')
+// let a = '^${params[0]}[/.-]${params[1]}[/.-]${params[2]}'
+// let p = DataProducer.producePattern(a, ['2023', '5', '27'])
+// console.log(p)
+// let c = new RegExp(p)
+// console.log(c.test('2023.5.27'))
