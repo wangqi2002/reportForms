@@ -83,27 +83,50 @@ class DataProducer {
     /**
      * @param {DataFrame|object[]} data
      * 通常情况下应当是object[]
-     * @param {string | number} column
+     * @param {{column:string|number,filter:(x:any)=>boolean}} [filterOptions]
      * 列名,可以是数字或者名字
-     * @param {(x:any)=>boolean} filter
+     * @param {{column:string|number,ascending?:boolean}} [sortOptions]
      * 筛选器,由调用者决定,只需接收x参数并且返回boolean即可,当x满足条件返回true,此时保留DataFrame本行,否则为false且删除本行
+     * @param {{column:string|number,striper:(x:any)=>number}} [striperOptions]
      * @example
      * filterData(
         [
             { columnName: 1, otherColumn: 'ok' },
             { columnName: 12, otherColumn: 'nice' },
         ],
-        'columnName',
-        (x) => {return x == 1}
+        {
+            column:1, filter:(x)=>return x==1?
+        }
         )
      * @returns
      */
-    static filterData(data, column, filter) {
+    static filterData(data, filterOptions, sortOptions, striperOptions) {
         let df = new DataFrame(data)
-        if (df.columns.includes(column) && filter) {
+        if (filterOptions.filter && df.columns.includes(filterOptions.column)) {
             df.index.forEach((index) => {
-                if (!filter(df.at(index, column))) df.drop({ index: [index], inplace: true })
+                if (!filterOptions.filter(df.at(index, filterOptions.column))) {
+                    df.drop({ index: [index], inplace: true })
+                }
             })
+        }
+        if (sortOptions.column && df.columns.includes(sortOptions.column)) {
+            df.sortValues(filterOptions.column, {
+                ascending: filterOptions.ascending ? filterOptions.ascending : null,
+                inplace: true,
+            })
+        }
+        if (striperOptions.striper && df.columns.includes(striperOptions.column)) {
+            let map = new Map()
+            df.index.forEach((index) => {
+                let number = striperOptions.striper(df.at(index, striperOptions.column))
+                if ((number == undefined) | null | false) {
+                    df.drop({ index: [index], inplace: true })
+                } else {
+                    let group = map.get(number)
+                    group ? group.push(df[index].toJSON()) : map.set(number, [df[index].toJSON()])
+                }
+            })
+            return [...map.values()]
         }
         return df.toJSON()
     }
