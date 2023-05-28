@@ -81,44 +81,60 @@ class DataProducer {
     }
 
     /**
-     * @param {DataFrame|object[]} data
-     * 通常情况下应当是object[]
-     * @param {{column:string|number,filter:(x:any)=>boolean}} [filterOptions]
-     * 列名,可以是数字或者名字
-     * @param {{column:string|number,ascending?:boolean}} [sortOptions]
-     * 筛选器,由调用者决定,只需接收x参数并且返回boolean即可,当x满足条件返回true,此时保留DataFrame本行,否则为false且删除本行
-     * @param {{column:string|number,striper:(x:any)=>number}} [striperOptions]
+     * @param {DataFrame|object[]} data 通常情况下应当是object[]
+     * @param {{filterOptions?:{column:string|number,filter:(x:any)=>boolean},sortOptions?:{column:string|number,ascending?:boolean},striperOptions?:{column:string|number,striper:(x:any)=>number}}} options
+     * 必选参数用于指定filter/sort/striper
+     * 
+     * -`filterOptions?:{column:string|number,filter:(x:any)=>boolean}` 指定列名和filter
+     * 
+     * -`sortOptions?:{column:string|number,ascending?:boolean}` 指定列名和是否升序排列
+     * 
+     * -`striperOptions?:{column:string|number,striper:(x:any)=>number}` 指定列名和striper
      * @example
-     * filterData(
+     * DataProducer.produceData(
         [
             { columnName: 1, otherColumn: 'ok' },
             { columnName: 12, otherColumn: 'nice' },
         ],
         {
-            column:1, filter:(x)=>return x==1?
+            filterOptions: {
+                column: 'columnName',
+                filter: (x) => {
+                    return x == 12
+                },
+            },
         }
-        )
+    )
      * @returns
      */
-    static filterData(data, filterOptions, sortOptions, striperOptions) {
+    static produceData(data, options) {
         let df = new DataFrame(data)
-        if (filterOptions.filter && df.columns.includes(filterOptions.column)) {
+        df.print()
+        if (
+            options.filterOptions &&
+            options.filterOptions.filter &&
+            df.columns.includes(options.filterOptions.column)
+        ) {
             df.index.forEach((index) => {
-                if (!filterOptions.filter(df.at(index, filterOptions.column))) {
+                if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
                     df.drop({ index: [index], inplace: true })
                 }
             })
         }
-        if (sortOptions.column && df.columns.includes(sortOptions.column)) {
-            df.sortValues(filterOptions.column, {
-                ascending: filterOptions.ascending ? filterOptions.ascending : null,
+        if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
+            df.sortValues(options.filterOptions.column, {
+                ascending: options.filterOptions.ascending ? options.filterOptions.ascending : null,
                 inplace: true,
             })
         }
-        if (striperOptions.striper && df.columns.includes(striperOptions.column)) {
+        if (
+            options.striperOptions &&
+            options.striperOptions.striper &&
+            df.columns.includes(options.striperOptions.column)
+        ) {
             let map = new Map()
             df.index.forEach((index) => {
-                let number = striperOptions.striper(df.at(index, striperOptions.column))
+                let number = options.striperOptions.striper(df.at(index, options.striperOptions.column))
                 if ((number == undefined) | null | false) {
                     df.drop({ index: [index], inplace: true })
                 } else {

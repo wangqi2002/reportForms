@@ -4,8 +4,6 @@ let patternTemplate = {
     thisYear: '^${params[0]}',
 } //注意正则表达式中-需要放到边界,否则会被误会为范围
 
-let map = new Map()
-
 /**
  * @param {string} raw
  * @param {any[]} params
