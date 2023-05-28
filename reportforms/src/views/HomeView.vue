@@ -62,6 +62,7 @@ $option: 250px;
     width: calc(100% - $option);
     height: 100%;
     padding: 0;
+    overflow: hidden;
   }
 }
 </style>

@@ -71,7 +71,9 @@
           </div>
         </div>
       </div>
-      <div class="fill_table"></div>
+      <div class="fill_table">
+        <Spreadsheet></Spreadsheet>
+      </div>
     </div>
     <div class="fill_bottom">
       <button class="fillBtn confirm" @click="handleConfirm">Confirm</button>
@@ -83,6 +85,7 @@
 <script setup>
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { ElMessageBox, ElDivider } from "element-plus";
+import Spreadsheet from "@/components/Spreadsheet.vue";
 import Drag from "@/unit/Drag";
 import emitter from "@/unit/mittBus";
 
