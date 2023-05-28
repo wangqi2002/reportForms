@@ -14,7 +14,7 @@ function generatePattern(raw, params) {
 }
 
 /**
- * @param {string} purpose 用于确定转换到哪个类型
+ * @param {'today'|'thisWeek'|'thisMonth'|'thisYear'|'range'} purpose 用于确定转换到哪个类型
  * - `today` 今天
  * - `thisWeek` 本周
  * - `thisMonth` 本月
@@ -80,6 +80,13 @@ function configureFilter(purpose, range, date) {
     return filter
 }
 
+/**
+ *
+ * @param {'byDay'|'byMonth'|'byYear'} purpose 用于指定调用哪种形式的striper
+ * @param {string|Date} dateStart
+ * @param {string|Date} dateEnd
+ * @returns
+ */
 function configureStriper(purpose, dateStart, dateEnd) {
     let striper = undefined
     let start = new Date(dateStart)
@@ -153,7 +160,7 @@ function configureStriper(purpose, dateStart, dateEnd) {
     return striper
 }
 
-// let striper = configureStriper('byDay', '2022/4/1', '2023/5/26')
+// let striper = configureStriper('byYear', '2022/4/1', '2023/5/26')
 // let a = ['2023/4/1', '2023/5/26', '2023/4/2', '2023/5/2', '2021/4/8', '2023/4/1', '2023/4/2', '2022/4/2']
 // a.forEach((x) => {
 //     console.log(striper(x))

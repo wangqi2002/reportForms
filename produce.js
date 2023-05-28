@@ -3,7 +3,7 @@ const Database = require('better-sqlite3')
 
 class DataProducer {
     /**
-     * @param {string} type 确认是哪种数据类型,目前支持:sqlite,excel,csv
+     * @param {'sqlite'|'excel'|'csv'} type 确认是哪种数据类型,目前支持:sqlite,excel,csv
      * @param {string} fileName 文件相对/绝对路径并且携带文件名称和后缀
      * @param {{onlyTable?: boolean,tableName?:string,fields?:string[],
      * limit?:string,columnRange?:{from:string,to:string}, rowRange?:{from:string,to:string},format?:string}} [options]
@@ -84,12 +84,9 @@ class DataProducer {
      * @param {DataFrame|object[]} data 通常情况下应当是object[]
      * @param {{filterOptions?:{column:string|number,filter:(x:any)=>boolean},sortOptions?:{column:string|number,ascending?:boolean},striperOptions?:{column:string|number,striper:(x:any)=>number}}} options
      * 必选参数用于指定filter/sort/striper
-     * 
-     * -`filterOptions?:{column:string|number,filter:(x:any)=>boolean}` 指定列名和filter
-     * 
-     * -`sortOptions?:{column:string|number,ascending?:boolean}` 指定列名和是否升序排列
-     * 
-     * -`striperOptions?:{column:string|number,striper:(x:any)=>number}` 指定列名和striper
+     * - `filterOptions?:{column:string|number,filter:(x:any)=>boolean}` 指定列名和filter
+     * - `sortOptions?:{column:string|number,ascending?:boolean}` 指定列名和是否升序排列
+     * - `striperOptions?:{column:string|number,striper:(x:any)=>number}` 指定列名和striper
      * @example
      * DataProducer.produceData(
         [
@@ -160,7 +157,6 @@ class DataProducer {
         return df.toJSON()
     }
 }
-
 // let f = async () => {
 //     let data = await DataProducer.readFromSource('excel', './nice.xlsx', {
 //         columnRange: { from: '0', to: '3' },
