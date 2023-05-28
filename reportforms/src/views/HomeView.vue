@@ -21,7 +21,7 @@ const reportfillInstance = createApp(Reportfill);
 const mountNode = document.createElement("div");
 let flag = false;
 
-const handleFillbox = () => {
+const handleFillbox = (type) => {
   const el = document.getElementById("fill_report_box");
   if (el == null) {
     document.body.appendChild(mountNode);
@@ -29,6 +29,9 @@ const handleFillbox = () => {
       reportfillInstance.mount(mountNode);
       flag = !flag;
     }
+    setTimeout(() => {
+      emitter.emit("filltype", type);
+    }, 500);
   }
 };
 const handleRemovefillbox = () => {
@@ -36,7 +39,7 @@ const handleRemovefillbox = () => {
 };
 
 provide("handleFillbox", handleFillbox);
-provide("handleRemovefillbox", handleRemovefillbox);
+
 onMounted(() => {
   emitter.on("exitfill", (e) => {
     handleRemovefillbox();

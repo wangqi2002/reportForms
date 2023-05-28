@@ -126,11 +126,11 @@ function exportToFile(type, filePath, df, options) {
 }
 
 let f = async () => {
-    let data = await readFromSource('excel', './nice.xlsx', {
-        columnRange: { from: '0', to: '3' },
-        rowRange: { from: '0', to: '3' },
-        format: 'column',
-    })
+    // let data = await readFromSource('excel', './nice.xlsx', {
+    //     columnRange: { from: '0', to: '3' },
+    //     rowRange: { from: '0', to: '3' },
+    //     format: 'column',
+    // })
     let a = await readFromSource('sqlite', './data.db', {
         onlyTable: true,
         tableName: 'week_2023_3_3s',

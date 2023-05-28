@@ -9,7 +9,7 @@ import { ref, onMounted } from "vue";
 
 const jsonData = ref({});
 
-const excleOptions = {
+const excelOptions = {
   container: "luckysheet",
   title: "万能报表",
   lang: "zh",
@@ -54,17 +54,25 @@ const excleOptions = {
   },
   cellRightClickConfig: {
     copy: true, // 复制
-    copyAs: true, // 复制为
+    copyAs: false, // 复制为
     paste: true, // 粘贴
     insertRow: true, // 插入行
     insertColumn: true, // 插入列
     deleteRow: true, // 删除选中行
     deleteColumn: true, // 删除选中列
     deleteCell: true, // 删除单元格
+    hideRow: false, // 隐藏选中行和显示选中行
+    hideColumn: false, // 隐藏选中列和显示选中列
+    rowHeight: true, // 行高
+    columnWidth: true, // 列宽
     clear: true, // 清除内容
+    matrix: false, // 矩阵操作选区
     sort: true, // 排序选区
+    filter: false, // 筛选选区
     chart: true, // 图表生成
     image: true, // 插入图片
+    link: true, // 插入链接
+    data: false, // 数据验证
     cellFormat: true, // 设置单元格格式
   },
   showinfobar: false,
@@ -75,7 +83,7 @@ const excleOptions = {
 
 // !!! create luckysheet after mounted
 onMounted(() => {
-  luckysheet.create(excleOptions);
+  luckysheet.create(excelOptions);
 });
 </script>
 

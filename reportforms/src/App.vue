@@ -8,8 +8,13 @@
 html,
 body {
   height: 100%;
-  #app{
+  overflow: hidden;
+  user-select: none;
+  #app {
     height: 100%;
+  }
+  button {
+    font-family: "Times New Roman", Times, serif;
   }
 }
 </style>

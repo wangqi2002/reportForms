@@ -1,7 +1,8 @@
-function Drag(id) {
-    this.oDiv = document.getElementById(id);
+function Drag(outId, inId) {
+    this.oDiv = document.getElementById(outId);
+    this.iDiv = document.getElementById(inId);
     var _this = this;
-    this.oDiv.onmousedown = function (ev) {
+    this.iDiv.onmousedown = function (ev) {
         _this.funcDown(ev);
     };
     document.onmouseup = this.funcUp;
@@ -22,26 +23,14 @@ Drag.prototype.funcMove = function (ev) {
     var e = ev || window.event;
     var l = e.clientX - this.offsetX;
     var t = e.clientY - this.offsetY;
-
-    if (l <= 0) {
-        l = 0;
-    }
     var windowWidth = document.documentElement.clientWidth || document.body.clientWidth;
-    if (l >= windowWidth - this.oDiv.offsetWidth) {
-        l = windowWidth - this.oDiv.offsetWidth;
-    }
-
-    if (t <= 0) {
-        t = 0;
-    }
     var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-    if (t >= windowHeight - this.oDiv.offsetHeight) {
-        t = windowHeight - this.oDiv.offsetHeight;
+    if (e.clientX > 0 && e.clientX < windowWidth) {
+        this.oDiv.style.left = l + 'px';
     }
-
-    this.oDiv.style.left = l + 'px';
-    this.oDiv.style.top = t + 'px';
-
+    if (e.clientY > 0 && e.clientY < windowHeight) {
+        this.oDiv.style.top = t + 'px';
+    }
 }
 
 Drag.prototype.funcUp = function (ev) {

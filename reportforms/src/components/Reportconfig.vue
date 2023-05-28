@@ -5,7 +5,7 @@
       <div class="fill_item db_fill">
         <div class="radio_defined">
           <div class="radio_box">
-            <input type="radio" v-model="fillType" value="3" label="3" />
+            <input type="radio" v-model="fillType" value="1" label="1" />
           </div>
           <div class="radio_content">
             数据库导入:
@@ -19,23 +19,23 @@
           </div>
         </div>
       </div>
-      <div class="fill_item excle_fill">
+      <div class="fill_item excel_fill">
         <div class="radio_defined">
           <div class="radio_box">
-            <input type="radio" v-model="fillType" value="3" label="3" />
+            <input type="radio" v-model="fillType" value="2" label="2" />
           </div>
           <div class="radio_content">
             <input
               ref="fileInput"
               type="file"
               placeholder="请选择.xlsx文件"
-              @change="loadExcle"
+              @change="loadExcel"
               style="display: none"
             />
-            Excle导入:
+            Excel导入:
             <button
               class="fill_btn"
-              @click="handleExcleFill"
+              @click="handleExcelFill"
               style="margin-left: 14px"
             >
               请选择.xlsx文件
@@ -75,15 +75,15 @@ const handleFillbox = inject("handleFillbox", () => {}, false);
 
 const handleDbFill = () => {
   console.log("fill db");
-  handleFillbox();
+  handleFillbox("dataBase");
 };
-const handleExcleFill = () => {
-  console.log("fill excle");
-  handleFillbox();
+const handleExcelFill = () => {
+  console.log("fill excel");
+  handleFillbox("excel");
 };
 const handleCsvFill = () => {
   console.log("fill csv");
-  handleFillbox();
+  handleFillbox("csv");
 };
 </script>
       

@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="reprot_item excle_report">
+      <div class="reprot_item excel_report">
         <div class="radio_defined">
           <div class="radio_box">
             <input type="radio" v-model="reportTemplate" value="3" label="3" />
@@ -41,7 +41,7 @@
               @change="loadExcel"
               style="display: none"
             />
-            Excle导入:
+            Excel导入:
             <button
               class="upload_btn"
               @click="clickFileIput"

@@ -5,6 +5,7 @@
     <Reporttype></Reporttype>
     <Reportconfig></Reportconfig>
     <div class="download_box">
+      <el-divider>报表导出</el-divider>
       <button class="download_btn" @click="downloadReport">导出报表</button>
       <button class="print_btn" @click="printReport">打印报表</button>
     </div>
