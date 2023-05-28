@@ -95,21 +95,32 @@ class DataProducer {
         [
             { columnName: 1, otherColumn: 'ok' },
             { columnName: 12, otherColumn: 'nice' },
+            { columnName: 1, otherColumn: 'o' },
         ],
         {
+            striperOptions: {
+                column: 'columnName',
+                striper: (x) => {
+                    if (x == 1) return 0
+                    return 1
+                },
+            },
             filterOptions: {
                 column: 'columnName',
                 filter: (x) => {
-                    return x == 12
+                    return x == 1
                 },
             },
+            sortOptions: {
+                column: 'otherColumn',
+                ascending: false,
+            },
         }
-    )
+        )
      * @returns
      */
     static produceData(data, options) {
         let df = new DataFrame(data)
-        df.print()
         if (
             options.filterOptions &&
             options.filterOptions.filter &&
@@ -122,8 +133,8 @@ class DataProducer {
             })
         }
         if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
-            df.sortValues(options.filterOptions.column, {
-                ascending: options.filterOptions.ascending ? options.filterOptions.ascending : null,
+            df.sortValues(options.sortOptions.column, {
+                ascending: options.sortOptions.ascending ? options.sortOptions.ascending : null,
                 inplace: true,
             })
         }
@@ -138,11 +149,13 @@ class DataProducer {
                 if ((number == undefined) | null | false) {
                     df.drop({ index: [index], inplace: true })
                 } else {
-                    let group = map.get(number)
-                    group ? group.push(df[index].toJSON()) : map.set(number, [df[index].toJSON()])
+                    let group = map.has(number)
+                    group
+                        ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
+                        : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
                 }
             })
-            return [...map.values()]
+            return Array.from(map.values())
         }
         return df.toJSON()
     }
