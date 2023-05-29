@@ -16,7 +16,7 @@
         width: 100%;
         height: $fill_header-height;
         line-height: $fill_header-height;
-        background-color: #eaeaeb;
+        background-color: #dadada;
         .fill_title {
             height: $fill_header-height;
             line-height: $fill_header-height;
@@ -39,7 +39,7 @@
         .fill_type {
             width: 150px;
             height: 100%;
-            background-color: #efefef;
+            background-color: #dbdbdb;
             float: left;
             .show_box {
                 height: 100%;
@@ -93,7 +93,7 @@
     }
     .fill_bottom {
         height: $fill_bottom-height;
-        background-color: #eaeaeb;
+        background-color: #dadada;
         .fillBtn {
             width: 60px;
             height: 20px;

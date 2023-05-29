@@ -34,7 +34,8 @@ const jsonData = ref({});
 }; */
 
 const downloadReport = () => {
-  exportExcel(luckysheet.getAllSheets(), "万能图表");
+  // exportExcel(luckysheet.getAllSheets(), "万能图表");
+  window.print();
 };
 const printReport = () => {
   window.print();
