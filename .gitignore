@@ -2,3 +2,4 @@
 **/dist/
 **/package-lock.json
 *.zip
+!/reportforms/public/dist

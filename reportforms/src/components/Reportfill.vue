@@ -109,7 +109,9 @@ const clickCsvFileInput = () => {
 };
 
 const loadDbfile = () => {
-  console.log("loadDbfile");
+  console.log(filedbInput.value.files[0]);
+  console.log(filedbInput.value.files[0].path);
+  console.log(filedbInput.value.files[0].name);
   dbItems.push({ message: "Foo" });
   dbItems.push({ message: "Bar" });
 };
