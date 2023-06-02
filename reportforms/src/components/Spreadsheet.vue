@@ -8,38 +8,58 @@
 import { ref, onMounted } from "vue";
 import Spreadsheet from "x-data-spreadsheet";
 import zhCN from "x-data-spreadsheet/dist/locale/zh-cn";
+import emitter from "@/unit/mittBus";
+import { dbTospread } from "@/unit/conversionDataformat";
 
-const init = () => {
-  const xs = new Spreadsheet("#x_spreadsheet", {
-    showToolbar: false, //顶部工具栏
-    showGrid: true, //表格区域
-    showContextmenu: false, //单元格菜单
-    view: {
-      height: () => document.querySelector(".fill_table").clientHeight + 20,
-      width: () => document.querySelector(".fill_table").clientWidth,
-    },
-    row: {
-      len: 60,
-      height: 20,
-    },
-    col: {
-      len: 20,
-      width: 60,
-      indexWidth: 35,
-      minWidth: 40,
-    },
-    style: {
-      bgcolor: "#efefef",
-    },
-  })
-    .loadData({})
-    .change((data) => {});
-};
+const options = {
+  showToolbar: false, //顶部工具栏
+  showGrid: true, //表格区域
+  showContextmenu: false, //单元格菜单
+  view: {
+    height: () => document.querySelector(".fill_table").clientHeight + 20,
+    width: () => document.querySelector(".fill_table").clientWidth,
+  },
+  row: {
+    len: 100,
+    height: 20,
+  },
+  col: {
+    len: 40,
+    width: 60,
+    indexWidth: 35,
+    minWidth: 40,
+  },
+  style: {
+    bgcolor: "#efefef",
+  },
+}
+const handleSetdata = (xs, value) => {
+  const data = dbTospread(value);
+  xs.loadData(data)
+}
+const handleClearData = (xs) => {
+  // let data = xs.getData()
+  data.forEach((item) => {
+    item.cols = { len: 40 }
+    item.rows = { len: 100 }
+  });
+  xs.loadData(data)
+}
 
-// !!! create luckysheet after mounted
 onMounted(() => {
   Spreadsheet.locale("zh-cn", zhCN);
-  init();
+  const xs = new Spreadsheet("#x_spreadsheet", options)
+  xs.on('cell-selected', function (cell, ri, ci) {
+    if (cell) {
+      console.log(cell.text)
+    }
+  })
+  emitter.on("setData", (e) => {
+    handleSetdata(xs, e);
+  });
+  emitter.on("clearData", (e) => {
+    handleClearData(xs);
+  });
 });
 </script>
   
@@ -54,6 +74,7 @@ onMounted(() => {
   #x_spreadsheet {
     width: 100%;
     height: 100%;
+
     // .x-spreadsheet {
     //   width: 100%;
     //   height: 100%;
@@ -64,6 +85,7 @@ onMounted(() => {
     // }
     .x-spreadsheet-bottombar {
       height: $x-spreadsheet-bottombar;
+
       .x-spreadsheet-menu {
         li {
           height: $x-spreadsheet-bottombar;

@@ -47,6 +47,7 @@ const excelOptions = {
     verticalAlignMode: true, // '垂直对齐方式'
     textWrapMode: true, // '换行方式'
     image: true, // '插入图片'
+    chart: true, // '插入表格'
     sortAndFilter: true, // '排序和筛选'
     splitColumn: true, // '分列'
     findAndReplace: true, // '查找替换'

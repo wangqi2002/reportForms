@@ -23,14 +23,6 @@ import Reportconfig from "@/components/Reportconfig.vue";
 
 const jsonData = ref({});
 
-const readFromSource = () => {
-  // let config = {
-  //   locateFile: () => "",
-  // };
-  initSqlJs(config).then(function (SQL) {
-    console.log("sql.js initialized");
-  });
-};
 
 /* const handleFun = () => {
   // luckysheet.setCellValue(0, 0, 1);
@@ -44,8 +36,7 @@ const readFromSource = () => {
 
 const downloadReport = () => {
   // exportExcel(luckysheet.getAllSheets(), "万能图表");
-  // window.print();
-  readFromSource();
+  window.print();
 };
 const printReport = () => {
   window.print();
@@ -53,5 +44,4 @@ const printReport = () => {
 </script>
   
 <style src="@/style/option.scss"  lang="scss"></style>
-<style lang="scss">
-</style>
+<style lang="scss"></style>
