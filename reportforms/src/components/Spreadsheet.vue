@@ -5,11 +5,14 @@
 </template>
   
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import Spreadsheet from "x-data-spreadsheet";
 import zhCN from "x-data-spreadsheet/dist/locale/zh-cn";
 import emitter from "@/unit/mittBus";
 import { dbTospread } from "@/unit/conversionDataformat";
+
+const store = useStore()
 
 const options = {
   showToolbar: false, //顶部工具栏
@@ -30,7 +33,7 @@ const options = {
     minWidth: 40,
   },
   style: {
-    bgcolor: "#efefef",
+    bgcolor: "#F7F7FC",
   },
 }
 const handleSetdata = (xs, value) => {
@@ -38,7 +41,7 @@ const handleSetdata = (xs, value) => {
   xs.loadData(data)
 }
 const handleClearData = (xs) => {
-  // let data = xs.getData()
+  let data = xs.getData()
   data.forEach((item) => {
     item.cols = { len: 40 }
     item.rows = { len: 100 }
@@ -51,7 +54,7 @@ onMounted(() => {
   const xs = new Spreadsheet("#x_spreadsheet", options)
   xs.on('cell-selected', function (cell, ri, ci) {
     if (cell) {
-      console.log(cell.text)
+      store.commit("changeTablehead", { title: cell.text })
     }
   })
   emitter.on("setData", (e) => {

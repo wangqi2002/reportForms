@@ -5,7 +5,7 @@
       <div class="reprot_item new_report">
         <div class="radio_defined">
           <div class="radio_box">
-            <input type="radio" v-model="reportTemplate" value="1" label="1" />
+            <input type="radio" v-model="reportTemplate" value="1" label="1" @change="handleChange" />
           </div>
           <div class="radio_content">创建新模版</div>
         </div>
@@ -13,17 +13,12 @@
       <div class="reprot_item history_report">
         <div class="radio_defined">
           <div class="radio_box">
-            <input type="radio" v-model="reportTemplate" value="2" label="2" />
+            <input type="radio" v-model="reportTemplate" value="2" label="2" @change="handleChange" />
           </div>
           <div class="radio_content">
             历史模板：
-            <el-select v-model="historyValue" placeholder="请选择">
-              <el-option
-                v-for="item in historyReports"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+            <el-select v-model="historyValue" placeholder="请选择" :disabled="isEffect2">
+              <el-option v-for="item in historyReports" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
         </div>
@@ -31,22 +26,12 @@
       <div class="reprot_item excel_report">
         <div class="radio_defined">
           <div class="radio_box">
-            <input type="radio" v-model="reportTemplate" value="3" label="3" />
+            <input type="radio" v-model="reportTemplate" value="3" label="3" @change="handleChange" />
           </div>
           <div class="radio_content">
-            <input
-              ref="fileInput"
-              type="file"
-              placeholder="请选择.xlsx文件"
-              @change="loadExcel"
-              style="display: none"
-            />
+            <input ref="fileInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcel" style="display: none" />
             Excel导入:
-            <button
-              class="upload_btn"
-              @click="clickFileIput"
-              style="margin-left: 6px"
-            >
+            <button class="upload_btn" @click="clickFileIput" :disabled="isEffect3" style="margin-left: 6px">
               上传
             </button>
           </div>
@@ -62,13 +47,17 @@
 </template>
    
 <script setup>
-import { ref } from "vue";
+import { ref, getCurrentInstance } from "vue";
 import LuckyExcel from "luckyexcel";
+
+const instance = getCurrentInstance();
 
 const jsonData = ref({});
 const fileInput = ref();
 const reportTemplate = ref(1);
 const historyValue = ref("");
+let isEffect2 = ref(true);
+let isEffect3 = ref(true);
 const historyReports = [
   {
     value: "Option1",
@@ -91,6 +80,22 @@ const historyReports = [
     label: "模板5",
   },
 ];
+
+const handleChange = () => {
+  if (reportTemplate.value === "1") {
+    isEffect2 = true;
+    isEffect3 = true;
+    instance.proxy.$forceUpdate();
+  } else if (reportTemplate.value === "2") {
+    isEffect2 = false;
+    isEffect3 = true;
+    instance.proxy.$forceUpdate();
+  } else if (reportTemplate.value === "3") {
+    isEffect2 = true;
+    isEffect3 = false;
+    instance.proxy.$forceUpdate();
+  }
+}
 
 const clickFileIput = () => {
   fileInput.value?.click();
@@ -137,6 +142,5 @@ const loadExcel = (evt) => {
 </script>
     
 <style src="@/style/reportCreate.scss"  lang="scss"></style>
-<style lang="scss">
-</style>
+<style lang="scss"></style>
   

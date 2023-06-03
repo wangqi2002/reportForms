@@ -1,3 +1,5 @@
+import emitter from "./mittBus";
+
 function Drag(outId, inId) {
     this.oDiv = document.getElementById(outId);
     this.iDiv = document.getElementById(inId);
@@ -38,13 +40,13 @@ Drag.prototype.funcUp = function (ev) {
     document.onmousemove = null;
 }
 
-function DragTo(id, box) {
+function DragTo(id, list) {
     this.initialArr = {
         initiall: null,
         initialt: null
     }
     this.oDiv = document.getElementById(id);
-    this.box = document.getElementById(box);
+    this.list = list;
     this.oDiv.oncontextmenu = () => false;
     var _this = this;
     this.oDiv.onmousedown = function (ev) {
@@ -89,11 +91,11 @@ DragTo.prototype.funcUp = function (ev) {
     document.onmousemove = null;
     this.oDiv.style.left = this.initialArr.initiall + 'px';
     this.oDiv.style.top = this.initialArr.initialt + 'px';
-    let childList = this.box.children
+    let childList = document.getElementsByClassName(this.list)
     for (let i = 0; i < childList.length; i++) {
         let res = checkIn(childList[i])
         if (res.isIn) {
-            console.log(res.idIn)
+            emitter.emit("setHead", res)
         }
     }
 }
@@ -127,16 +129,41 @@ function checkIn(obj) {
 }
 function creatTab(table, tr, td) {
     var div = document.getElementById(table);
-    var tab = "<table border='1' cellspacing='0'>"
-    for (var i = 0; i < tr; i++) {
-        tab = tab + "<tr>";
-        for (var j = 0; j < td; j++) {
-            tab += "<td width='50px' height='18px'></td>";
+    if (td * 50 > 340) {
+        let width = td * 50
+        var tab = "<table class='create_table' width='" + width + "' border='1' cellspacing='0'>"
+        for (var i = 0; i < tr; i++) {
+            tab = tab + "<tr>";
+            if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td class='create_cell' width='50px' height='20px'><input id='input_" + j + "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>";
+                }
+            } else {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td class='create_cell' width='50px' height='20px'></td>";
+                }
+            }
+            tab += "<tr/>";
         }
-        tab += "<tr/>";
+        tab += '</table>';
+    } else {
+        var tab = "<table class='create_table' width='100%' border='1' cellspacing='0'>"
+        for (var i = 0; i < tr; i++) {
+            tab = tab + "<tr>";
+            if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td height='20px'><input id='input_" + j + "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>";
+                }
+            } else {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td height='20px'></td>";
+                }
+            }
+            tab += "<tr/>";
+        }
+        tab += '</table>';
     }
-    tab += '</table>';
     div.innerHTML = tab;
 }
 
-export { Drag, DragTo };
+export { Drag, DragTo, creatTab };

@@ -41,12 +41,12 @@
             </button>
           </div>
         </div>
+        <el-divider class="fill_type_middle" content-position="left">报表区域</el-divider>
         <div id="fill_template" class="fill_template">
-          <!-- <button id="btn1" @click="handleCs">测试</button> -->
         </div>
       </div>
       <div class="fill_table">
-        <div id="mark" class="mark" ref="mark" @click="handleCs1" @contextmenu.prevent="handleCs2"></div>
+        <div id="mark" class="mark" ref="mark"></div>
         <Spreadsheet></Spreadsheet>
       </div>
     </div>
@@ -59,13 +59,16 @@
   
 <script setup>
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
+import { useStore } from "vuex";
 import { ElMessageBox, ElDivider } from "element-plus";
 import Spreadsheet from "@/components/Spreadsheet.vue";
-import { Drag, DragTo } from "@/unit/Drag";
+import { Drag, DragTo, creatTab } from "@/unit/Drag";
 import emitter from "@/unit/mittBus";
 import { dbDataConver } from "@/unit/conversionDataformat";
 
 const instance = getCurrentInstance();
+const store = useStore()
+
 const dbItems = reactive([]);
 const dbTable = reactive([]);
 const mark = ref(null)
@@ -80,12 +83,6 @@ let dbFile = null;
 const handleCs = () => {
   console.log("handleCs")
   emitter.emit("clearData");
-}
-const handleCs1 = (e) => {
-  console.log("handleCs1", e)
-}
-const handleCs2 = (e) => {
-  console.log("handleCs2", e)
 }
 const clickDbfileInput = () => {
   filedbInput.value?.click();
@@ -157,17 +154,28 @@ const handleCancel = () => {
   emitter.emit("clearData");
   emitter.emit("exitfill");
 };
+const setheadListener = () => {
+  const inputList = document.getElementsByClassName("table_input")
+  emitter.on("setHead", (e) => {
+    for (let i = 0; i < inputList.length; i++) {
+      if (inputList[i].id === e.idIn) {
+        inputList[i].value = store.state.tableHead.title
+      }
+    }
+  })
+}
 const filltypeListener = () => {
   emitter.on("filltype", (e) => {
-    if (e === "dataBase") {
+    creatTab("fill_template", e.range.row[2], e.range.column[2])
+    if (e.type === "dataBase") {
       filldbShow = true;
       fillexcelShow = false;
       fillcsvShow = false;
-    } else if (e === "excel") {
+    } else if (e.type === "excel") {
       filldbShow = false;
       fillexcelShow = true;
       fillcsvShow = false;
-    } else if (e === "csv") {
+    } else if (e.type === "csv") {
       filldbShow = false;
       fillexcelShow = false;
       fillcsvShow = true;
@@ -221,12 +229,9 @@ const readFromSource = (type, file, options, callback) => {
 
 onMounted(() => {
   new Drag("fill_report_box", "fill_header");
-  new DragTo("mark", "fill_template");
+  new DragTo("mark", "table_input");
   filltypeListener();
-  mark.value.ontouchmove = function (e) {
-    console.log(e)
-    e.preventDefault()
-  }
+  setheadListener();
 });
 </script>
   
