@@ -50,14 +50,10 @@ function DragTo(id, list) {
     this.oDiv.oncontextmenu = () => false;
     var _this = this;
     this.oDiv.onmousedown = function (ev) {
-        if (ev.button == 2) {
-            _this.funcDown(ev);
-        }
+        _this.funcDown(ev);
     };
     this.oDiv.onmouseup = function (ev) {
-        if (ev.button == 2) {
-            _this.funcUp(ev);
-        }
+        _this.funcUp(ev);
     };
 }
 
@@ -71,7 +67,6 @@ DragTo.prototype.funcDown = function (ev) {
         initiall: l,
         initialt: t
     }
-
     var _this = this;
     document.onmousemove = function (ev) {
         _this.funcMove(ev);
@@ -95,7 +90,12 @@ DragTo.prototype.funcUp = function (ev) {
     for (let i = 0; i < childList.length; i++) {
         let res = checkIn(childList[i])
         if (res.isIn) {
-            emitter.emit("setHead", res)
+            let obj = { ...res, fromId: this.oDiv.id }
+            if (obj.fromId === "mark") {
+                emitter.emit("setHead", obj)
+            } else {
+                emitter.emit("setFilter", obj)
+            }
         }
     }
 }
@@ -129,12 +129,17 @@ function checkIn(obj) {
 }
 function creatTab(table, tr, td) {
     var div = document.getElementById(table);
+    tr = tr > 9 ? 9 : tr
     if (td * 50 > 340) {
         let width = td * 50
         var tab = "<table class='create_table' width='" + width + "' border='1' cellspacing='0'>"
-        for (var i = 0; i < tr; i++) {
+        for (var i = 0; i < tr + 1; i++) {
             tab = tab + "<tr>";
             if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td class='create_cell' width='50px' height='20px'>" + (j + 1) + "</td>";
+                }
+            } else if (i === 1) {
                 for (var j = 0; j < td; j++) {
                     tab += "<td class='create_cell' width='50px' height='20px'><input id='input_" + j + "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>";
                 }
@@ -148,9 +153,13 @@ function creatTab(table, tr, td) {
         tab += '</table>';
     } else {
         var tab = "<table class='create_table' width='100%' border='1' cellspacing='0'>"
-        for (var i = 0; i < tr; i++) {
+        for (var i = 0; i < tr + 1; i++) {
             tab = tab + "<tr>";
             if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += "<td height='20px'>" + (j + 1) + "</td>";
+                }
+            } else if (i === 1) {
                 for (var j = 0; j < td; j++) {
                     tab += "<td height='20px'><input id='input_" + j + "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>";
                 }

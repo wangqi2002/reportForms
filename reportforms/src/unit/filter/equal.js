@@ -29,3 +29,12 @@ function configureStriper(params) {
     }
     return striper
 }
+
+const equal = {
+    type: 'equal',
+    configureFilter: configureFilter,
+    configureStriper: configureStriper,
+}
+export {
+    equal
+}

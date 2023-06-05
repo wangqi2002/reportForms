@@ -24,8 +24,8 @@ const excelOptions = {
       index: 0,
     },
   ],
-  column: 25,
-  row: 50,
+  column: 26,
+  row: 60,
   showtoolbar: false,
   showtoolbarConfig: {
     undoRedo: true, //撤销重做，注意撤消重做是两个按钮，由这一个配置决定显示还是隐藏

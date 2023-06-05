@@ -60,6 +60,7 @@ function configureFilter(purpose, range, date) {
             break
         case 'range': {
             if (range) {
+                console.log(range)
                 const d1 = new Date(range.start)
                 const d2 = new Date(range.end)
                 //重写pattern.test方法,不再使用正则表达式
@@ -153,15 +154,24 @@ function configureStriper(purpose, dateStart, dateEnd) {
                 }
             }
             break
-
         default:
             break
     }
     return striper
 }
+const date = {
+    type: 'date',
+    configureFilter: configureFilter,
+    configureStriper: configureStriper
+}
 
 // let striper = configureStriper('byYear', '2022/4/1', '2023/5/26')
+// let filter = configureFilter('range', { start: '2022/4/1', end: '2023/5/26' })
 // let a = ['2023/4/1', '2023/5/26', '2023/4/2', '2023/5/2', '2021/4/8', '2023/4/1', '2023/4/2', '2022/4/2']
 // a.forEach((x) => {
-//     console.log(striper(x))
+//     console.log(striper(x)/* ,filter(x) */)
+//     console.log()
 // })
+export {
+    date
+}

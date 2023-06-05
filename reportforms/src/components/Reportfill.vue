@@ -14,6 +14,7 @@
             <button class="fill_upload_btn" @click="clickDbfileInput" style="margin-left: 6px">
               选择.db文件
             </button>
+            <button @click="handleCs">CS</button>
           </div>
           <el-divider content-position="left">数据库</el-divider>
           <div class="fill_db_content">
@@ -61,6 +62,7 @@
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { useStore } from "vuex";
 import { ElMessageBox, ElDivider } from "element-plus";
+import { DataFrame, toJSON } from 'danfojs'
 import Spreadsheet from "@/components/Spreadsheet.vue";
 import { Drag, DragTo, creatTab } from "@/unit/Drag";
 import emitter from "@/unit/mittBus";
@@ -71,7 +73,7 @@ const store = useStore()
 
 const dbItems = reactive([]);
 const dbTable = reactive([]);
-const mark = ref(null)
+const mark = ref(null);
 const filedbInput = ref(null);
 const fileexcelInput = ref(null);
 const filecsvInput = ref(null);
@@ -79,10 +81,26 @@ let filldbShow = ref(false);
 let fillexcelShow = ref(false);
 let fillcsvShow = ref(false);
 let dbFile = null;
+let tableName = null;
+let reportData = [];
+let fillOptions = new Map();
 
 const handleCs = () => {
-  console.log("handleCs")
-  emitter.emit("clearData");
+  let childList = document.getElementsByClassName("table_input")
+  let attributeString = ""
+  for (let i = 0; i < childList.length; i++) {
+    if (i == 0) {
+      attributeString = childList[i].value;
+    } else {
+      attributeString = attributeString + "," + childList[i].value;
+    }
+  }
+  readDbData(dbFile, tableName, attributeString, function (result) {
+    result.forEach((item) => {
+      reportData.push(item)
+    })
+    console.log(reportData)
+  })
 }
 const clickDbfileInput = () => {
   filedbInput.value?.click();
@@ -93,7 +111,6 @@ const clickExcelfileInput = () => {
 const clickCsvFileInput = () => {
   filecsvInput.value?.click();
 };
-
 const loadDbfile = () => {
   let f = filedbInput.value.files[0];
   const r = new FileReader();
@@ -115,7 +132,9 @@ const loadExcelfile = () => {
 const loadCsvfile = () => {
   console.log("loadCsvfile");
 };
+
 const handleChangedb = async (e) => {
+  tableName = e.target.innerText
   await readFromSource("sqlite", dbFile, {
     tableName: e.target.innerText,
     limit: '25',
@@ -128,7 +147,6 @@ const handleChangedb = async (e) => {
     dbTable.length = 0
   })
 };
-
 const handleExitfill = () => {
   ElMessageBox.confirm("确定退出报表内容填充?", "Warning", {
     confirmButtonText: "OK",
@@ -157,11 +175,32 @@ const handleCancel = () => {
 const setheadListener = () => {
   const inputList = document.getElementsByClassName("table_input")
   emitter.on("setHead", (e) => {
+    let obj = null
+    if (fillOptions.get(e.idIn) == undefined) {
+      obj = { column: store.state.tableHead.title, striper: null }
+    } else {
+      obj = fillOptions.get(e.idIn)
+      obj.column = store.state.tableHead.title
+    }
+    fillOptions.set(e.idIn, obj)
     for (let i = 0; i < inputList.length; i++) {
       if (inputList[i].id === e.idIn) {
         inputList[i].value = store.state.tableHead.title
       }
     }
+  })
+}
+const setFilterListener = () => {
+  emitter.on("setFilter", (e) => {
+    let obj = null
+    if (fillOptions.get(e.idIn) == undefined) {
+      obj = { column: null, striper: store.state.striper }
+    } else {
+      obj = fillOptions.get(e.idIn)
+      obj.striper = store.state.striper
+    }
+    fillOptions.set(e.idIn, obj)
+    console.log(fillOptions)
   })
 }
 const filltypeListener = () => {
@@ -226,12 +265,67 @@ const readFromSource = (type, file, options, callback) => {
       return undefined;
   }
 };
+const produceData = (data, options) => {
+  let df = new DataFrame(data)
+  if (
+    options.filterOptions &&
+    options.filterOptions.filter &&
+    df.columns.includes(options.filterOptions.column)
+  ) {
+    df.index.forEach((index) => {
+      if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
+        df.drop({ index: [index], inplace: true })
+      }
+    })
+  }
+  if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
+    df.sortValues(options.sortOptions.column, {
+      ascending: options.sortOptions.ascending ? options.sortOptions.ascending : null,
+      inplace: true,
+    })
+  }
+  if (
+    options.striperOptions &&
+    options.striperOptions.striper &&
+    df.columns.includes(options.striperOptions.column)
+  ) {
+    let map = new Map()
+    df.index.forEach((index) => {
+      let number = options.striperOptions.striper(df.at(index, options.striperOptions.column))
+      if ((number == undefined) | null | false) {
+        df.drop({ index: [index], inplace: true })
+      } else {
+        let group = map.has(number)
+        group
+          ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
+          : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
+      }
+    })
+    return Array.from(map.values())
+  }
+  return df.toJSON()
+}
+const readDbData = (dataBase, tableName, attributeString, callback) => {
+  initSqlJs(config).then(function (SQL) {
+    const result = [];
+    const db = new SQL.Database(dataBase);
+    let stmt = db.prepare(
+      `select ${attributeString} from ${tableName}`
+    );
+    while (stmt.step()) {
+      const row = stmt.getAsObject();
+      result.push(row);
+    }
+    callback(result);
+  });
+}
 
 onMounted(() => {
   new Drag("fill_report_box", "fill_header");
   new DragTo("mark", "table_input");
   filltypeListener();
   setheadListener();
+  setFilterListener();
 });
 </script>
   

@@ -1,28 +1,87 @@
 .report_type {
     $select_type-height: 28px;
-    height: 160px;
+    height: 180px;
     text-align: center;
     font-size: 14px;
-
-    .date_type {
-        margin: 5px 0px;
-        color: #60627c;
-        font-size: 12px;
-        float: left;
-        .select_line {
-            height: calc($select_type-height - 4px);
-            line-height: calc($select_type-height - 4px);
-            vertical-align: middle;
+    .report_type_select {
+        width: calc(100% - 40px);
+        height: calc($select_type-height - 2px);
+        line-height: calc($select_type-height - 2px);
+        margin-top: 7px;
+        .el-input {
+            height: calc($select_type-height - 2px);
+            line-height: calc($select_type-height - 2px);
+            .el-input__wrapper {
+                padding: 0 8px;
+                .el-input__inner {
+                    height: calc($select_type-height - 6px);
+                    font-size: 12px;
+                }
+            }
+        }
+        .el-input :focus {
+            border: none;
+        }
+    }
+    .type_box {
+        width: calc(100% - 10px);
+        height: calc(100% - 50px);
+        margin: 5px 5px;
+        .date_type {
+            margin: 5px 0px;
+            color: #60627c;
+            font-size: 12px;
+            float: left;
+            .select_line {
+                height: calc($select_type-height - 4px);
+                line-height: calc($select_type-height - 4px);
+                vertical-align: middle;
+                .el-select {
+                    width: calc(100% - 95px);
+                    line-height: calc($select_type-height - 4px);
+                    .el-input {
+                        height: calc($select_type-height - 4px);
+                        line-height: calc($select_type-height - 4px);
+                        .el-input__wrapper {
+                            padding: 0 8px;
+                            .el-input__inner {
+                                height: calc($select_type-height - 8px);
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                    .el-input :focus {
+                        border: none;
+                    }
+                }
+            }
+            .el-date-editor {
+                width: calc(100% - 9px);
+                height: calc($select_type-height - 6px);
+                line-height: calc($select_type-height - 6px);
+                margin: 5px 0 0;
+                padding: 0 10px;
+                .el-input__inner {
+                    height: 100%;
+                    font-size: 12px;
+                }
+            }
+        }
+        .shift_range {
+            margin: 5px 0px;
+            color: #60627c;
+            font-size: 12px;
+            float: left;
             .el-select {
                 width: calc(100% - 95px);
-                line-height: calc($select_type-height - 4px);
+                line-height: calc($select_type-height - 6px);
                 .el-input {
-                    height: calc($select_type-height - 4px);
-                    line-height: calc($select_type-height - 4px);
+                    height: calc($select_type-height - 6px);
+                    line-height: calc($select_type-height - 6px);
                     .el-input__wrapper {
                         padding: 0 8px;
                         .el-input__inner {
-                            height: calc($select_type-height - 8px);
+                            height: calc($select_type-height - 10px);
                             font-size: 12px;
                         }
                     }
@@ -32,39 +91,16 @@
                 }
             }
         }
-        .el-date-editor {
-            width: calc(100% - 9px);
-            height: calc($select_type-height - 6px);
+        .type_confirm {
+            width: 33%;
+            height: calc($select_type-height - 8px);
             line-height: calc($select_type-height - 6px);
-            margin: 5px 0 0;
-            padding: 0 10px;
-            .el-input__inner {
-                height: 100%;
-            }
-        }
-    }
-    .shift_range {
-        margin: 5px 0px;
-        color: #60627c;
-        font-size: 12px;
-        float: left;
-        .el-select {
-            width: calc(100% - 95px);
-            line-height: calc($select_type-height - 6px);
-            .el-input {
-                height: calc($select_type-height - 6px);
-                line-height: calc($select_type-height - 6px);
-                .el-input__wrapper {
-                    padding: 0 8px;
-                    .el-input__inner {
-                        height: calc($select_type-height - 10px);
-                        font-size: 12px;
-                    }
-                }
-            }
-            .el-input :focus {
-                border: none;
-            }
+            margin-top: 5px;
+            font-size: 12px;
+            background-color: white;
+            color: #75778a;
+            border: none;
+            border-radius: 3px;
         }
     }
 }
