@@ -28,7 +28,7 @@ function generatePattern(raw, params) {
  */
 function configureFilter(purpose, range, date) {
     let currentDate = date ? new Date(date) : new Date()
-    let pattern = undefined
+    let pattern = {}
     switch (purpose) {
         case 'today':
             pattern = new RegExp(
@@ -74,6 +74,7 @@ function configureFilter(purpose, range, date) {
                 }
             }
         }
+            break
         default:
             return false
     }
@@ -169,8 +170,8 @@ const date = {
 // let filter = configureFilter('range', { start: '2022/4/1', end: '2023/5/26' })
 // let a = ['2023/4/1', '2023/5/26', '2023/4/2', '2023/5/2', '2021/4/8', '2023/4/1', '2023/4/2', '2022/4/2']
 // a.forEach((x) => {
-//     console.log(striper(x)/* ,filter(x) */)
-//     console.log()
+//     // console.log(striper(x))
+//     console.log(filter(x))
 // })
 export {
     date

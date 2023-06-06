@@ -1,5 +1,5 @@
-import { date } from "./date"
-import { equal } from "./equal"
+import { date } from "./date/date"
+import { equal } from "./equal/equal"
 
 const filters = new Map();
 filters.set("date", date)

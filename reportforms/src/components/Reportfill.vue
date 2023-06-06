@@ -14,7 +14,7 @@
             <button class="fill_upload_btn" @click="clickDbfileInput" style="margin-left: 6px">
               选择.db文件
             </button>
-            <button @click="handleCs">CS</button>
+            <!-- <button @click="getDbData">CS</button> -->
           </div>
           <el-divider content-position="left">数据库</el-divider>
           <div class="fill_db_content">
@@ -62,11 +62,12 @@
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { useStore } from "vuex";
 import { ElMessageBox, ElDivider } from "element-plus";
-import { DataFrame, toJSON } from 'danfojs'
+// import { DataFrame, toJSON } from 'danfojs'
 import Spreadsheet from "@/components/Spreadsheet.vue";
-import { Drag, DragTo, creatTab } from "@/unit/Drag";
 import emitter from "@/unit/mittBus";
+import { Drag, DragTo, creatTab } from "@/unit/Drag";
 import { dbDataConver } from "@/unit/conversionDataformat";
+import { readFromSource, readDbData, produceData } from "@/unit/produce"
 
 const instance = getCurrentInstance();
 const store = useStore()
@@ -83,9 +84,10 @@ let fillcsvShow = ref(false);
 let dbFile = null;
 let tableName = null;
 let reportData = [];
+let realData = [];
 let fillOptions = new Map();
 
-const handleCs = () => {
+const getDbData = (callback) => {
   let childList = document.getElementsByClassName("table_input")
   let attributeString = ""
   for (let i = 0; i < childList.length; i++) {
@@ -99,7 +101,7 @@ const handleCs = () => {
     result.forEach((item) => {
       reportData.push(item)
     })
-    console.log(reportData)
+    callback(reportData)
   })
 }
 const clickDbfileInput = () => {
@@ -162,6 +164,19 @@ const handleExitfill = () => {
 };
 const handleConfirm = () => {
   console.log("Confirm");
+  let options = null;
+  if (fillOptions.size != 0) {
+    for (const [key, value] of fillOptions) {
+      if (value.striper != null) {
+        options = value
+      }
+    }
+    getDbData(function (result) {
+      console.log(result, { striperOptions: options })
+      realData = produceData(result, { striperOptions: options })
+      console.log(realData)
+    })
+  }
   dbItems.length = 0
   emitter.emit("clearData");
   emitter.emit("exitfill");
@@ -222,103 +237,6 @@ const filltypeListener = () => {
     instance.proxy.$forceUpdate();
   });
 };
-const readFromSource = (type, file, options, callback) => {
-  switch (type) {
-    case "sqlite": {
-      initSqlJs(config).then(function (SQL) {
-        const result = [];
-        const db = new SQL.Database(file);
-        if (options.onlyTable) {
-          let stmt = db.prepare(
-            `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`
-          );
-          while (stmt.step()) {
-            const row = stmt.getAsObject();
-            result.push(row);
-          }
-        } else {
-          let limit = options.limit ? options.limit : "15";
-          let field = "*";
-          if (options.fields) {
-            field = options.fields[0];
-            options.fields.forEach((f, index) => {
-              if (index > 0) field = field + "," + f;
-            });
-          }
-          let stmt = db.prepare(
-            `select ${field} from ${options.tableName} limit ${limit}`
-          );
-          while (stmt.step()) {
-            const row = stmt.getAsObject();
-            result.push(row);
-          }
-        }
-        callback(result);
-      });
-    }
-      break;
-    case "excel": {
-      console.log("excel")
-    }
-      break;
-    default:
-      return undefined;
-  }
-};
-const produceData = (data, options) => {
-  let df = new DataFrame(data)
-  if (
-    options.filterOptions &&
-    options.filterOptions.filter &&
-    df.columns.includes(options.filterOptions.column)
-  ) {
-    df.index.forEach((index) => {
-      if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
-        df.drop({ index: [index], inplace: true })
-      }
-    })
-  }
-  if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
-    df.sortValues(options.sortOptions.column, {
-      ascending: options.sortOptions.ascending ? options.sortOptions.ascending : null,
-      inplace: true,
-    })
-  }
-  if (
-    options.striperOptions &&
-    options.striperOptions.striper &&
-    df.columns.includes(options.striperOptions.column)
-  ) {
-    let map = new Map()
-    df.index.forEach((index) => {
-      let number = options.striperOptions.striper(df.at(index, options.striperOptions.column))
-      if ((number == undefined) | null | false) {
-        df.drop({ index: [index], inplace: true })
-      } else {
-        let group = map.has(number)
-        group
-          ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
-          : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
-      }
-    })
-    return Array.from(map.values())
-  }
-  return df.toJSON()
-}
-const readDbData = (dataBase, tableName, attributeString, callback) => {
-  initSqlJs(config).then(function (SQL) {
-    const result = [];
-    const db = new SQL.Database(dataBase);
-    let stmt = db.prepare(
-      `select ${attributeString} from ${tableName}`
-    );
-    while (stmt.step()) {
-      const row = stmt.getAsObject();
-      result.push(row);
-    }
-    callback(result);
-  });
-}
 
 onMounted(() => {
   new Drag("fill_report_box", "fill_header");

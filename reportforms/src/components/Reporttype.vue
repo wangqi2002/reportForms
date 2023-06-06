@@ -86,7 +86,6 @@ let dateConfig = {}
 let shiftConfig = {}
 
 const handleConfirmdate = () => {
-  console.log("handleConfirmdate")
   const striperFunc = filters.get("date").configureStriper
   const striper = striperFunc(dateConfig.purpose, dateConfig.dateRange.start, dateConfig.dateRange.end)
   store.commit("changeStriper", striper)
