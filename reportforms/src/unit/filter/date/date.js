@@ -20,14 +20,16 @@ function generatePattern(raw, params) {
  * - `thisMonth` 本月
  * - `thisYear` 今年
  * - `range` 日期范围
- * @param {{start:Date|string,end:Date|string}} [range]
+ * @param {{date?:Date,range?:{start:Date|string,end:Date|string}}} [options]
+ * - `date?:Date|string`
+ * - `range?:{start:Date|string,end:Date|string}`用于指定日期范围,仅用于'range'情况
  * @example
  * let filter = configureFilter('today')
  * filter('2023/5/28')
  * @returns
  */
-function configureFilter(purpose, range, date) {
-    let currentDate = date ? new Date(date) : new Date()
+function configureFilter(purpose, options) {
+    let currentDate = options.date ? new Date(options.date) : new Date()
     let pattern = {}
     switch (purpose) {
         case 'today':
@@ -58,22 +60,23 @@ function configureFilter(purpose, range, date) {
         case 'thisYear':
             pattern = new RegExp(generatePattern(patternTemplate.thisYear, [currentDate.getFullYear()]))
             break
-        case 'range': {
-            if (range) {
-                console.log(range)
-                const d1 = new Date(range.start)
-                const d2 = new Date(range.end)
-                //重写pattern.test方法,不再使用正则表达式
-                pattern.test = (x) => {
-                    let date = new Date(x)
-                    if (date < d2 && date > d1) {
-                        return true
-                    } else {
-                        return false
+        case 'range':
+            {
+                if (options.range) {
+                    console.log(options.range)
+                    const d1 = new Date(options.range.start)
+                    const d2 = new Date(options.range.end)
+                    //重写pattern.test方法,不再使用正则表达式
+                    pattern.test = (x) => {
+                        let date = new Date(x)
+                        if (date < d2 && date > d1) {
+                            return true
+                        } else {
+                            return false
+                        }
                     }
                 }
             }
-        }
             break
         default:
             return false
@@ -85,14 +88,13 @@ function configureFilter(purpose, range, date) {
 /**
  *
  * @param {'byDay'|'byMonth'|'byYear'} purpose 用于指定调用哪种形式的striper
- * @param {string|Date} dateStart
- * @param {string|Date} dateEnd
+ * @param {{dateStart:string|Date,dateEnd:string|Date}} [options]
  * @returns
  */
-function configureStriper(purpose, dateStart, dateEnd) {
+function configureStriper(purpose, options) {
     let striper = undefined
-    let start = new Date(dateStart)
-    let end = new Date(dateEnd)
+    let start = new Date(options.dateStart)
+    let end = new Date(options.dateEnd)
 
     switch (purpose) {
         case 'byDay':
@@ -163,7 +165,7 @@ function configureStriper(purpose, dateStart, dateEnd) {
 const date = {
     type: 'date',
     configureFilter: configureFilter,
-    configureStriper: configureStriper
+    configureStriper: configureStriper,
 }
 
 // let striper = configureStriper('byYear', '2022/4/1', '2023/5/26')

@@ -49,8 +49,11 @@
 <script setup>
 import LuckyExcel from "luckyexcel";
 import { ref, inject, getCurrentInstance } from "vue";
+import { useStore } from "vuex";
+import { rangeTohead } from "@/unit/conversionDataformat"
 
 const instance = getCurrentInstance();
+const store = useStore()
 
 const jsonData = ref({});
 const fileInput = ref();
@@ -84,8 +87,14 @@ const handleDbFill = () => {
   console.log("fill db");
   let objRange = null
   objRange = luckysheet.getRange()[0]
+  let tableHeadrange = rangeTohead(objRange)
   objRange.row[2] = objRange.row[1] - objRange.row[0] + 1
   objRange.column[2] = objRange.column[1] - objRange.column[0] + 1
+  if (tableHeadrange.row != null) {
+    luckysheet.setRangeShow(tableHeadrange)
+    objRange.tableHead = luckysheet.transToCellData(luckysheet.getRangeValue(tableHeadrange))
+  }
+  store.commit("changeLuckyrange", objRange)
   Object.assign(fillRange, objRange);
   handleFillbox("dataBase", fillRange);
   fillRange = {}

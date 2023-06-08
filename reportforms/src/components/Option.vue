@@ -8,8 +8,8 @@
       <el-divider>报表导出</el-divider>
       <button class="download_btn" @click="downloadReport">导出报表</button>
       <button class="print_btn" @click="printReport">打印报表</button>
+      <button class="print_btn" @click="handleFun">测试API</button>
     </div>
-    <!-- <button @click="handleFun">测试API</button> -->
   </div>
 </template>
   
@@ -24,15 +24,16 @@ import Reportconfig from "@/components/Reportconfig.vue";
 const jsonData = ref({});
 
 
-/* const handleFun = () => {
+const handleFun = () => {
   // luckysheet.setCellValue(0, 0, 1);
   // console.log(luckysheet.getRange());
   // console.log(luckysheet.getRangeWithFlatten());
   // console.log(luckysheet.getRangeValuesWithFlatte());
-  console.log(luckysheet.getRangeValue());
-  // luckysheet.setRangeShow("A1:E8")
-  // luckysheet.setRangeShow([{row:[0,1],column:[0,1]},{row:[2,2],column:[3,8]}])
-}; */
+  // luckysheet.setRangeShow({ row: [0, 1], column: [0, 2] })
+  // console.log(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] }));
+  // console.log(luckysheet.transToCellData(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] })))
+  console.log(document.querySelector(".fill_table"))
+};
 
 const downloadReport = () => {
   // exportExcel(luckysheet.getAllSheets(), "万能图表");

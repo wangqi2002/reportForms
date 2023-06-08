@@ -149,6 +149,13 @@ function produceData(data, options) {
     return toJSON(df)
     // dfd.toJSON(df, { format: 'row' })
 }
+/**
+ * 
+ * @param {file} dataBase 
+ * @param {string} tableName 
+ * @param {string} attributeString 
+ * @param {function (params) {}} callback 
+ */
 
 function readDbData(dataBase, tableName, attributeString, callback) {
     initSqlJs(config).then(function (SQL) {

@@ -23,7 +23,6 @@ const mountNode = document.createElement("div");
 let flag = false;
 
 const handleFillbox = (type, value) => {
-  // console.log(type, value);
   const el = document.getElementById("fill_report_box");
   if (el == null) {
     document.body.appendChild(mountNode);

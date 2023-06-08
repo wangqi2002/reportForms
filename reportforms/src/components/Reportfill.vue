@@ -62,11 +62,10 @@
 import { ref, reactive, onMounted, getCurrentInstance } from "vue";
 import { useStore } from "vuex";
 import { ElMessageBox, ElDivider } from "element-plus";
-// import { DataFrame, toJSON } from 'danfojs'
 import Spreadsheet from "@/components/Spreadsheet.vue";
 import emitter from "@/unit/mittBus";
 import { Drag, DragTo, creatTab } from "@/unit/Drag";
-import { dbDataConver } from "@/unit/conversionDataformat";
+import { dbTospread, dbTolucky, produceOption } from "@/unit/conversionDataformat";
 import { readFromSource, readDbData, produceData } from "@/unit/produce"
 
 const instance = getCurrentInstance();
@@ -92,9 +91,17 @@ const getDbData = (callback) => {
   let attributeString = ""
   for (let i = 0; i < childList.length; i++) {
     if (i == 0) {
-      attributeString = childList[i].value;
+      if (childList[i].value != "") {
+        attributeString = childList[i].value;
+      }
     } else {
-      attributeString = attributeString + "," + childList[i].value;
+      if (childList[i].value != "") {
+        if (attributeString == "") {
+          attributeString = childList[i].value;
+        } else {
+          attributeString = attributeString + "," + childList[i].value;
+        }
+      }
     }
   }
   readDbData(dbFile, tableName, attributeString, function (result) {
@@ -144,8 +151,8 @@ const handleChangedb = async (e) => {
     result.forEach((item) => {
       dbTable.push(item)
     })
-    const rowData = dbDataConver(dbTable);
-    emitter.emit("setData", rowData);
+    let spreadData = dbTospread(dbTable);
+    emitter.emit("setSpread", spreadData);
     dbTable.length = 0
   })
 };
@@ -157,34 +164,33 @@ const handleExitfill = () => {
   })
     .then(() => {
       dbItems.length = 0
-      emitter.emit("clearData");
+      emitter.emit("clearSpread");
       emitter.emit("exitfill");
     })
     .catch(() => { });
 };
 const handleConfirm = () => {
   console.log("Confirm");
-  let options = null;
+  const luckyRange = store.state.luckyRange
   if (fillOptions.size != 0) {
-    for (const [key, value] of fillOptions) {
-      if (value.striper != null) {
-        options = value
-      }
-    }
+    let options = produceOption(fillOptions)
     getDbData(function (result) {
-      console.log(result, { striperOptions: options })
-      realData = produceData(result, { striperOptions: options })
-      console.log(realData)
+      realData = produceData(result, { ...options })
+      let luckyData = dbTolucky(realData, luckyRange);
+      emitter.emit("setLucky", luckyData);
+      realData.length = 0
     })
   }
   dbItems.length = 0
-  emitter.emit("clearData");
+  reportData.length = 0
+  fillOptions.clear()
+  emitter.emit("clearSpread");
   emitter.emit("exitfill");
 };
 const handleCancel = () => {
   console.log("Cancel");
   dbItems.length = 0
-  emitter.emit("clearData");
+  emitter.emit("clearSpread");
   emitter.emit("exitfill");
 };
 const setheadListener = () => {
@@ -192,7 +198,7 @@ const setheadListener = () => {
   emitter.on("setHead", (e) => {
     let obj = null
     if (fillOptions.get(e.idIn) == undefined) {
-      obj = { column: store.state.tableHead.title, striper: null }
+      obj = { column: store.state.tableHead.title }
     } else {
       obj = fillOptions.get(e.idIn)
       obj.column = store.state.tableHead.title
@@ -209,13 +215,19 @@ const setFilterListener = () => {
   emitter.on("setFilter", (e) => {
     let obj = null
     if (fillOptions.get(e.idIn) == undefined) {
-      obj = { column: null, striper: store.state.striper }
+      obj = {
+        column: null,
+        striper: store.state.striper,
+        filter: store.state.filter,
+        sort: store.state.sort
+      }
     } else {
       obj = fillOptions.get(e.idIn)
       obj.striper = store.state.striper
+      obj.filter = store.state.filter
+      obj.sort = store.state.sort
     }
     fillOptions.set(e.idIn, obj)
-    console.log(fillOptions)
   })
 }
 const filltypeListener = () => {

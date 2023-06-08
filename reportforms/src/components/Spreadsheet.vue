@@ -10,7 +10,6 @@ import { useStore } from "vuex";
 import Spreadsheet from "x-data-spreadsheet";
 import zhCN from "x-data-spreadsheet/dist/locale/zh-cn";
 import emitter from "@/unit/mittBus";
-import { dbTospread } from "@/unit/conversionDataformat";
 
 const store = useStore()
 
@@ -19,8 +18,8 @@ const options = {
   showGrid: true, //表格区域
   showContextmenu: false, //单元格菜单
   view: {
-    height: () => document.querySelector(".fill_table").clientHeight + 20,
-    width: () => document.querySelector(".fill_table").clientWidth,
+    height: () => document.querySelector(".fill_table") != null ? document.querySelector(".fill_table").clientHeight + 20 : 480,
+    width: () => document.querySelector(".fill_table") != null ? document.querySelector(".fill_table").clientWidth : 580,
   },
   row: {
     len: 100,
@@ -37,8 +36,7 @@ const options = {
   },
 }
 const handleSetdata = (xs, value) => {
-  const data = dbTospread(value);
-  xs.loadData(data)
+  xs.loadData(value)
 }
 const handleClearData = (xs) => {
   let data = xs.getData()
@@ -57,10 +55,10 @@ onMounted(() => {
       store.commit("changeTablehead", { title: cell.text })
     }
   })
-  emitter.on("setData", (e) => {
+  emitter.on("setSpread", (e) => {
     handleSetdata(xs, e);
   });
-  emitter.on("clearData", (e) => {
+  emitter.on("clearSpread", (e) => {
     handleClearData(xs);
   });
 });
