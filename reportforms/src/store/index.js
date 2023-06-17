@@ -11,6 +11,7 @@ export default createStore({
       container: "luckysheet",
       title: "万能报表",
       lang: "zh",
+      plugins: ["chart"],
       data: [],
       column: 26,
       row: 60,
@@ -39,7 +40,6 @@ export default createStore({
         sortAndFilter: true, // '排序和筛选'
         splitColumn: true, // '分列'
         findAndReplace: true, // '查找替换'
-        print: true, // '打印'
       },
       cellRightClickConfig: {
         copy: true, // 复制

@@ -43,6 +43,7 @@
                             .el-input__inner {
                                 height: calc($radio_content_item-height - 4px);
                                 font-size: 12px;
+                                border: none;
                             }
                         }
                     }
@@ -84,5 +85,15 @@
             border: 1px solid transparent;
             border-radius: 3px;
         }
+    }
+}
+.el-divider--horizontal {
+    margin: 10px 0 5px;
+    border-top: 1px solid black;
+
+    .el-divider__text {
+        background-color: #eaeaeb;
+        padding: 0 5px;
+        font-size: 13px;
     }
 }
