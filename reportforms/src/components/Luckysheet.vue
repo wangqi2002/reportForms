@@ -16,14 +16,29 @@ const createLuckysheet = () => {
   {
     name: "Sheet1",
     color: "",
-    status: "1",
-    order: "0",
-    data: [],
-    config: {},
     index: 0,
+    status: 1,
+    order: 0,
+    data: null,
+    config: {}
   }
   let excelOptions = store.state.luckyOptions;
   excelOptions.data.push(initialOption);
+  luckysheet.create(excelOptions);
+}
+const newLuckysheet = () => {
+  let initialOption = [
+    {
+      name: "Sheet1",
+      color: "",
+      index: 0,
+      status: 1,
+      order: 0,
+      data: [],
+      config: {}
+    }]
+  let excelOptions = store.state.luckyOptions;
+  excelOptions.data = initialOption;
   luckysheet.create(excelOptions);
 }
 const handleSetdata = (value) => {
@@ -35,6 +50,9 @@ const handleSetdata = (value) => {
 // !!! create luckysheet after mounted
 onMounted(() => {
   createLuckysheet()
+  emitter.on("newLucky", () => {
+    newLuckysheet();
+  });
   emitter.on("setLucky", (e) => {
     handleSetdata(e);
   });

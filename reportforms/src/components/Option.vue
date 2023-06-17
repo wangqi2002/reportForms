@@ -25,14 +25,12 @@ const jsonData = ref({});
 
 
 const handleFun = () => {
+  console.log("CS")
   // luckysheet.setCellValue(0, 0, 1);
-  // console.log(luckysheet.getRange());
-  // console.log(luckysheet.getRangeWithFlatten());
-  // console.log(luckysheet.getRangeValuesWithFlatte());
   // luckysheet.setRangeShow({ row: [0, 1], column: [0, 2] })
   // console.log(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] }));
-  // console.log(luckysheet.transToCellData(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] })))
-  console.log(document.querySelector(".fill_table"))
+  // luckysheet.clearRange({ row: [0, 1], column: [0, 2] })
+  console.log(luckysheet.getAllSheets())
 };
 
 const downloadReport = () => {

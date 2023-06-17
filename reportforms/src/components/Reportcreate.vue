@@ -7,7 +7,9 @@
           <div class="radio_box">
             <input type="radio" v-model="reportTemplate" value="1" label="1" @change="handleChange" />
           </div>
-          <div class="radio_content">创建新模版</div>
+          <div class="radio_content">新模版
+            <button class="create_btn" :disabled="isEffect1" @click="handleNewreport">创建</button>
+          </div>
         </div>
       </div>
       <div class="reprot_item history_report">
@@ -39,7 +41,7 @@
       </div>
       <div class="reprot_item save_report">
         <div style="margin-top: 5px">
-          <button class="save_btn">保存模板</button>
+          <button class="save_btn" @click="handleSavereport">保存模板</button>
         </div>
       </div>
     </div>
@@ -49,6 +51,7 @@
 <script setup>
 import { ref, getCurrentInstance } from "vue";
 import LuckyExcel from "luckyexcel";
+import emitter from "@/unit/mittBus";
 
 const instance = getCurrentInstance();
 
@@ -56,6 +59,7 @@ const jsonData = ref({});
 const fileInput = ref();
 const reportTemplate = ref(1);
 const historyValue = ref("");
+let isEffect1 = ref(false);
 let isEffect2 = ref(true);
 let isEffect3 = ref(true);
 const historyReports = [
@@ -70,37 +74,36 @@ const historyReports = [
   {
     value: "Option3",
     label: "模板3",
-  },
-  {
-    value: "Option4",
-    label: "模板4",
-  },
-  {
-    value: "Option5",
-    label: "模板5",
-  },
+  }
 ];
 
+const handleNewreport = () => {
+  emitter.emit("newLucky");
+}
 const handleChange = () => {
   if (reportTemplate.value === "1") {
+    isEffect1 = false
     isEffect2 = true;
     isEffect3 = true;
     instance.proxy.$forceUpdate();
   } else if (reportTemplate.value === "2") {
+    isEffect1 = true;
     isEffect2 = false;
     isEffect3 = true;
     instance.proxy.$forceUpdate();
   } else if (reportTemplate.value === "3") {
+    isEffect1 = true;
     isEffect2 = true;
     isEffect3 = false;
     instance.proxy.$forceUpdate();
   }
 }
-
 const clickFileIput = () => {
   fileInput.value?.click();
 };
-
+const handleSavereport = () => {
+  console.log("save report")
+}
 const loadExcel = (evt) => {
   const files = evt.target.files;
   if (files == null || files.length == 0) {

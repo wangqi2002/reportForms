@@ -13,6 +13,17 @@
         .radio_defined {
             .radio_content {
                 color: #60627c;
+                .create_btn {
+                    height: calc($radio_content_item-height - 4px);
+                    line-height: calc($radio_content_item-height - 4px);
+                    width: calc(100% - 67px);
+                    margin-left: 25px;
+                    background-color: white;
+                    color: #60627c;
+                    font-size: 12px;
+                    border: 1px solid transparent;
+                    border-radius: 3px;
+                }
             }
         }
     }

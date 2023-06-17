@@ -53,10 +53,19 @@ const dbTospread = (dataList) => {
 
 const dbTolucky = (data, range) => {
     let index = 0
-    let rangeSpace = {
-        r: range.row[0],
-        c: range.column[0],
-        data: [...range.tableHead]
+    console.log(range)
+    let rangeSpace = {}
+    if (range.tableHead) {
+        rangeSpace = {
+            r: range.row[0],
+            c: range.column[0],
+            data: [...range.tableHead]
+        }
+    } else {
+        rangeSpace = {
+            r: range.row[0],
+            c: range.column[0]
+        }
     }
     let luckyData = []
     if (Array.isArray(data[0])) {
@@ -87,9 +96,11 @@ const dbDataConverL = (rangeSpace, index, data) => {
         sheet.order = index
     }
     let cellData = []
-    rangeSpace.data.forEach((item) => {
-        cellData.push(item)
-    })
+    if (rangeSpace.data) {
+        rangeSpace.data.forEach((item) => {
+            cellData.push(item)
+        })
+    }
     for (let i = 0; i < data.length; i++) {
         let j = 0
         for (const item in data[i]) {
@@ -144,6 +155,3 @@ export {
     produceOption,
     rangeTohead
 }
-/* document.querySelector(".fill_table").clientHeight ? document.querySelector(".fill_table").clientHeight + 20 : 480
-
-document.querySelector(".fill_table").clientWidth? document.querySelector(".fill_table").clientWidth : 600 */
