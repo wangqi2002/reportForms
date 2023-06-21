@@ -8,7 +8,6 @@
       <el-divider>报表导出</el-divider>
       <button class="download_btn" @click="downloadReport">导出报表</button>
       <button class="print_btn" @click="printReport">打印报表</button>
-      <button class="print_btn" @click="handleFun">测试API</button>
     </div>
   </div>
 </template>
@@ -34,8 +33,8 @@ const handleFun = () => {
 };
 
 const downloadReport = () => {
-  // exportExcel(luckysheet.getAllSheets(), "万能图表");
-  window.print();
+  exportExcel(luckysheet.getAllSheets(), "万能图表");
+  // window.print();
 };
 const printReport = () => {
   window.print();
