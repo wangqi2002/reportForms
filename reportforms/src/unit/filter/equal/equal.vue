@@ -2,15 +2,17 @@
     <div id="tabs">
         <div class="tabs_header">
             <span class="type_name">时间类型：</span>
-            <button class="tabs_btn" style="margin-right: 16px;">striper</button>
-            <button class="tabs_btn active">filter</button>
+            <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
+            <button class="tabs_btn active">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
-                Java是一门面向对象的编程语言
+                <input class="input_area" v-model="striperValue" @change="handleStriper" />
+                <button class="type_confirm" @click="handleConfirmstriper">确定</button>
             </div>
             <div class="tabs_pane" style="display: block;">
-                HTML5是构建Web内容的一种语言描述方式
+                <input class="input_area" v-model="filterValue" @change="handleFilter" />
+                <button class="type_confirm" @click="handleConfirmfilter">确定</button>
             </div>
         </div>
     </div>
@@ -18,6 +20,34 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useStore } from "vuex";
+import { equal } from "@/unit/filter/equal/equal";
+
+const store = useStore()
+
+const filterValue = ref('')
+const striperValue = ref('')
+let equalConfig = {}
+
+const handleConfirmfilter = () => {
+    equalConfig.param = filterValue.value
+    const func = equal.configureFilter
+    const filter = func(equalConfig.param)
+    store.commit("changeFilter", filter)
+    equalConfig = {}
+    filterValue.value = ""
+    striperValue.value = ""
+}
+
+const handleConfirmstriper = () => {
+    equalConfig.params = striperValue.value
+    const func = equal.configureStriper
+    const striper = func(equalConfig.params)
+    store.commit("changeStriper", striper)
+    equalConfig = {}
+    striperValue.value = ""
+    filterValue.value = ""
+}
 
 class TabSwitch {
     constructor(id) {
@@ -70,7 +100,7 @@ onMounted(() => {
         }
 
         .tabs_btn {
-            width: 40px;
+            width: 45px;
             height: calc($type_line-height - 6px);
             line-height: calc($type_line-height - 6px);
             margin: 3px 4px;
@@ -91,6 +121,36 @@ onMounted(() => {
         width: calc(100% - 29px);
         height: calc(100% - $type_line-height);
         margin: 0 15px 0 14px;
+
+        .tabs_pane {
+            width: 100%;
+            height: 100%;
+
+            .input_area {
+                width: calc(100% - 20px);
+                height: calc($type_line-height - 6px);
+                margin-top: 7px;
+                padding: 0 5px;
+                font-size: 12px;
+                color: #606266;
+                background-color: #FFFFFF;
+                border: none;
+                border-radius: 3px;
+                outline: none;
+            }
+
+            .type_confirm {
+                width: 33%;
+                height: calc($type_line-height - 6px);
+                line-height: calc($type_line-height - 4px);
+                margin-top: 10px;
+                font-size: 12px;
+                color: #606266;
+                background-color: #FFFFFF;
+                border: none;
+                border-radius: 3px;
+            }
+        }
     }
 }
 </style>

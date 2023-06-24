@@ -2,8 +2,8 @@
     <div id="tabs">
         <div class="tabs_header">
             <span class="type_name">时间类型：</span>
-            <button class="tabs_btn" style="margin-right: 16px;">striper</button>
-            <button class="tabs_btn active">filter</button>
+            <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
+            <button class="tabs_btn active">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
@@ -51,7 +51,6 @@ const striperValue = ref('')
 const datefilterFrom = ref({ start: "", end: "" });
 const datestriperFrom = ref({ start: "", end: "" });
 let dateConfig = {}
-
 
 const handleChangefilter = () => {
     dateConfig.purpose = filterValue.value
@@ -157,7 +156,7 @@ onMounted(() => {
         }
 
         .tabs_btn {
-            width: 40px;
+            width: 45px;
             height: calc($type_line-height - 6px);
             line-height: calc($type_line-height - 6px);
             margin: 3px 4px;
