@@ -34,6 +34,7 @@ const options = {
   style: {
     bgcolor: "#F7F7FC",
   },
+  mode: 'read'
 }
 const handleSetdata = (xs, value) => {
   xs.loadData(value)
@@ -54,6 +55,13 @@ onMounted(() => {
     if (cell) {
       store.commit("changeTablehead", { title: cell.text })
     }
+  })
+  //TODO 添加双击填充
+  xs.on('cell-selected', (cell, ri, ci) => {
+    window.addEventListener('dblclick', function handleDbClick(){
+      emitter.emit('tdFill', cell.text)
+      window.removeEventListener("dblclick", handleDbClick)
+    })
   })
   emitter.on("setSpread", (e) => {
     handleSetdata(xs, e);

@@ -6,6 +6,7 @@
     <Reportconfig></Reportconfig>
     <div class="download_box">
       <el-divider>报表导出</el-divider>
+      <input type="text" placeholder="输入文件名" style="border: none;text-align: center;border-radius: 5px;" id="reportName">
       <button class="download_btn" @click="downloadReport">导出报表</button>
       <button class="print_btn" @click="printReport">打印报表</button>
     </div>
@@ -33,7 +34,8 @@ const handleFun = () => {
 };
 
 const downloadReport = () => {
-  exportExcel(luckysheet.getAllSheets(), "万能图表");
+  let name=document.getElementById('reportName')
+  exportExcel(luckysheet.getAllSheets(), name.value?name.value:"万能图表");
   // window.print();
 };
 const printReport = () => {

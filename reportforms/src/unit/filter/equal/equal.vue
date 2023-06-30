@@ -31,6 +31,13 @@ let equalConfig = {}
 
 const handleConfirmfilter = () => {
     equalConfig.param = filterValue.value
+    if (equalConfig.param.includes('-')) {
+        let array = equalConfig.param.split('-')
+        let start = Number(array[0])
+        let end = Number(array[1])
+        equalConfig.param={start:start, end:end}
+    }
+    console.log(equalConfig.param);
     const func = equal.configureFilter
     const filter = func(equalConfig.param)
     store.commit("changeFilter", filter)
@@ -41,6 +48,21 @@ const handleConfirmfilter = () => {
 
 const handleConfirmstriper = () => {
     equalConfig.params = striperValue.value
+    if (/[,，、/;]/.test(equalConfig.params)) {
+        equalConfig.params=equalConfig.params.split(/[\t\r\f\n\s]*/g).join('')
+        equalConfig.params = equalConfig.params.split(/[,，、/;]/)
+        equalConfig.params = equalConfig.params.filter(x => { return x && x.trim() })
+        equalConfig.params=[...new Set(equalConfig.params)]
+    } else if (equalConfig.params.includes('-')) {
+        let array = equalConfig.params.split('-')
+        let start = Number(array[0])
+        let end = Number(array[1])
+        equalConfig.params=[]
+        for (let i = start; i <= end; i++) {
+            equalConfig.params.push(i)
+        }
+    }
+    console.log(equalConfig.params);
     const func = equal.configureStriper
     const striper = func(equalConfig.params)
     store.commit("changeStriper", striper)
@@ -125,9 +147,10 @@ onMounted(() => {
         .tabs_pane {
             width: 100%;
             height: 100%;
+            float:left;
 
             .input_area {
-                width: calc(100% - 20px);
+                // width: calc(100% - 20px);
                 height: calc($type_line-height - 6px);
                 margin-top: 7px;
                 padding: 0 5px;

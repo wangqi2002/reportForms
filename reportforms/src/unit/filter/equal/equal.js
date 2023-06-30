@@ -3,11 +3,19 @@
  * @returns
  */
 function configureFilter(param) {
-    let pattern = `^${param}$`
-    let filter = (x) => {
-        return pattern.test(x)
+    if (param.start) {
+        let start = Number(param.start)
+        let end = Number(param.end)
+        let filter = (x) => {
+            return Number(x) <= end && Number(x) >= start
+        }
+        return filter
+    } else {
+        let filter = (x) => {
+            return /^${param}$/.test(x)
+        }
+        return filter
     }
-    return filter
 }
 
 /**
@@ -35,6 +43,4 @@ const equal = {
     configureFilter: configureFilter,
     configureStriper: configureStriper,
 }
-export {
-    equal
-}
+export { equal }
