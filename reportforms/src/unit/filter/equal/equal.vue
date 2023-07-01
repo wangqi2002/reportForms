@@ -2,8 +2,8 @@
     <div id="tabs">
         <div class="tabs_header">
             <span class="type_name">时间类型：</span>
-            <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
-            <button class="tabs_btn active">筛选器</button>
+            <button class="tabs_btn" id="equal-spliter" style="margin-right: 16px;">分离器</button>
+            <button class="tabs_btn active" id="equal-filter">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
@@ -31,6 +31,7 @@ let equalConfig = {}
 
 const handleConfirmfilter = () => {
     equalConfig.param = filterValue.value
+    console.log(equalConfig.param);
     if (equalConfig.param.includes('-')) {
         let array = equalConfig.param.split('-')
         let start = Number(array[0])
@@ -44,6 +45,11 @@ const handleConfirmfilter = () => {
     equalConfig = {}
     filterValue.value = ""
     striperValue.value = ""
+    let filterButton = document.getElementById('equal-filter')
+    filterButton.draggable = true
+    filterButton.ondragstart = (e) => {
+        console.log('start');
+    }
 }
 
 const handleConfirmstriper = () => {

@@ -171,16 +171,19 @@ const handleExitfill = () => {
 };
 const handleConfirm = () => {
   console.log("Confirm");
+  window.tdFilled = new Map()
+  window.tdFilled.clear()
+  window.tdCount = 0
   const luckyRange = store.state.luckyRange
-  if (fillOptions.size != 0) {
-    let options = produceOption(fillOptions)
-    getDbData(function (result) {
-      realData = produceData(result, { ...options })
-      let luckyData = dbTolucky(realData, luckyRange);
-      emitter.emit("setLucky", luckyData);
-      realData.length = 0
-    })
-  }
+  // if (fillOptions.size != 0) {
+  let options = produceOption(fillOptions)
+  getDbData(function (result) {
+    realData = produceData(result, { ...options })
+    let luckyData = dbTolucky(realData, luckyRange);
+    emitter.emit("setLucky", luckyData);
+    realData.length = 0
+  })
+  // }
   dbItems.length = 0
   reportData.length = 0
   fillOptions.clear()
