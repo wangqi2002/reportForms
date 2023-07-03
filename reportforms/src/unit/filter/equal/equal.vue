@@ -40,15 +40,17 @@ const handleConfirmfilter = () => {
     }
     console.log(equalConfig.param);
     const func = equal.configureFilter
+    
     const filter = func(equalConfig.param)
+    console.log(filter)
     store.commit("changeFilter", filter)
     equalConfig = {}
-    filterValue.value = ""
-    striperValue.value = ""
+    // filterValue.value = ""
+    // striperValue.value = ""
     let filterButton = document.getElementById('equal-filter')
     filterButton.draggable = true
     filterButton.ondragstart = (e) => {
-        console.log('start');
+        window.dragFrom=e.target
     }
 }
 
@@ -73,8 +75,13 @@ const handleConfirmstriper = () => {
     const striper = func(equalConfig.params)
     store.commit("changeStriper", striper)
     equalConfig = {}
-    striperValue.value = ""
-    filterValue.value = ""
+    // striperValue.value = ""
+    // filterValue.value = ""
+    let striperterButton = document.getElementById('equal-spliter')
+    striperterButton.draggable = true
+    striperterButton.ondragstart = (e) => {
+        window.dragFrom = e.target
+    }
 }
 
 class TabSwitch {
