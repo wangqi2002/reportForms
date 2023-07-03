@@ -1,8 +1,11 @@
+const map = new Map()
+
 /**
  * @param {string} param
  * @returns
  */
 function configureFilter(param) {
+    console.log(param)
     if (param.start) {
         let start = Number(param.start)
         let end = Number(param.end)
@@ -12,8 +15,9 @@ function configureFilter(param) {
         return filter
     } else {
         let filter = (x) => {
-            return /^${param}$/.test(x)
+            return eval(`/^${param}$/`).test(String(x))
         }
+        console.log(param)
         return filter
     }
 }
@@ -23,8 +27,7 @@ function configureFilter(param) {
  * @example let filter=configureStriper([1,2,3,4])
  */
 function configureStriper(params) {
-    let map = new Map()
-    params.forEach((index, value) => {
+    params.forEach((value, index) => {
         map.set(value, index)
     })
     /**
@@ -33,6 +36,7 @@ function configureStriper(params) {
      * @returns {number} 得到序号
      */
     let striper = (x) => {
+        console.log(map)
         return map.get(x)
     }
     return striper

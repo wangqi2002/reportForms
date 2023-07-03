@@ -199,7 +199,7 @@ function creatTab(table, tr, td) {
                     e.target.style.backgroundColor = '#3f7bea'
                 }
                 td.ondragleave = (e) => {
-                    e.target.style.backgroundColor = '#ffffff'
+                    e.target.style.backgroundColor = '#DADADA'
                 }
                 // tdInput.style.backgroundColor = '#3f7bea'
                 window.tdFilled.set(text, text)
@@ -225,7 +225,11 @@ function onDragOver(e) {
 }
 function onDrop(e) {
     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
-    if (e.endsWith('filter') || e.endsWith('spliter')) {
+    e.target.style.backgroundColor = '#DADADA'
+    if ((window.dragFrom.id && window.dragFrom.id.endsWith('filter')) || window.dragFrom.id.endsWith('spliter')) {
+        let obj = { isIn: true, idIn: e.target.id, fromId: 'data_type', column: e.target.value }
+        emitter.emit('setFilter', obj)
+        e.target.style.backgroundColor = '#3f7bea'
     }
     if (dragElement) {
         if (e.target.id != dragElement.id) {
@@ -246,111 +250,3 @@ function onDrop(e) {
 }
 
 export { Drag, DragTo, creatTab }
-
-// function creatTab(table, tr, td) {
-//     var div = document.getElementById(table)
-//     tr = tr > 9 ? 9 : tr
-//     if (td * 50 > 340) {
-//         let width = td * 50
-//         var tab = "<table class='create_table' width='" + width + "' border='1' cellspacing='0'>"
-//         for (var i = 0; i < tr + 1; i++) {
-//             tab = tab + '<tr>'
-//             if (i === 0) {
-//                 for (var j = 0; j < td; j++) {
-//                     tab += "<td class='create_cell' width='50px' height='20px'>" + (j + 1) + '</td>'
-//                 }
-//             } else if (i === 1) {
-//                 for (var j = 0; j < td; j++) {
-//                     tab +=
-//                         "<td class='create_cell' width='50px' height='20px'><input id='input_" +
-//                         j +
-//                         "' class='table_input' style='width: 98%; height: 90%;'></input></td>"
-//                 }
-//             }
-//             // else {
-//             //     for (var j = 0; j < td; j++) {
-//             //         tab += "<td class='create_cell' width='50px' height='20px'></td>";
-//             //     }
-//             // }
-//             tab += '<tr/>'
-//         }
-//         tab += '</table>'
-//     } else {
-//         var tab = "<table class='create_table' width='100%' border='1' cellspacing='0'>"
-//         for (var i = 0; i < 2; i++) {
-//             if (i === 0) {
-//                 tab = tab + '<tr>'
-//                 for (var j = 0; j < td; j++) {
-//                     tab += '<td height="20px">' + (j + 1) + '</td>'
-//                 }
-//             } else if (i === 1) {
-//                 tab = tab + '<tr id="button-wrapper">'
-//                 for (var j = 0; j < td; j++) {
-//                     tab +=
-//                         "<td height='20px'><input id='input_" +
-//                         j +
-//                         "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>"
-//                 }
-//             }
-//             // else {
-//             //     for (var j = 0; j < td; j++) {
-//             //         tab += "<td height='20px'></td>";
-//             //     }
-//             // }
-//             tab += '<tr/>'
-//         }
-//         tab += '</table>'
-//     }
-//     div.innerHTML = tab
-//     window.tdFilled = new Map()
-//     window.tdFilled.clear()
-//     window.tdCount = 0
-//     emitter.on('tdFill', (text) => {
-//         console.log(text)
-//         if (window.tdFilled) {
-//             if (!window.tdFilled.has(text)) {
-//                 let tdInput = document.getElementById('input_' + String(window.tdCount))
-//                 tdInput.draggable = true
-//                 tdInput.ondragstart = onDragStart
-//                 tdInput.ondragover = onDragOver
-//                 tdInput.ondrop = onDrop
-//                 tdInput.value = text
-//                 // tdInput.style.backgroundColor = '#3f7bea'
-//                 window.tdFilled.set(text, text)
-//                 window.tdCount++
-//                 let a = document.createElement('button')
-//             }
-//             if (window.tdCount >= td) {
-//                 window.tdFilled.clear()
-//                 window.tdCount = 0
-//             }
-//         }
-//     })
-// }
-
-// let dragElement = null
-// function onDragStart(e) {
-//     // 获取当前拖拽元素
-//     dragElement = e.currentTarget
-// }
-// function onDragOver(e) {
-//     // 默认的当你dragover的时候会阻止你做drop的操作，所以需要取消这个默认
-//     e.preventDefault()
-// }
-// function onDrop(e) {
-//     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
-//     let dropElement = e.currentTarget
-//     console.log(e)
-//     if (dragElement != null && dragElement != dropElement) {
-//         let wrapper = document.getElementById('button-wrapper')
-//         // 临时 div 用于存储 box
-//         let temp = document.createElement('div')
-//         // 添加 temp 到父元素 wrapper 中
-//         wrapper.appendChild(temp)
-//         // 交换
-//         wrapper.replaceChild(temp, dropElement)
-//         wrapper.replaceChild(dropElement, dragElement)
-//         wrapper.replaceChild(dragElement, temp)
-//     }
-// }
-// export { Drag, DragTo, creatTab }

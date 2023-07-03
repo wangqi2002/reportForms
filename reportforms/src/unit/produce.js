@@ -29,47 +29,45 @@ import { DataFrame, toJSON } from 'danfojs'
 */
 function readFromSource(type, file, options, callback) {
     switch (type) {
-        case "sqlite": {
-            initSqlJs(config).then(function (SQL) {
-                const result = [];
-                const db = new SQL.Database(file);
-                if (options.onlyTable) {
-                    let stmt = db.prepare(
-                        `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`
-                    );
-                    while (stmt.step()) {
-                        const row = stmt.getAsObject();
-                        result.push(row);
+        case 'sqlite':
+            {
+                initSqlJs(config).then(function (SQL) {
+                    const result = []
+                    const db = new SQL.Database(file)
+                    if (options.onlyTable) {
+                        let stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`)
+                        while (stmt.step()) {
+                            const row = stmt.getAsObject()
+                            result.push(row)
+                        }
+                    } else {
+                        let limit = options.limit ? options.limit : '15'
+                        let field = '*'
+                        if (options.fields) {
+                            field = options.fields[0]
+                            options.fields.forEach((f, index) => {
+                                if (index > 0) field = field + ',' + f
+                            })
+                        }
+                        let stmt = db.prepare(`select ${field} from ${options.tableName} limit ${limit}`)
+                        while (stmt.step()) {
+                            const row = stmt.getAsObject()
+                            result.push(row)
+                        }
                     }
-                } else {
-                    let limit = options.limit ? options.limit : "15";
-                    let field = "*";
-                    if (options.fields) {
-                        field = options.fields[0];
-                        options.fields.forEach((f, index) => {
-                            if (index > 0) field = field + "," + f;
-                        });
-                    }
-                    let stmt = db.prepare(
-                        `select ${field} from ${options.tableName} limit ${limit}`
-                    );
-                    while (stmt.step()) {
-                        const row = stmt.getAsObject();
-                        result.push(row);
-                    }
-                }
-                callback(result);
-            });
-        }
-            break;
-        case "excel": {
-            console.log("excel")
-        }
-            break;
+                    callback(result)
+                })
+            }
+            break
+        case 'excel':
+            {
+                console.log('excel')
+            }
+            break
         default:
-            return undefined;
+            return undefined
     }
-};
+}
 
 /**
 * @param {DataFrame|object[]} data 通常情况下应当是object[]
@@ -109,11 +107,10 @@ function readFromSource(type, file, options, callback) {
 */
 function produceData(data, options) {
     let df = new DataFrame(data)
-    if (
-        options.filterOptions &&
-        options.filterOptions.filter &&
-        df.columns.includes(options.filterOptions.column)
-    ) {
+    console.log(
+        options.striperOptions && options.striperOptions.striper && df.columns.includes(options.striperOptions.column)
+    )
+    if (options.filterOptions && options.filterOptions.filter && df.columns.includes(options.filterOptions.column)) {
         df.index.forEach((index) => {
             if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
                 df.drop({ index: [index], inplace: true })
@@ -134,15 +131,18 @@ function produceData(data, options) {
         let map = new Map()
         df.index.forEach((index) => {
             let number = options.striperOptions.striper(df.at(index, options.striperOptions.column))
+            console.log(df.at(index, options.striperOptions.column))
             if ((number == undefined) | null | false) {
                 df.drop({ index: [index], inplace: true })
             } else {
                 let group = map.has(number)
+
                 group
                     ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
                     : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
             }
         })
+        console.log(Array.from(map.values()))
         return Array.from(map.values())
     }
     // return df
@@ -150,30 +150,24 @@ function produceData(data, options) {
     // dfd.toJSON(df, { format: 'row' })
 }
 /**
- * 
- * @param {file} dataBase 
- * @param {string} tableName 
- * @param {string} attributeString 
- * @param {function (params) {}} callback 
+ *
+ * @param {file} dataBase
+ * @param {string} tableName
+ * @param {string} attributeString
+ * @param {function (params) {}} callback
  */
 
 function readDbData(dataBase, tableName, attributeString, callback) {
     initSqlJs(config).then(function (SQL) {
-        const result = [];
-        const db = new SQL.Database(dataBase);
-        let stmt = db.prepare(
-            `select ${attributeString} from ${tableName}`
-        );
+        const result = []
+        const db = new SQL.Database(dataBase)
+        let stmt = db.prepare(`select ${attributeString} from ${tableName}`)
         while (stmt.step()) {
-            const row = stmt.getAsObject();
-            result.push(row);
+            const row = stmt.getAsObject()
+            result.push(row)
         }
-        callback(result);
-    });
+        callback(result)
+    })
 }
 
-export {
-    readFromSource,
-    produceData,
-    readDbData
-}
+export { readFromSource, produceData, readDbData }

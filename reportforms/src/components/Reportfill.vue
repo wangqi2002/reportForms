@@ -177,6 +177,7 @@ const handleConfirm = () => {
   const luckyRange = store.state.luckyRange
   // if (fillOptions.size != 0) {
   let options = produceOption(fillOptions)
+  console.log(options);
   getDbData(function (result) {
     realData = produceData(result, { ...options })
     let luckyData = dbTolucky(realData, luckyRange);
@@ -216,10 +217,11 @@ const setheadListener = () => {
 }
 const setFilterListener = () => {
   emitter.on("setFilter", (e) => {
+    console.log(e,'setFilter');
     let obj = null
     if (fillOptions.get(e.idIn) == undefined) {
       obj = {
-        column: null,
+        column: e.column,
         striper: store.state.striper,
         filter: store.state.filter,
         sort: store.state.sort
