@@ -20,7 +20,7 @@ function generatePattern(raw, params) {
  * - `thisMonth` 本月
  * - `thisYear` 今年
  * - `range` 日期范围
- * @param {{date?:Date,range?:{start:Date|string,end:Date|string}}} [options]
+ * @param {{date?:Date|string,range?:{start:Date|string,end:Date|string}}} [options]
  * - `date?:Date|string`
  * - `range?:{start:Date|string,end:Date|string}`用于指定日期范围,仅用于'range'情况
  * @example
@@ -81,18 +81,19 @@ function configureFilter(purpose, options) {
         default:
             return false
     }
+    let tester = (x) => {}
     let filter = (x) => pattern.test(x)
     return filter
 }
 
 /**
  *
- * @param {'byDay'|'byMonth'|'byYear'} purpose 用于指定调用哪种形式的striper
+ * @param {'byDay'|'byMonth'|'byYear'} purpose 用于指定调用哪种形式的spliter
  * @param {{dateStart:string|Date,dateEnd:string|Date}} [options]
  * @returns
  */
-function configureStriper(purpose, options) {
-    let striper = undefined
+function configureSpliter(purpose, options) {
+    let spliter = undefined
     let start = new Date(options.dateStart)
     let end = new Date(options.dateEnd)
 
@@ -101,7 +102,7 @@ function configureStriper(purpose, options) {
             {
                 let map = new Map()
                 let counter = 0
-                striper = (x) => {
+                spliter = (x) => {
                     let dateX = new Date(x)
                     if (dateX <= end && dateX >= start) {
                         let current = map.get(dateX.toLocaleDateString())
@@ -121,7 +122,7 @@ function configureStriper(purpose, options) {
             {
                 let map = new Map()
                 let counter = 0
-                striper = (x) => {
+                spliter = (x) => {
                     let dateX = new Date(x)
                     if (dateX <= end && dateX >= start) {
                         let current = map.get(dateX.getFullYear().toString() + '/' + dateX.getMonth().toString())
@@ -141,7 +142,7 @@ function configureStriper(purpose, options) {
             {
                 let map = new Map()
                 let counter = 0
-                striper = (x) => {
+                spliter = (x) => {
                     let dateX = new Date(x)
                     if (dateX <= end && dateX >= start) {
                         let current = map.get(dateX.getFullYear())
@@ -160,21 +161,19 @@ function configureStriper(purpose, options) {
         default:
             break
     }
-    return striper
+    return spliter
 }
 const date = {
     type: 'date',
     configureFilter: configureFilter,
-    configureStriper: configureStriper,
+    configureSpliter: configureSpliter,
 }
 
-// let striper = configureStriper('byYear', '2022/4/1', '2023/5/26')
+// let spliter = configureSpliter('byYear', '2022/4/1', '2023/5/26')
 // let filter = configureFilter('range', { start: '2022/4/1', end: '2023/5/26' })
 // let a = ['2023/4/1', '2023/5/26', '2023/4/2', '2023/5/2', '2021/4/8', '2023/4/1', '2023/4/2', '2022/4/2']
 // a.forEach((x) => {
-//     // console.log(striper(x))
+//     // console.log(spliter(x))
 //     console.log(filter(x))
 // })
-export {
-    date
-}
+export { date }

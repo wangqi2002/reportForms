@@ -196,7 +196,7 @@ function creatTab(table, tr, td) {
                 td.ondrop = onDrop
                 td.ondragenter = (e) => {
                     e.preventDefault()
-                    e.target.style.backgroundColor = '#3f7bea'
+                    e.target.style.backgroundColor = '#77b8fa'
                 }
                 td.ondragleave = (e) => {
                     e.target.style.backgroundColor = '#DADADA'
@@ -226,10 +226,13 @@ function onDragOver(e) {
 function onDrop(e) {
     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
     e.target.style.backgroundColor = '#DADADA'
-    if ((window.dragFrom.id && window.dragFrom.id.endsWith('filter')) || window.dragFrom.id.endsWith('spliter')) {
-        let obj = { isIn: true, idIn: e.target.id, fromId: 'data_type', column: e.target.value }
-        emitter.emit('setFilter', obj)
-        e.target.style.backgroundColor = '#3f7bea'
+    if (window.dragFrom) {
+        if (window.dragFrom.id.endsWith('filter') || window.dragFrom.id.endsWith('spliter')) {
+            let obj = { isIn: true, idIn: e.target.id, fromId: 'data_type', column: e.target.value }
+            emitter.emit('setFilter', obj)
+            e.target.style.backgroundColor = '#77b8fa'
+            e.target.style
+        }
     }
     if (dragElement) {
         if (e.target.id != dragElement.id) {

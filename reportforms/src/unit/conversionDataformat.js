@@ -118,14 +118,14 @@ const dbDataConverL = (rangeSpace, index, data) => {
 const produceOption = (fillOptions) => {
     if (fillOptions) {
         let options = {
-            striperOptions: {},
+            spliterOptions: {},
             filterOptions: {},
             sortOptions: {},
         }
         for (const [key, value] of fillOptions) {
-            if (value.striper != null) {
-                options.striperOptions.column = value.column
-                options.striperOptions.striper = value.striper
+            if (value.spliter != null) {
+                options.spliterOptions.column = value.column
+                options.spliterOptions.spliter = value.spliter
             }
             if (value.filter != null) {
                 options.filterOptions.column = value.column

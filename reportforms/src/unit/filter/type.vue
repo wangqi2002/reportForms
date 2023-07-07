@@ -1,7 +1,7 @@
 <template>
     <div id="tabs">
         <div class="tabs_header">
-            <span class="type_name">时间类型：</span>
+            <span class="type_name">操作：</span>
             <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
             <button class="tabs_btn active">筛选器</button>
         </div>

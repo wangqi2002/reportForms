@@ -1,24 +1,24 @@
 <template>
     <div id="tabs">
         <div class="tabs_header">
-            <span class="type_name">时间类型：</span>
+            <span class="type_name">操作：</span>
             <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
             <button class="tabs_btn active">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
-                <select class="type_select" name="pets" id="pet-select" v-model="striperValue"
-                    @change="handleChangestriper">
-                    <option value="">选择striper类型</option>
+                <select class="type_select" name="pets" id="pet-select" v-model="spliterValue"
+                    @change="handleChangespliter">
+                    <option value="">选择spliter类型</option>
                     <option value="byDay">日报</option>
                     <option value="byMonth">月报</option>
                     <option value="byYear">年报</option>
                 </select>
-                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datestriperFrom.start"
-                    @change="handlDatestriper" />
-                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datestriperFrom.end"
-                    @change="handlDatestriper" />
-                <button class="type_confirm" @click="handleConfirmstriper">确定</button>
+                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.start"
+                    @change="handlDatespliter" />
+                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.end"
+                    @change="handlDatespliter" />
+                <button class="type_confirm" @click="handleConfirmspliter">确定</button>
             </div>
             <div class="tabs_pane" style="display: block;">
                 <select class="type_select" name="pets" id="pet-select" v-model="filterValue" @change="handleChangefilter">
@@ -47,9 +47,9 @@ import { date } from "@/unit/filter/date/date";
 const store = useStore()
 
 const filterValue = ref('')
-const striperValue = ref('')
+const spliterValue = ref('')
 const datefilterFrom = ref({ start: "", end: "" });
-const datestriperFrom = ref({ start: "", end: "" });
+const datespliterFrom = ref({ start: "", end: "" });
 let dateConfig = {}
 
 const handleChangefilter = () => {
@@ -69,27 +69,27 @@ const handleConfirmfilter = () => {
     dateConfig = {}
     filterValue.value = ""
     datefilterFrom.value = { start: "", end: "" }
-    striperValue.value = ""
-    datestriperFrom.value = { start: "", end: "" }
+    spliterValue.value = ""
+    datespliterFrom.value = { start: "", end: "" }
 }
 
 
-const handleChangestriper = () => {
-    dateConfig.purpose = striperValue.value
+const handleChangespliter = () => {
+    dateConfig.purpose = spliterValue.value
 }
-const handlDatestriper = () => {
+const handlDatespliter = () => {
     dateConfig.dateRange = {
-        dateStart: converDate(datestriperFrom.value.start),
-        dateEnd: converDate(datestriperFrom.value.end)
+        dateStart: converDate(datespliterFrom.value.start),
+        dateEnd: converDate(datespliterFrom.value.end)
     }
 }
-const handleConfirmstriper = () => {
-    const func = date.configureStriper
-    const striper = func(dateConfig.purpose, dateConfig.dateRange)
-    store.commit("changeStriper", striper)
+const handleConfirmspliter = () => {
+    const func = date.configureSpliter
+    const spliter = func(dateConfig.purpose, dateConfig.dateRange)
+    store.commit("changeSpliter", spliter)
     dateConfig = {}
-    striperValue.value = ""
-    datestriperFrom.value = { start: "", end: "" }
+    spliterValue.value = ""
+    datespliterFrom.value = { start: "", end: "" }
     filterValue.value = ""
     datefilterFrom.value = { start: "", end: "" }
 }

@@ -1,47 +1,61 @@
 <template>
-  <div class="option_box">
-    <div class="title_box">多用报表</div>
-    <Reportcreate></Reportcreate>
-    <Reporttype></Reporttype>
-    <Reportconfig></Reportconfig>
-    <div class="download_box">
-      <el-divider>报表导出</el-divider>
-      <input type="text" placeholder="输入文件名" style="border: none;text-align: center;border-radius: 5px;" id="reportName">
-      <button class="download_btn" @click="downloadReport">导出报表</button>
-      <button class="print_btn" @click="printReport">打印报表</button>
+    <div class="option_box">
+        <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse-item title="报表模板" name="1">
+                <Reportcreate></Reportcreate>
+            </el-collapse-item>
+            <el-collapse-item title="报表类型" name="2">
+                <Reporttype></Reporttype>
+            </el-collapse-item>
+            <el-collapse-item title="报表配置" name="3">
+                <Reportconfig></Reportconfig>
+            </el-collapse-item>
+            <el-collapse-item title="报表导出" name="4">
+                <div class="download_box">
+                    <el-divider>报表导出</el-divider>
+                    <input
+                        type="text"
+                        placeholder="输入文件名"
+                        style="border: none; text-align: center; border-radius: 5px"
+                        id="reportName"
+                    />
+                    <button class="download_btn" @click="downloadReport">导出报表</button>
+                    <button class="print_btn" @click="printReport">打印报表</button>
+                </div>
+            </el-collapse-item>
+        </el-collapse>
+        <!-- <div class="title_box">多用报表</div> -->
     </div>
-  </div>
 </template>
-  
+
 <script setup>
-import { ref } from "vue";
-import { exportExcel } from "@/unit/export";
+import { ref } from 'vue'
+import { exportExcel } from '@/unit/export'
 
-import Reportcreate from "@/components/Reportcreate.vue";
-import Reporttype from "@/components/Reporttype.vue";
-import Reportconfig from "@/components/Reportconfig.vue";
+import Reportcreate from '@/components/Reportcreate.vue'
+import Reporttype from '@/components/Reporttype.vue'
+import Reportconfig from '@/components/Reportconfig.vue'
 
-const jsonData = ref({});
-
+const jsonData = ref({})
 
 const handleFun = () => {
-  console.log("CS")
-  // luckysheet.setCellValue(0, 0, 1);
-  // luckysheet.setRangeShow({ row: [0, 1], column: [0, 2] })
-  // console.log(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] }));
-  // luckysheet.clearRange({ row: [0, 1], column: [0, 2] })
-  console.log(luckysheet.getAllSheets())
-};
+    console.log('CS')
+    // luckysheet.setCellValue(0, 0, 1);
+    // luckysheet.setRangeShow({ row: [0, 1], column: [0, 2] })
+    // console.log(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] }));
+    // luckysheet.clearRange({ row: [0, 1], column: [0, 2] })
+    console.log(luckysheet.getAllSheets())
+}
 
 const downloadReport = () => {
-  let name=document.getElementById('reportName')
-  exportExcel(luckysheet.getAllSheets(), name.value?name.value:"万能图表");
-  // window.print();
-};
+    let name = document.getElementById('reportName')
+    exportExcel(luckysheet.getAllSheets(), name.value ? name.value : '万能图表')
+    // window.print();
+}
 const printReport = () => {
-  window.print();
-};
+    window.print()
+}
 </script>
-  
-<style src="@/style/option.scss"  lang="scss"></style>
+
+<style src="@/style/option.scss" lang="scss"></style>
 <style lang="scss"></style>

@@ -1,14 +1,14 @@
 <template>
     <div id="tabs">
         <div class="tabs_header">
-            <span class="type_name">时间类型：</span>
+            <span class="type_name">操作：</span>
             <button class="tabs_btn" id="equal-spliter" style="margin-right: 16px;">分离器</button>
             <button class="tabs_btn active" id="equal-filter">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
-                <input class="input_area" v-model="striperValue" @change="handleStriper" />
-                <button class="type_confirm" @click="handleConfirmstriper">确定</button>
+                <input class="input_area" v-model="spliterValue" @change="handleSpliter" />
+                <button class="type_confirm" @click="handleConfirmspliter">确定</button>
             </div>
             <div class="tabs_pane" style="display: block;">
                 <input class="input_area" v-model="filterValue" @change="handleFilter" />
@@ -26,7 +26,7 @@ import { equal } from "@/unit/filter/equal/equal";
 const store = useStore()
 
 const filterValue = ref('')
-const striperValue = ref('')
+const spliterValue = ref('')
 let equalConfig = {}
 
 const handleConfirmfilter = () => {
@@ -45,8 +45,8 @@ const handleConfirmfilter = () => {
     console.log(filter)
     store.commit("changeFilter", filter)
     equalConfig = {}
-    // filterValue.value = ""
-    // striperValue.value = ""
+    filterValue.value = ''
+    spliterValue.value = ''
     let filterButton = document.getElementById('equal-filter')
     filterButton.draggable = true
     filterButton.ondragstart = (e) => {
@@ -54,8 +54,8 @@ const handleConfirmfilter = () => {
     }
 }
 
-const handleConfirmstriper = () => {
-    equalConfig.params = striperValue.value
+const handleConfirmspliter = () => {
+    equalConfig.params = spliterValue.value
     if (/[,，、/;]/.test(equalConfig.params)) {
         equalConfig.params=equalConfig.params.split(/[\t\r\f\n\s]*/g).join('')
         equalConfig.params = equalConfig.params.split(/[,，、/;]/)
@@ -71,15 +71,16 @@ const handleConfirmstriper = () => {
         }
     }
     console.log(equalConfig.params);
-    const func = equal.configureStriper
-    const striper = func(equalConfig.params)
-    store.commit("changeStriper", striper)
+    const func = equal.configureSpliter
+    const spliter = func(equalConfig.params)
+    store.commit("changeSpliter", spliter)
     equalConfig = {}
-    // striperValue.value = ""
-    // filterValue.value = ""
-    let striperterButton = document.getElementById('equal-spliter')
-    striperterButton.draggable = true
-    striperterButton.ondragstart = (e) => {
+    filterValue.value=''
+    spliterValue.value=''
+    // spliterValue.value = "已设定:"+spliterValue.value
+    let spliterterButton = document.getElementById('equal-spliter')
+    spliterterButton.draggable = true
+    spliterterButton.ondragstart = (e) => {
         window.dragFrom = e.target
     }
 }

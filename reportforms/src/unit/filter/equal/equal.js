@@ -24,9 +24,9 @@ function configureFilter(param) {
 
 /**
  * @param {any[]} params
- * @example let filter=configureStriper([1,2,3,4])
+ * @example let filter=configureSpliter([1,2,3,4])
  */
-function configureStriper(params) {
+function configureSpliter(params) {
     params.forEach((value, index) => {
         map.set(value, index)
     })
@@ -35,16 +35,16 @@ function configureStriper(params) {
      * @param {any} x 接收任意参数
      * @returns {number} 得到序号
      */
-    let striper = (x) => {
+    let spliter = (x) => {
         console.log(map)
         return map.get(x)
     }
-    return striper
+    return spliter
 }
 
 const equal = {
     type: 'equal',
     configureFilter: configureFilter,
-    configureStriper: configureStriper,
+    configureSpliter: configureSpliter,
 }
 export { equal }

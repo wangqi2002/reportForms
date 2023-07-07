@@ -192,6 +192,9 @@ const handleConfirm = () => {
   emitter.emit("exitfill");
 };
 const handleCancel = () => {
+  window.tdFilled = new Map()
+  window.tdFilled.clear()
+  window.tdCount = 0
   console.log("Cancel");
   dbItems.length = 0
   emitter.emit("clearSpread");
@@ -222,13 +225,13 @@ const setFilterListener = () => {
     if (fillOptions.get(e.idIn) == undefined) {
       obj = {
         column: e.column,
-        striper: store.state.striper,
+        spliter: store.state.spliter,
         filter: store.state.filter,
         sort: store.state.sort
       }
     } else {
       obj = fillOptions.get(e.idIn)
-      obj.striper = store.state.striper
+      obj.spliter = store.state.spliter
       obj.filter = store.state.filter
       obj.sort = store.state.sort
     }
