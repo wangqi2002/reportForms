@@ -43,9 +43,9 @@ function configureSpliter(params) {
 }
 
 const component = {
-    type: 'equal',
+    type: 'ok',
     configureFilter: configureFilter,
     configureSpliter: configureSpliter,
 }
-let name = 'equal'
+let name = 'ok'
 export { name, component }

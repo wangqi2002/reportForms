@@ -1,6 +1,6 @@
 <template>
     <div class="report_type">
-        <el-select
+        <!-- <el-select
             class="report_type_select"
             v-model="filterTypeValue"
             placeholder="请选择筛选器类型"
@@ -14,12 +14,17 @@
             <el-checkbox label="MAX"></el-checkbox>
             <el-checkbox label="MIN"></el-checkbox>
             <el-checkbox label="GAP"></el-checkbox>
-        </div>
+        </div> -->
 
-        <!-- <el-divider>数据筛选/分离</el-divider>
-    <el-select class="report_type_select" v-model="filterTypeValue" placeholder="请选择筛选器类型" @change="handleChangtype">
-      <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
-    </el-select> -->
+        <el-divider>数据筛选/分离</el-divider>
+        <el-select
+            class="report_type_select"
+            v-model="filterTypeValue"
+            placeholder="请选择筛选器类型"
+            @change="handleChangtype"
+        >
+            <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
+        </el-select>
         <div class="type_box">
             <span id="date_type"></span>
             <component :is="components.get(compName)"></component>
@@ -44,7 +49,7 @@ const filterType = reactive([])
 const checks = ref(['sum', 'avg', 'max', 'min', 'gap'])
 
 const getComponents = () => {
-    for (const [key, value] of filters) {
+    for (let [key, value] of filters) {
         components.value.set(
             key,
             defineAsyncComponent(() => import(`@/unit/filter/${key}/${key}.vue`))
@@ -52,9 +57,12 @@ const getComponents = () => {
     }
 }
 const getFiltertype = () => {
-    for (const [key, value] of filters) {
+    filters.forEach((value) => {
         filterType.push(value)
-    }
+    })
+    // for (let [key, value] of filters) {
+    //     filterType.push(value)
+    // }
 }
 const handleChangtype = () => {
     compName.value = filterTypeValue.value

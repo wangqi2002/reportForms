@@ -191,6 +191,12 @@ function creatTab(table, tr, td) {
                 tdInput.value = text
                 tdInput.innerText = text
                 tdInput.draggable = true
+                tdInput.ondblclick = (e) => {
+                    window.tdCount--
+                    window.tdFilled.delete(e.target.value)
+                    tdInput.value = ''
+                    tdInput.innerText = ''
+                }
                 td.ondragstart = onDragStart
                 td.ondragover = onDragOver
                 td.ondrop = onDrop

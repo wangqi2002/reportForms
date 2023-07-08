@@ -2,26 +2,49 @@
     <div id="tabs">
         <div class="tabs_header">
             <span class="type_name">操作：</span>
-            <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
+            <button class="tabs_btn" style="margin-right: 16px">分离器</button>
             <button class="tabs_btn active">筛选器</button>
         </div>
         <div class="tabs_content">
-            <div class="tabs_pane" style="display: none;">
-                <select class="type_select" name="pets" id="pet-select" v-model="spliterValue"
-                    @change="handleChangespliter">
+            <div class="tabs_pane" style="display: none">
+                <select
+                    class="type_select"
+                    name="pets"
+                    id="pet-select"
+                    v-model="spliterValue"
+                    @change="handleChangespliter"
+                >
                     <option value="">选择spliter类型</option>
                     <option value="byDay">日报</option>
                     <option value="byMonth">月报</option>
                     <option value="byYear">年报</option>
                 </select>
-                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.start"
-                    @change="handlDatespliter" />
-                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.end"
-                    @change="handlDatespliter" />
-                <button class="type_confirm" @click="handleConfirmspliter">确定</button>
+                <input
+                    id="start"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datespliterFrom.start"
+                    @change="handlDatespliter"
+                />
+                <input
+                    id="end"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datespliterFrom.end"
+                    @change="handlDatespliter"
+                />
+                <button class="type_confirm" @click="handleConfirmSpliter">确定</button>
             </div>
-            <div class="tabs_pane" style="display: block;">
-                <select class="type_select" name="pets" id="pet-select" v-model="filterValue" @change="handleChangefilter">
+            <div class="tabs_pane" style="display: block">
+                <select
+                    class="type_select"
+                    name="pets"
+                    id="pet-select"
+                    v-model="filterValue"
+                    @change="handleChangefilter"
+                >
                     <option value="">选择filter类型</option>
                     <option value="today">日报</option>
                     <option value="thisWeek">周报</option>
@@ -29,10 +52,22 @@
                     <option value="thisYear">年报</option>
                     <option value="range">自由报表</option>
                 </select>
-                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datefilterFrom.start"
-                    @change="handlDatefilter" />
-                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datefilterFrom.end"
-                    @change="handlDatefilter" />
+                <input
+                    id="start"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datefilterFrom.start"
+                    @change="handlDatefilter"
+                />
+                <input
+                    id="end"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datefilterFrom.end"
+                    @change="handlDatefilter"
+                />
                 <button class="type_confirm" @click="handleConfirmfilter">确定</button>
             </div>
         </div>
@@ -41,15 +76,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useStore } from "vuex";
-import { date } from "@/unit/filter/date/date";
+import { useStore } from 'vuex'
+import { date } from '@/unit/filter/date/date'
 
 const store = useStore()
 
 const filterValue = ref('')
 const spliterValue = ref('')
-const datefilterFrom = ref({ start: "", end: "" });
-const datespliterFrom = ref({ start: "", end: "" });
+const datefilterFrom = ref({ start: '', end: '' })
+const datespliterFrom = ref({ start: '', end: '' })
 let dateConfig = {}
 
 const handleChangefilter = () => {
@@ -58,21 +93,19 @@ const handleChangefilter = () => {
 const handlDatefilter = () => {
     dateConfig.dateRange = {
         date: converDate(datefilterFrom.value.start),
-        start: converDate(datefilterFrom.value.start),
-        end: converDate(datefilterFrom.value.end),
+        range: { start: converDate(datefilterFrom.value.start), end: converDate(datefilterFrom.value.end) },
     }
 }
 const handleConfirmfilter = () => {
     const func = date.configureFilter
     const filter = func(dateConfig.purpose, dateConfig.dateRange)
-    store.commit("changeFilter", filter)
+    store.commit('changeFilter', filter)
     dateConfig = {}
-    filterValue.value = ""
-    datefilterFrom.value = { start: "", end: "" }
-    spliterValue.value = ""
-    datespliterFrom.value = { start: "", end: "" }
+    filterValue.value = ''
+    datefilterFrom.value = { start: '', end: '' }
+    spliterValue.value = ''
+    datespliterFrom.value = { start: '', end: '' }
 }
-
 
 const handleChangespliter = () => {
     dateConfig.purpose = spliterValue.value
@@ -80,59 +113,59 @@ const handleChangespliter = () => {
 const handlDatespliter = () => {
     dateConfig.dateRange = {
         dateStart: converDate(datespliterFrom.value.start),
-        dateEnd: converDate(datespliterFrom.value.end)
+        dateEnd: converDate(datespliterFrom.value.end),
     }
 }
-const handleConfirmspliter = () => {
+const handleConfirmSpliter = () => {
     const func = date.configureSpliter
     const spliter = func(dateConfig.purpose, dateConfig.dateRange)
-    store.commit("changeSpliter", spliter)
+    store.commit('changeSpliter', spliter)
     dateConfig = {}
-    spliterValue.value = ""
-    datespliterFrom.value = { start: "", end: "" }
-    filterValue.value = ""
-    datefilterFrom.value = { start: "", end: "" }
+    spliterValue.value = ''
+    datespliterFrom.value = { start: '', end: '' }
+    filterValue.value = ''
+    datefilterFrom.value = { start: '', end: '' }
 }
 
 class TabSwitch {
     constructor(id) {
-        var node = document.getElementById(id);
-        this.aBtns = node.getElementsByClassName("tabs_btn");
-        this.aDivs = node.getElementsByClassName("tabs_pane");
+        var node = document.getElementById(id)
+        this.aBtns = node.getElementsByClassName('tabs_btn')
+        this.aDivs = node.getElementsByClassName('tabs_pane')
 
-        var _this = this;
+        var _this = this
 
         for (var i = 0; i < this.aBtns.length; i++) {
-            this.aBtns[i].index = i;
+            this.aBtns[i].index = i
             this.aBtns[i].onclick = function () {
-                _this.tab(this);
-            };
+                _this.tab(this)
+            }
         }
     }
     tab(oBtn) {
         for (var i = 0; i < this.aBtns.length; i++) {
-            this.aBtns[i].className = 'tabs_btn';
-            this.aDivs[i].style.display = 'none';
+            this.aBtns[i].className = 'tabs_btn'
+            this.aDivs[i].style.display = 'none'
         }
-        oBtn.className = "tabs_btn active";
-        this.aDivs[oBtn.index].style.display = 'block';
+        oBtn.className = 'tabs_btn active'
+        this.aDivs[oBtn.index].style.display = 'block'
     }
 }
 const converDate = (date) => {
     if (date) {
-        var today = new Date(date);
-        var DD = String(today.getDate()).padStart(2, '0'); // 获取日
-        var MM = String(today.getMonth() + 1).padStart(2, '0'); //获取月份，1 月为 0
-        var yyyy = today.getFullYear(); // 获取年
-        today = yyyy + '/' + MM + '/' + DD;
-        return today;
+        var today = new Date(date)
+        var DD = String(today.getDate()).padStart(2, '0') // 获取日
+        var MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
+        var yyyy = today.getFullYear() // 获取年
+        today = yyyy + '/' + MM + '/' + DD
+        return today
     } else {
-        return null;
+        return null
     }
 }
 onMounted(() => {
-    new TabSwitch("tabs");
-});
+    new TabSwitch('tabs')
+})
 </script>
 <style lang="scss">
 #tabs {
@@ -186,7 +219,7 @@ onMounted(() => {
                 width: calc(100% - 10px);
                 height: calc($type_line-height - 4px);
                 color: #606266;
-                background-color: #FFFFFF;
+                background-color: #ffffff;
                 font-size: 12px;
                 margin: 4px 2px 0;
                 padding: 0 5px;
@@ -202,7 +235,7 @@ onMounted(() => {
                 padding: 0 5px;
                 font-size: 12px;
                 color: #606266;
-                background-color: #FFFFFF;
+                background-color: #ffffff;
                 border: none;
                 border-radius: 3px;
                 outline: none;
@@ -215,7 +248,7 @@ onMounted(() => {
                 margin-top: 10px;
                 font-size: 12px;
                 color: #606266;
-                background-color: #FFFFFF;
+                background-color: #ffffff;
                 border: none;
                 border-radius: 3px;
             }

@@ -71,8 +71,9 @@ function readFromSource(type, file, options, callback) {
 
 /**
 * @param {DataFrame|object[]} data 通常情况下应当是object[]
-* @param {{filterOptions?:{column:string|number,
-    filter:(x:any)=>boolean,tester?:(x:any)=>number,replace?:'sum'|'avg'|'max'|'min'|'gap'},sortOptions?:{column:string|number,ascending?:boolean},
+* @param {{
+    filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,replace?:'sum'|'avg'|'max'|'min'|'gap'},
+    sortOptions?:{column:string|number,ascending?:boolean},
     spliterOptions?:{column:string|number,spliter:(x:any)=>number},
     appendOptions?:{sum?:boolean,avg?:boolean,min?:boolean,max?:boolean,gap?:boolean},
     otherOptions?:{step?:number}
@@ -123,7 +124,7 @@ function produceData(data, options) {
             } else if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
                 df.drop({ index: [index], inplace: true })
             } else {
-                let result = options.filterOptions.tester(df.at(index, options.filterOptions.column))
+                let result = options.filterOptions.grouper(df.at(index, options.filterOptions.column))
                 let value = map.get(result)
                 if (!value) {
                     map.set(result, [index])
@@ -132,7 +133,7 @@ function produceData(data, options) {
                 }
             }
         })
-        if (options.filterOptions.tester && options.filterOptions.replace) {
+        if (options.filterOptions.grouper && options.filterOptions.replace) {
             let array = Array.from(map.keys())
             array = array.sort()
             let result = undefined
@@ -290,7 +291,7 @@ function readDbData(dataBase, tableName, attributeString, callback) {
 //             filter: (x) => {
 //                 return true
 //             },
-//             tester: (x) => {
+//             grouper: (x) => {
 //                 return x.startsWith('2023') ? 0 : 1
 //             },
 //             replace: 'gap',
