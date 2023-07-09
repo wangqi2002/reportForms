@@ -29,6 +29,7 @@ const filterType = reactive([]);
 
 const getComponents = () => {
   for (const [key, value] of filters) {
+    // console.log(key, value);
     components.value.set(
       key,
       defineAsyncComponent(() => import(`@/unit/filter/${key}/${key}.vue`))

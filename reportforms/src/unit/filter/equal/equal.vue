@@ -1,12 +1,13 @@
 <template>
     <div id="tabs">
         <div class="tabs_header">
-            <span class="type_name">时间类型：</span>
+            <span class="type_name">班次类型：</span>
             <button class="tabs_btn" style="margin-right: 16px;">分离器</button>
             <button class="tabs_btn active">筛选器</button>
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none;">
+                <input class="input_area" v-model="striperValue" @change="handleStriper" />
                 <input class="input_area" v-model="striperValue" @change="handleStriper" />
                 <button class="type_confirm" @click="handleConfirmstriper">确定</button>
             </div>
