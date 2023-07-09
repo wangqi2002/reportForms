@@ -1,11 +1,11 @@
 <template>
     <el-container class="container_box">
-        <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" align-center>
-            <span>权限认证</span>
-            <el-input placeholder="请输入用户名" />
-            <el-input placeholder="请输入密码" />
-            //todo 生成人名/编辑时间表头,软件激活码使用时候还会改动
-        </el-dialog>
+<!--        <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" align-center>-->
+<!--            <span>权限认证</span>-->
+<!--            <el-input placeholder="请输入用户名" />-->
+<!--            <el-input placeholder="请输入密码" />-->
+<!--            //todo 生成人名/编辑时间表头,软件激活码使用时候还会改动-->
+<!--        </el-dialog>-->
         <el-aside class="option_box" id="option_box">
             <Option></Option>
         </el-aside>

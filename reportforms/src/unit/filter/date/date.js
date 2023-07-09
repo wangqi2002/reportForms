@@ -233,12 +233,11 @@ function configureSpliter(purpose, options) {
     }
     return spliter
 }
-const component = {
+const Date = {
     type: 'date',
     configureFilter: configureFilter,
     configureSpliter: configureSpliter,
 }
-let name = 'date'
 
 // let { filter, grouper } = configureFilter('thisYear', { replace: 'avg' })
 // console.log(filter('2023/7/8 13:00:00'))
@@ -247,4 +246,4 @@ let name = 'date'
 // console.log(filter('2023/7/8 14:12:42'))
 // console.log(filter('2023/7/8 15:12:42'))
 // console.log(new Date('2023/7/23 15:12:42').getDate())
-export { name, component }
+export { Date }

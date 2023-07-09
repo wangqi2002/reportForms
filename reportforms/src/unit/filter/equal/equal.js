@@ -42,10 +42,10 @@ function configureSpliter(params) {
     return spliter
 }
 
-const component = {
+const Equal = {
     type: 'equal',
     configureFilter: configureFilter,
     configureSpliter: configureSpliter,
 }
-let name = 'equal'
-export { name, component }
+
+export { Equal }
