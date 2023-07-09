@@ -22,7 +22,9 @@ function generatePattern(raw, params) {
  * @param {{
  * date?:Date|string,
  * range?:{start:Date|string,end:Date|string},
- * interval?:string}} [options]
+ * interval?:string,
+ * theTopOfTheHour?:boolean
+ * }} [options]
  * - `date?:Date|string`
  * - `range?:{start:Date|string,end:Date|string}`用于指定日期范围,仅用于'range'情况
  * @example
@@ -54,7 +56,9 @@ function configureFilter(purpose, options) {
                         let mis = undefined
                         let currentValue = undefined
                         if (!firstTime) {
-                            firstTime = currentHour
+                            firstTime = options.theTopOfTheHour
+                                ? new Date(currentHour.toLocaleDateString() + ' 00:00')
+                                : currentHour
                         }
                         if (options.interval.endsWith('h')) {
                             interval = Number(options.interval.replaceAll('h', '')) * 3600
