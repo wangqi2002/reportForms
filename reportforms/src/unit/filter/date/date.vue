@@ -29,12 +29,8 @@
                             <div class="type_select_card">
                                 <input list="day_kind" id="day_kind_input" class="type_select_day" name="day_kind_choice"
                                     v-model="filterDayPet" @input="handleChangefilterPetday">
-                                <datalist id="day_kind" v-for="(item, index) in filterDayPetList">
-                                    <option value="1"></option>
-                                    <option value="2"></option>
-                                    <option value="3"></option>
-                                    <option value="4"></option>
-                                    <option value="5"></option>
+                                <datalist id="day_kind">
+                                    <option v-for="(item, index) in filterDayPetList" :value="item.name"></option>
                                 </datalist>
                             </div>
                             <div class="option_card">
@@ -58,10 +54,8 @@
                                 v-model="filterMonthDate" @change="handlDatefilter" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
                                 @change="handleChangefilterPet">
-                                <option value="">请选择</option>
-                                <option value="1">111111</option>
-                                <option value="2">222222</option>
-                                <option value="3">333333</option>
+                                <option v-for="(item, index) in filterMonthPetList" :value="item.name">{{ item.value }}
+                                </option>
                             </select>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
@@ -105,6 +99,7 @@ const filterDayPetList = ref([
     { name: 5, value: "555555" }]
 )
 const filterMonthPetList = ref([
+    { name: '', value: "请选择" },
     { name: 1, value: "111111" },
     { name: 2, value: "222222" },
     { name: 3, value: "333333" },
