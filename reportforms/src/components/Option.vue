@@ -13,12 +13,8 @@
             <el-collapse-item title="报表导出" name="4">
                 <div class="download_box">
                     <el-divider>报表导出</el-divider>
-                    <input
-                        type="text"
-                        placeholder="输入文件名"
-                        style="border: none; text-align: center; border-radius: 5px"
-                        id="reportName"
-                    />
+                    <input type="text" placeholder="输入文件名" style="border: none; text-align: center; border-radius: 5px"
+                        id="reportName" />
                     <button class="download_btn" @click="downloadReport">导出报表</button>
                     <button class="print_btn" @click="printReport">打印报表</button>
                 </div>
@@ -37,6 +33,7 @@ import Reporttype from '@/components/Reporttype.vue'
 import Reportconfig from '@/components/Reportconfig.vue'
 
 const jsonData = ref({})
+const activeNames = ref(1)
 
 const handleFun = () => {
     console.log('CS')
@@ -45,6 +42,10 @@ const handleFun = () => {
     // console.log(luckysheet.getRangeValue({ row: [0, 1], column: [0, 2] }));
     // luckysheet.clearRange({ row: [0, 1], column: [0, 2] })
     console.log(luckysheet.getAllSheets())
+}
+
+const handleChange = () => {
+    console.log(activeNames.value)
 }
 
 const downloadReport = () => {

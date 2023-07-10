@@ -5,7 +5,7 @@
     height: 70vh;
     margin: 0px;
     padding: 0px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Times New Roman", Times, serif;
     color: #60627c;
     background-color: #fafafc;
     position: absolute;
@@ -200,14 +200,4 @@
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     background: #ededed;
-}
-.el-divider--horizontal {
-    margin: 10px 0 5px;
-    border-top: 1px solid black;
-
-    .el-divider__text {
-        background-color: #eaeaeb;
-        padding: 0 5px;
-        font-size: 13px;
-    }
 }

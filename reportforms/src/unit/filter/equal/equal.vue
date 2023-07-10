@@ -21,7 +21,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useStore } from "vuex";
-import { equal } from "@/unit/filter/equal/equal";
+import { Equal } from "@/unit/filter/equal/equal";
 
 const store = useStore()
 
@@ -36,11 +36,11 @@ const handleConfirmfilter = () => {
         let array = equalConfig.param.split('-')
         let start = Number(array[0])
         let end = Number(array[1])
-        equalConfig.param={start:start, end:end}
+        equalConfig.param = { start: start, end: end }
     }
     console.log(equalConfig.param);
-    const func = equal.configureFilter
-    
+    const func = Equal.configureFilter
+
     const filter = func(equalConfig.param)
     console.log(filter)
     store.commit("changeFilter", filter)
@@ -50,33 +50,33 @@ const handleConfirmfilter = () => {
     let filterButton = document.getElementById('equal-filter')
     filterButton.draggable = true
     filterButton.ondragstart = (e) => {
-        window.dragFrom=e.target
+        window.dragFrom = e.target
     }
 }
 
 const handleConfirmspliter = () => {
     equalConfig.params = spliterValue.value
     if (/[,，、/;]/.test(equalConfig.params)) {
-        equalConfig.params=equalConfig.params.split(/[\t\r\f\n\s]*/g).join('')
+        equalConfig.params = equalConfig.params.split(/[\t\r\f\n\s]*/g).join('')
         equalConfig.params = equalConfig.params.split(/[,，、/;]/)
         equalConfig.params = equalConfig.params.filter(x => { return x && x.trim() })
-        equalConfig.params=[...new Set(equalConfig.params)]
+        equalConfig.params = [...new Set(equalConfig.params)]
     } else if (equalConfig.params.includes('-')) {
         let array = equalConfig.params.split('-')
         let start = Number(array[0])
         let end = Number(array[1])
-        equalConfig.params=[]
+        equalConfig.params = []
         for (let i = start; i <= end; i++) {
             equalConfig.params.push(i)
         }
     }
     console.log(equalConfig.params);
-    const func = equal.configureSpliter
+    const func = Equal.configureSpliter
     const spliter = func(equalConfig.params)
     store.commit("changeSpliter", spliter)
     equalConfig = {}
-    filterValue.value=''
-    spliterValue.value=''
+    filterValue.value = ''
+    spliterValue.value = ''
     // spliterValue.value = "已设定:"+spliterValue.value
     let spliterterButton = document.getElementById('equal-spliter')
     spliterterButton.draggable = true
@@ -161,7 +161,7 @@ onMounted(() => {
         .tabs_pane {
             width: 100%;
             height: 100%;
-            float:left;
+            float: left;
 
             .input_area {
                 // width: calc(100% - 20px);

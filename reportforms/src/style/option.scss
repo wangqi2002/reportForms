@@ -1,9 +1,24 @@
 .option_box {
     height: 100%;
     width: 100%;
-    background-color: #eaeaeb;
+    overflow-y: auto;
+    // background-color: #eaeaeb;
     font-family: "Times New Roman", Times, serif;
     // display: none;
+    .el-collapse {
+        .el-collapse-item {
+            .el-collapse-item__header {
+                padding: 5px 10px 0;
+                height: 30px;
+            }
+            .el-collapse-item__wrap {
+                border-bottom: 1px solid #cccccd;
+                .el-collapse-item__content {
+                    padding-bottom: 15px;
+                }
+            }
+        }
+    }
 
     .title_box {
         height: 30px;
@@ -40,14 +55,18 @@
         }
     }
 }
+.el-divider {
+    height: 0px !important;
+}
 .el-divider--horizontal {
-    margin: 10px 0 5px;
-    border-top: 1px solid black;
+    width: 94% !important;
+    margin: 10px 3% 5px !important;
+    border-top: 1px solid #9c9c9c !important;
 
     .el-divider__text {
-        background-color: #eaeaeb;
-        padding: 0 5px;
-        font-size: 13px;
+        background-color: white !important;
+        padding: 0 5px !important;
+        font-size: 13px !important;
     }
 }
 .el-popper.el-select__popper {

@@ -13,6 +13,6 @@
 import { Date } from './date/date'
 import { Equal } from './equal/equal'
 const filters = new Map()
-filters.set('equal', Date)
-filters.set('date', Equal)
+filters.set('equal', Equal)
+filters.set('date', Date)
 export { filters }

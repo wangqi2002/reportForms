@@ -1,6 +1,6 @@
 .report_type {
     $select_type-height: 28px;
-    height: 200px;
+    height: 250px;
     text-align: center;
     font-size: 14px;
     .report_type_select {
@@ -36,15 +36,5 @@
             left: 5px;
             z-index: 1000;
         }
-    }
-}
-.el-divider--horizontal {
-    margin: 10px 0 5px;
-    border-top: 1px solid black;
-
-    .el-divider__text {
-        background-color: #eaeaeb;
-        padding: 0 5px;
-        font-size: 13px;
     }
 }
