@@ -133,6 +133,9 @@ const handleClear = () => {
 }
 const handleConfirm = () => {
     console.log("handleConfirm")
+    console.log(filterMonthPet.value)
+    console.log(filterDayPet.value)
+    console.log(checkList.value)
 }
 
 // spliter相关
@@ -301,7 +304,7 @@ onMounted(() => {
                 margin-top: 10px;
                 font-size: 12px;
                 color: #606266;
-                background-color: #d9d9d9;
+                background-color: #f0f0f0;
                 border: none;
                 border-radius: 3px;
             }
@@ -342,7 +345,7 @@ onMounted(() => {
                                 line-height: calc($type_line-height - 5px);
                                 ;
                                 margin: 0 5px;
-                                background-color: #d9d9d9;
+                                background-color: #f0f0f0;
                                 border: none;
                                 border-radius: 3px;
                                 font-size: 12px;

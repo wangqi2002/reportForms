@@ -13,8 +13,7 @@
             <el-collapse-item title="报表导出" name="4">
                 <div class="download_box">
                     <el-divider>报表导出</el-divider>
-                    <input type="text" placeholder="输入文件名" style="border: none; text-align: center; border-radius: 5px"
-                        id="reportName" />
+                    <input class="report_name" type="text" placeholder="输入文件名" id="reportName" />
                     <button class="download_btn" @click="downloadReport">导出报表</button>
                     <button class="print_btn" @click="printReport">打印报表</button>
                 </div>

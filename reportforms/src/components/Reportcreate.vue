@@ -19,8 +19,13 @@
           </div>
           <div class="radio_content">
             历史模板：
-            <el-select v-model="historyValue" placeholder="请选择" :disabled="isEffect2">
-              <el-option v-for="item in historyReports" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="historyValue" placeholder="请选择" :disabled="isEffect2" @change="handleLoadTemplate">
+              <el-option v-for="item in historyReports" :key="item.value" :label="item.label" :value="item.value">
+                <span>{{ item.label }}</span>
+                <span style="float: right;" @click.stop="handleDeleteTemplate(item.value)">
+                  <div style="padding-left: 5px;padding-right: 5px">x</div>
+                </span>
+              </el-option>
             </el-select>
           </div>
         </div>
@@ -49,7 +54,8 @@
 </template>
    
 <script setup>
-import { ref, getCurrentInstance } from "vue";
+import { ref, onMounted, getCurrentInstance } from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
 import LuckyExcel from "luckyexcel";
 import emitter from "@/unit/mittBus";
 
@@ -59,24 +65,23 @@ const jsonData = ref({});
 const fileInput = ref();
 const reportTemplate = ref(1);
 const historyValue = ref("");
+const historyReports = ref([]);
 let isEffect1 = ref(false);
 let isEffect2 = ref(true);
 let isEffect3 = ref(true);
-const historyReports = [
-  {
-    value: "Option1",
-    label: "模板1",
-  },
-  {
-    value: "Option2",
-    label: "模板2",
-  },
-  {
-    value: "Option3",
-    label: "模板3",
-  }
-];
 
+const getTemplate = () => {
+  for (var i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i).includes('_template_')) {
+      let name = localStorage.key(i).replace('_template_', '')
+      let obj = {
+        value: name,
+        label: name,
+      }
+      historyReports.value.push(obj)
+    }
+  }
+}
 const handleNewreport = () => {
   emitter.emit("newLucky");
 }
@@ -102,7 +107,47 @@ const clickFileIput = () => {
   fileInput.value?.click();
 };
 const handleSavereport = () => {
-  console.log("save report")
+  ElMessageBox.prompt('请输入模版名称', 'Tip', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel'
+  })
+    .then(({ value }) => {
+      let templateName = '_template_' + value
+      try {
+        localStorage.setItem(templateName, JSON.stringify(luckysheet.getAllSheets()));
+        historyReports.value.push({
+          value: value,
+          label: value,
+        })
+        ElMessage({
+          type: 'success',
+          message: `模板保存成功`,
+        })
+      } catch (e) {
+        ElMessage({
+          type: 'info',
+          message: '保存失败',
+        })
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消保存',
+      })
+    })
+}
+const handleLoadTemplate = (val) => {
+  let templateName = '_template_' + val
+  let data = JSON.parse(localStorage.getItem(templateName))
+  emitter.emit("setLucky", data);
+}
+const handleDeleteTemplate = (val) => {
+  historyReports.value = historyReports.value.filter((item) => {
+    return item.value != val
+  })
+  let templateName = '_template_' + val
+  localStorage.removeItem(templateName)
 }
 const loadExcel = (evt) => {
   const files = evt.target.files;
@@ -142,6 +187,10 @@ const loadExcel = (evt) => {
     }
   );
 };
+
+onMounted(() => {
+  getTemplate()
+})
 </script>
     
 <style src="@/style/reportCreate.scss"  lang="scss"></style>

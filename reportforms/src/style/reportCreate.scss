@@ -63,7 +63,7 @@
                     height: calc($radio_content_item-height - 4px);
                     line-height: calc($radio_content_item-height - 4px);
                     width: calc(100% - 67px);
-                    background-color: white;
+                    background-color: #f0f0f0;
                     color: #60627c;
                     font-size: 12px;
                     border: 1px solid transparent;
@@ -79,11 +79,26 @@
             height: calc($radio_content_item-height);
             line-height: calc($radio_content_item-height);
             width: calc(100% - 100px);
-            background-color: white;
+            background-color: #f0f0f0;
             color: #60627c;
             font-size: 12px;
             border: 1px solid transparent;
-            border-radius: 3px;
+            border-radius: 5px;
         }
+    }
+}
+.el-message-box__input {
+    .el-input__wrapper,
+    .el-input__wrapper.is-focus {
+        width: 90%;
+        box-shadow: none;
+    }
+    .el-input_inner:focus {
+        border: none;
+    }
+}
+.el-message-box__btns {
+    .el-button {
+        line-height: 5px;
     }
 }
