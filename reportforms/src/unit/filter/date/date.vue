@@ -7,28 +7,57 @@
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none">
-                <select class="type_select" name="pets" id="pet-select" v-model="spliterValue"
-                    @change="handleChangespliter">
+                <select
+                    class="type_select"
+                    name="pets"
+                    id="pet-select"
+                    v-model="spliterValue"
+                    @change="handleChangespliter"
+                >
                     <option value="">选择spliter类型</option>
                     <option value="byDay">日报</option>
                     <option value="byMonth">月报</option>
                     <option value="byYear">年报</option>
                 </select>
-                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.start"
-                    @change="handlDatespliter" />
-                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.end"
-                    @change="handlDatespliter" />
+                <input
+                    id="start"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datespliterFrom.start"
+                    @change="handlDatespliter"
+                />
+                <input
+                    id="end"
+                    class="dateInput"
+                    type="date"
+                    pattern="\d{4}/\d{2}/\d{2}"
+                    v-model="datespliterFrom.end"
+                    @change="handlDatespliter"
+                />
                 <button class="type_confirm" @click="handleConfirmSpliter">确定</button>
             </div>
             <div class="tabs_pane" style="display: block">
                 <el-tabs class="date_tabs" tab-position="left" v-model="dataTabsValues">
-                    <el-tab-pane name="Day" label="Day">
+                    <el-tab-pane name="Day" label="日报表">
                         <div class="pane_box">
-                            <input id="dayDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterDayDate" @change="handlDatefilter" />
+                            <input
+                                id="dayDate"
+                                class="dateInput"
+                                type="date"
+                                pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterDayDate"
+                                @change="handlDatefilter"
+                            />
                             <div class="type_select_card">
-                                <input list="day_kind" id="day_kind_input" class="type_select_day" name="day_kind_choice"
-                                    v-model="filterDayPet" @input="handleChangefilterPetday">
+                                <input
+                                    list="day_kind"
+                                    id="day_kind_input"
+                                    class="type_select_day"
+                                    name="day_kind_choice"
+                                    v-model="filterDayPet"
+                                    @input="handleChangefilterPetday"
+                                />
                                 <datalist id="day_kind">
                                     <option v-for="(item, index) in filterDayPetList" :value="item.name"></option>
                                 </datalist>
@@ -48,13 +77,61 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="Month" label="Month">
+                    <el-tab-pane name="Month" label="月报表">
                         <div class="pane_box">
-                            <input id="monthDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterMonthDate" @change="handlDatefilter" />
-                            <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
-                                @change="handleChangefilterPet">
-                                <option v-for="(item, index) in filterMonthPetList" :value="item.name">{{ item.value }}
+                            <input
+                                id="monthDate"
+                                class="dateInput"
+                                type="month"
+                                pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterMonthDate"
+                                @change="handlDatefilter"
+                            />
+                            <select
+                                class="type_select"
+                                name="pets"
+                                id="pet-select"
+                                v-model="filterMonthPet"
+                                @change="handleChangefilterPet"
+                            >
+                                <option v-for="(item, index) in filterMonthPetList" :value="item.name">
+                                    {{ item.value }}
+                                </option>
+                            </select>
+                            <div class="option_card">
+                                <button class="option_btn" @click="handleClear">清空</button>
+                                <button class="option_btn" @click="handleConfirm">确认</button>
+                            </div>
+                            <div class="checkbox_card">
+                                <el-checkbox-group v-model="checkList" @change="handleCheck">
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="AVG" />
+                                    <el-checkbox label="GAP" />
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane name="Year" label="年报表">
+                        <div class="pane_box">
+                            <input
+                                id="yearDate"
+                                class="dateInput"
+                                type="year"
+                                pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterMonthDate"
+                                @change="handlDatefilter"
+                            />
+                            <select
+                                class="type_select"
+                                name="pets"
+                                id="pet-select"
+                                v-model="filterMonthPet"
+                                @change="handleChangefilterPet"
+                            >
+                                <option v-for="(item, index) in filterYearPetList" :value="item.name">
+                                    {{ item.value }}
                                 </option>
                             </select>
                             <div class="option_card">
@@ -91,23 +168,35 @@ const filterDayDate = ref('')
 const filterMonthDate = ref('')
 const filterDayPet = ref('')
 const filterMonthPet = ref('')
+//todo
 const filterDayPetList = ref([
-    { name: 1, value: "111111" },
-    { name: 2, value: "222222" },
-    { name: 3, value: "333333" },
-    { name: 4, value: "444444" },
-    { name: 5, value: "555555" }]
-)
+    { name: '', value: '选择采样间隔' },
+    { name: 1, value: '2s' },
+    { name: 2, value: '10s' },
+    { name: 3, value: '5m' },
+    { name: 4, value: '10m' },
+    { name: 5, value: '1h' },
+    { name: 5, value: '2h' },
+    { name: 5, value: '4h' },
+])
 const filterMonthPetList = ref([
-    { name: '', value: "请选择" },
-    { name: 1, value: "111111" },
-    { name: 2, value: "222222" },
-    { name: 3, value: "333333" },
-    { name: 4, value: "444444" },
-    { name: 5, value: "555555" }]
-)
+    { name: '', value: '以此替代月内的数据' },
+    { name: 1, value: 'sum' },
+    { name: 2, value: 'avg' },
+    { name: 3, value: 'max' },
+    { name: 4, value: 'min' },
+    { name: 5, value: 'gap' },
+])
+const filterYearPetList = ref([
+    { name: '', value: '以此替代年内的数据' },
+    { name: 1, value: 'sum' },
+    { name: 2, value: 'avg' },
+    { name: 3, value: 'max' },
+    { name: 4, value: 'min' },
+    { name: 5, value: 'gap' },
+])
 const datespliterFrom = ref({ start: '', end: '' })
-const dataTabsValues = ref("Day")
+const dataTabsValues = ref('Day')
 const checkList = ref(['Sum', 'GAP'])
 let dateConfig = {}
 
@@ -129,10 +218,10 @@ const handleCheck = () => {
     console.log(checkList.value)
 }
 const handleClear = () => {
-    console.log("handleClear")
+    console.log('handleClear')
 }
 const handleConfirm = () => {
-    console.log("handleConfirm")
+    console.log('handleConfirm')
     console.log(filterMonthPet.value)
     console.log(filterDayPet.value)
     console.log(checkList.value)
@@ -162,13 +251,13 @@ const handleConfirmSpliter = () => {
 // 功能
 class TabSwitch {
     constructor(id) {
-        var node = document.getElementById(id)
+        let node = document.getElementById(id)
         this.aBtns = node.getElementsByClassName('tabs_btn')
         this.aDivs = node.getElementsByClassName('tabs_pane')
 
-        var _this = this
+        let _this = this
 
-        for (var i = 0; i < this.aBtns.length; i++) {
+        for (let i = 0; i < this.aBtns.length; i++) {
             this.aBtns[i].index = i
             this.aBtns[i].onclick = function () {
                 _this.tab(this)
@@ -176,7 +265,7 @@ class TabSwitch {
         }
     }
     tab(oBtn) {
-        for (var i = 0; i < this.aBtns.length; i++) {
+        for (let i = 0; i < this.aBtns.length; i++) {
             this.aBtns[i].className = 'tabs_btn'
             this.aDivs[i].style.display = 'none'
         }
@@ -186,27 +275,44 @@ class TabSwitch {
 }
 const converDate = (date) => {
     if (date) {
-        var today = new Date(date)
-        var DD = String(today.getDate()).padStart(2, '0') // 获取日
-        var MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
-        var yyyy = today.getFullYear() // 获取年
+        let today = new Date(date)
+        let DD = String(today.getDate()).padStart(2, '0') // 获取日
+        let MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
+        let yyyy = today.getFullYear() // 获取年
         today = yyyy + '/' + MM + '/' + DD
         return today
     } else {
         return null
     }
 }
-const converDate2 = () => {
-    var today = new Date()
-    var DD = String(today.getDate()).padStart(2, '0') // 获取日
-    var MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
-    var yyyy = today.getFullYear() // 获取年
-    today = yyyy + '-' + MM + '-' + DD
-    return today
+const converDate2 = (target = 'day') => {
+    switch (target) {
+        case 'day':
+            {
+                let today = new Date()
+                let DD = String(today.getDate()).padStart(2, '0') // 获取日
+                let MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
+                let yyyy = today.getFullYear() // 获取年
+                today = yyyy + '-' + MM + '-' + DD
+                return today
+            }
+            break
+        case 'month':
+            {
+                let today = new Date()
+                let MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
+                let yyyy = today.getFullYear() // 获取年
+                today = yyyy + '-' + MM
+                return today
+            }
+            break
+        default:
+            break
+    }
 }
 onMounted(() => {
-    filterDayDate.value = converDate2()
-    filterMonthDate.value = converDate2()
+    filterDayDate.value = converDate2('day')
+    filterMonthDate.value = converDate2('month')
     new TabSwitch('tabs')
 })
 </script>
@@ -341,9 +447,7 @@ onMounted(() => {
                             .option_btn {
                                 width: 50px;
                                 height: calc($type_line-height - 6px);
-                                ;
                                 line-height: calc($type_line-height - 5px);
-                                ;
                                 margin: 0 5px;
                                 background-color: #f0f0f0;
                                 border: none;

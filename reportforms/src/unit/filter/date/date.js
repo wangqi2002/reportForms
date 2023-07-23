@@ -62,11 +62,11 @@ function configureFilter(purpose, options) {
                         }
                         if (options.interval.endsWith('h')) {
                             interval = Number(options.interval.replaceAll('h', '')) * 3600
-                            mis = 3600
+                            mis = interval * 60
                             currentValue = currentHour.getHours()
                         } else if (options.interval.endsWith('m')) {
                             interval = Number(options.interval.replaceAll('m', '')) * 60
-                            mis = 60
+                            mis = interval * 5
                             currentValue = currentHour.getHours() + currentHour.getMinutes()
                         } else {
                             interval = Number(options.interval.replaceAll('s', ''))
