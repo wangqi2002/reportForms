@@ -125,7 +125,7 @@ function checkIn(obj) {
 }
 function creatTab(table, tr, td) {
     var div = document.getElementById(table)
-    tr = tr > 9 ? 9 : tr
+    tr = tr > 2 ? 2 : tr
     if (td * 50 > 340) {
         let width = td * 50
         var tab = "<table class='create_table' width='" + width + "' border='1' cellspacing='0'>"

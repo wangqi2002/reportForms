@@ -7,59 +7,30 @@
         </div>
         <div class="tabs_content">
             <div class="tabs_pane" style="display: none">
-                <select
-                    class="type_select"
-                    name="pets"
-                    id="pet-select"
-                    v-model="spliterValue"
-                    @change="handleChangespliter"
-                >
+                <select class="type_select" name="pets" id="pet-select" v-model="spliterValue"
+                    @change="handleChangespliter">
                     <option value="">选择spliter类型</option>
                     <option value="byDay">日报</option>
                     <option value="byMonth">月报</option>
                     <option value="byYear">年报</option>
                 </select>
-                <input
-                    id="start"
-                    class="dateInput"
-                    type="date"
-                    pattern="\d{4}/\d{2}/\d{2}"
-                    v-model="datespliterFrom.start"
-                    @change="handlDatespliter"
-                />
-                <input
-                    id="end"
-                    class="dateInput"
-                    type="date"
-                    pattern="\d{4}/\d{2}/\d{2}"
-                    v-model="datespliterFrom.end"
-                    @change="handlDatespliter"
-                />
+                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.start"
+                    @change="handlDatespliter" />
+                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.end"
+                    @change="handlDatespliter" />
                 <button class="type_confirm" @click="handleConfirmSpliter">确定</button>
             </div>
             <div class="tabs_pane" style="display: block">
                 <el-tabs class="date_tabs" tab-position="left" v-model="dataTabsValues">
                     <el-tab-pane name="Day" label="日报表">
                         <div class="pane_box">
-                            <input
-                                id="dayDate"
-                                class="dateInput"
-                                type="date"
-                                pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterDayDate"
-                                @change="handlDatefilter"
-                            />
+                            <input id="dayDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterDayDate" @change="handlDatefilter" />
                             <div class="type_select_card">
-                                <input
-                                    list="day_kind"
-                                    id="day_kind_input"
-                                    class="type_select_day"
-                                    name="day_kind_choice"
-                                    v-model="filterDayPet"
-                                    @input="handleChangefilterPetday"
-                                />
+                                <input list="day_kind" id="day_kind_input" class="type_select_day" name="day_kind_choice"
+                                    v-model="filterDayPet" @input="handleChangefilterPetday" />
                                 <datalist id="day_kind">
-                                    <option v-for="(item, index) in filterDayPetList" :value="item.name"></option>
+                                    <option v-for="(item, index) in filterDayPetList" :value="item.value"></option>
                                 </datalist>
                             </div>
                             <div class="option_card">
@@ -79,21 +50,10 @@
                     </el-tab-pane>
                     <el-tab-pane name="Month" label="月报表">
                         <div class="pane_box">
-                            <input
-                                id="monthDate"
-                                class="dateInput"
-                                type="month"
-                                pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterMonthDate"
-                                @change="handlDatefilter"
-                            />
-                            <select
-                                class="type_select"
-                                name="pets"
-                                id="pet-select"
-                                v-model="filterMonthPet"
-                                @change="handleChangefilterPet"
-                            >
+                            <input id="monthDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterMonthDate" @change="handlDatefilter" />
+                            <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
+                                @change="handleChangefilterPet">
                                 <option v-for="(item, index) in filterMonthPetList" :value="item.name">
                                     {{ item.value }}
                                 </option>
@@ -115,21 +75,10 @@
                     </el-tab-pane>
                     <el-tab-pane name="Year" label="年报表">
                         <div class="pane_box">
-                            <input
-                                id="yearDate"
-                                class="dateInput"
-                                type="year"
-                                pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterMonthDate"
-                                @change="handlDatefilter"
-                            />
-                            <select
-                                class="type_select"
-                                name="pets"
-                                id="pet-select"
-                                v-model="filterMonthPet"
-                                @change="handleChangefilterPet"
-                            >
+                            <input id="yearDate" class="dateInput" type="year" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterMonthDate" @change="handlDatefilter" />
+                            <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
+                                @change="handleChangefilterPet">
                                 <option v-for="(item, index) in filterYearPetList" :value="item.name">
                                     {{ item.value }}
                                 </option>
@@ -296,7 +245,6 @@ const converDate2 = (target = 'day') => {
                 today = yyyy + '-' + MM + '-' + DD
                 return today
             }
-            break
         case 'month':
             {
                 let today = new Date()
@@ -305,7 +253,6 @@ const converDate2 = (target = 'day') => {
                 today = yyyy + '-' + MM
                 return today
             }
-            break
         default:
             break
     }
