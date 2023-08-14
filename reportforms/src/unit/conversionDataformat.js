@@ -120,6 +120,13 @@ const produceOption = (fillOptions) => {
         let options = {
             spliterOptions: {},
             filterOptions: {},
+            appendOptions: {
+                sum: false,
+                avg: false,
+                min: false,
+                max: false,
+                gap: false
+            },
             sortOptions: {},
         }
         for (const [key, value] of fillOptions) {
@@ -130,6 +137,15 @@ const produceOption = (fillOptions) => {
             if (value.filter != null) {
                 options.filterOptions.column = value.column
                 options.filterOptions.filter = value.filter
+                options.filterOptions.grouper = value.grouper
+                options.filterOptions.replace = value.replace
+            }
+            if (value.append != null) {
+                for (let i = 0; i < value.append.length; i++) {
+                    console.log(value.append[i] in options.appendOptions)
+                    if (value.append[i] in options.appendOptions)
+                        options.appendOptions[value.append[i]] = true
+                }
             }
             if (value.sort != null) {
                 options.sortOptions.column = value.column

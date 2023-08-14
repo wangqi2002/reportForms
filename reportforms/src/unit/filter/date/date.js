@@ -237,7 +237,7 @@ function configureSpliter(purpose, options) {
     }
     return spliter
 }
-const Date = {
+const Datejs = {
     type: 'date',
     configureFilter: configureFilter,
     configureSpliter: configureSpliter,
@@ -250,4 +250,4 @@ const Date = {
 // console.log(filter('2023/7/8 14:12:42'))
 // console.log(filter('2023/7/8 15:12:42'))
 // console.log(new Date('2023/7/23 15:12:42').getDate())
-export { Date }
+export { Datejs }

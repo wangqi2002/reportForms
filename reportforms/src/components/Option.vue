@@ -5,10 +5,10 @@
                 <Reportcreate></Reportcreate>
             </el-collapse-item>
             <el-collapse-item title="报表类型" name="2">
-                <Reporttype></Reporttype>
+                <Reportconfig></Reportconfig>
             </el-collapse-item>
             <el-collapse-item title="报表配置" name="3">
-                <Reportconfig></Reportconfig>
+                <Reporttype></Reporttype>
             </el-collapse-item>
             <el-collapse-item title="报表导出" name="4">
                 <div class="download_box">
@@ -44,7 +44,7 @@ const handleFun = () => {
 }
 
 const handleChange = () => {
-    console.log(activeNames.value)
+    // console.log(activeNames.value)
 }
 
 const downloadReport = () => {

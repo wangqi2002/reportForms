@@ -53,13 +53,20 @@ onMounted(() => {
   const xs = new Spreadsheet("#x_spreadsheet", options)
   xs.on('cell-selected', function (cell, ri, ci) {
     if (cell) {
-      store.commit("changeTablehead", { title: cell.text })
+      if ('text' in cell) {
+        store.commit("changeTablehead", { title: cell.text })
+      }
     }
   })
   //TODO 添加双击填充
   xs.on('cell-selected', (cell, ri, ci) => {
-    window.addEventListener('dblclick', function handleDbClick(){
-      emitter.emit('tdFill', cell.text)
+    window.addEventListener('dblclick', function handleDbClick() {
+      if (cell) {
+        if ('text' in cell) {
+          emitter.emit('tdFill', cell.text)
+          store.commit("changeTablehead", { title: cell.text })
+        }
+      }
       window.removeEventListener("dblclick", handleDbClick)
     })
   })

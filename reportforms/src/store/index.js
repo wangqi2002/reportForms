@@ -5,6 +5,9 @@ export default createStore({
         tableHead: { title: null },
         spliter: null,
         filter: null,
+        grouper: null,
+        replace: null,
+        append: null,
         sort: null,
         luckyRange: null,
         luckyOptions: {
@@ -80,6 +83,15 @@ export default createStore({
         },
         changeFilter(state, newFilter) {
             state.filter = newFilter
+        },
+        changeGrouper(state, newGrouper) {
+            state.grouper = newGrouper
+        },
+        changeReplace(state, newReplace) {
+            state.replace = newReplace
+        },
+        changeAppend(state, newAppend) {
+            state.append = newAppend
         },
         changeSort(state, newSort) {
             state.sort = newSort

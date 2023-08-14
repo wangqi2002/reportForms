@@ -91,6 +91,7 @@ DragTo.prototype.funcUp = function (ev) {
         let res = checkIn(childList[i])
         if (res.isIn) {
             let obj = { ...res, fromId: this.oDiv.id }
+            console.log(res, obj)
             if (obj.fromId === 'mark') {
                 emitter.emit('setHead', obj)
             } else {
@@ -112,6 +113,7 @@ function checkIn(obj) {
     var div_y_height = Number(obj.getBoundingClientRect().top + obj.clientHeight) // obj相对屏幕的纵坐标+height
 
     if (x > div_x && x < div_x_width && y > div_y && y < div_y_height) {
+        obj.style.backgroundColor = '#d9c9c9'
         return {
             isIn: true,
             idIn: obj.id,
@@ -129,7 +131,7 @@ function creatTab(table, tr, td) {
     if (td * 50 > 340) {
         let width = td * 50
         var tab = "<table class='create_table' width='" + width + "' border='1' cellspacing='0'>"
-        for (var i = 0; i < tr + 1; i++) {
+        for (var i = 0; i < 2; i++) {
             tab = tab + '<tr>'
             if (i === 0) {
                 for (var j = 0; j < td; j++) {
@@ -142,17 +144,18 @@ function creatTab(table, tr, td) {
                         j +
                         "' class='table_input' value='' style='width: 98%; height: 90%;'></input></td>"
                 }
-            } else {
-                for (var j = 0; j < td; j++) {
-                    tab += "<td class='create_cell' width='50px' height='20px'></td>"
-                }
             }
+            // else {
+            //     for (var j = 0; j < td; j++) {
+            //         tab += "<td class='create_cell' width='50px' height='20px'></td>"
+            //     }
+            // }
             tab += '<tr/>'
         }
         tab += '</table>'
     } else {
         var tab = "<table class='create_table' width='100%' border='1' cellspacing='0'>"
-        for (var i = 0; i < tr + 1; i++) {
+        for (var i = 0; i < 2; i++) {
             if (i === 0) {
                 tab = tab + '<tr>'
                 for (var j = 0; j < td; j++) {
@@ -187,33 +190,34 @@ function creatTab(table, tr, td) {
         if (window.tdFilled) {
             if (!window.tdFilled.has(text)) {
                 let tdInput = document.getElementById('input_' + String(window.tdCount))
-                let td = document.getElementById('input_td_' + String(window.tdCount))
+                let tdbtn = document.getElementById('input_td_' + String(window.tdCount))
                 tdInput.value = text
                 tdInput.innerText = text
+                emitter.emit('setHead', { idIn: 'input_' + String(window.tdCount) })
                 tdInput.draggable = true
                 tdInput.ondblclick = (e) => {
-                    window.tdCount--
+                    window.tdCount = 0
                     window.tdFilled.delete(e.target.value)
                     tdInput.value = ''
                     tdInput.innerText = ''
+                    tdInput.style.backgroundColor = '#e9e9e9'
+                    emitter.emit('deleteColumn', { idIn: tdInput.id })
                 }
-                td.ondragstart = onDragStart
-                td.ondragover = onDragOver
-                td.ondrop = onDrop
-                td.ondragenter = (e) => {
+                tdbtn.ondragstart = onDragStart
+                tdbtn.ondragover = onDragOver
+                tdbtn.ondrop = onDrop
+                tdbtn.ondragenter = (e) => {
                     e.preventDefault()
-                    e.target.style.backgroundColor = '#77b8fa'
+                    e.target.style.backgroundColor = '#bdffee'
                 }
-                td.ondragleave = (e) => {
-                    e.target.style.backgroundColor = '#DADADA'
+                tdbtn.ondragleave = (e) => {
+                    e.target.style.backgroundColor = '#e9e9e9'
                 }
-                // tdInput.style.backgroundColor = '#3f7bea'
                 window.tdFilled.set(text, text)
                 window.tdCount++
                 if (window.tdCount >= td) {
-                    // window.tdFilled.clear()
-                    console.log(td, 'td')
-                    window.tdCount = 0
+                    window.tdFilled.clear()
+                    window.tdCount--
                 }
             }
         }
@@ -231,30 +235,19 @@ function onDragOver(e) {
 }
 function onDrop(e) {
     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
-    e.target.style.backgroundColor = '#DADADA'
-    if (window.dragFrom) {
-        if (window.dragFrom.id.endsWith('filter') || window.dragFrom.id.endsWith('spliter')) {
-            let obj = { isIn: true, idIn: e.target.id, fromId: 'data_type', column: e.target.value }
-            emitter.emit('setFilter', obj)
-            e.target.style.backgroundColor = '#77b8fa'
-            e.target.style
-        }
-    }
     if (dragElement) {
-        if (e.target.id != dragElement.id) {
-            let dropElement = e.target.parentNode
-            if (dragElement != null && dragElement != dropElement) {
-                let wrapper = document.getElementById('button-wrapper')
-                // 临时 div 用于存储 box
-                let temp = document.createElement('td')
-                // 添加 temp 到父元素 wrapper 中
-                wrapper.appendChild(temp)
-                // 交换
-                wrapper.replaceChild(temp, dropElement)
-                wrapper.replaceChild(dropElement, dragElement.parentNode)
-                wrapper.replaceChild(dragElement.parentNode, temp)
-            }
-        }
+        // console.log(dragElement.id, e.target.id)
+        let dropItem = document.getElementById(e.target.id)
+        let storage = dragElement.value
+        dragElement.value = dropItem.value
+        dragElement.innerText = dropItem.innerText
+        dropItem.value = storage
+        dropItem.innerText = storage
+        e.target.style.backgroundColor = '#e9e9e9'
+        emitter.emit('changeColumn', {
+            drag: dragElement.id,
+            drop: e.target.id
+        })
     }
 }
 

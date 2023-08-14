@@ -152,11 +152,10 @@ function produceData(data, options) {
                                 eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
-                                            .${
-                                                options.filterOptions.replace == 'avg'
-                                                    ? 'mean'
-                                                    : options.filterOptions.replace
-                                            }({axis:0})
+                                            .${options.filterOptions.replace == 'avg'
+                                        ? 'mean'
+                                        : options.filterOptions.replace
+                                    }({axis:0})
                                             .round(3).values[0]
                                     )`)
                             }
@@ -168,8 +167,8 @@ function produceData(data, options) {
                 result = result
                     ? result.append(new Series(temp), [result.index.at(-1) + 1])
                     : new DataFrame([new Series(temp).values], {
-                          columns: tempDF.columns,
-                      })
+                        columns: tempDF.columns,
+                    })
             })
             df = result
         }
@@ -183,7 +182,7 @@ function produceData(data, options) {
     if (options.appendOptions) {
         let data = []
         if (options.appendOptions.sum) {
-            data.push(df.sum({ axis: 0 }))
+            data.push(df.cumSum({ axis: 0 }))
         }
         if (options.appendOptions.min) {
             if (df.dtypes.every((x) => x == 'int32' || x == 'float32')) {
@@ -216,7 +215,7 @@ function produceData(data, options) {
             }
         }
         if (options.appendOptions.avg) {
-            data.push(df.sum({ axis: 0 }).div(df.index.at(-1) + 1))
+            data.push(df.cumSum({ axis: 0 }).div(df.index.at(-1) + 1))
         }
         if (options.appendOptions.gap) {
             let temp = []

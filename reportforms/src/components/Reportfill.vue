@@ -10,13 +10,8 @@
             <div class="fill_type">
                 <div class="show_box" v-if="filldbShow">
                     <div class="fill_upload_btn_box">
-                        <input
-                            ref="filedbInput"
-                            type="file"
-                            placeholder="请选择.db文件"
-                            @change="loadDbfile"
-                            style="display: none"
-                        />
+                        <input ref="filedbInput" type="file" placeholder="请选择.db文件" @change="loadDbfile"
+                            style="display: none" />
                         <button class="fill_upload_btn" @click="clickDbfileInput" style="margin-left: 6px">
                             选择.db文件
                         </button>
@@ -32,13 +27,8 @@
                 </div>
                 <div class="show_box" v-if="fillexcelShow">
                     <div class="fill_upload_btn_box">
-                        <input
-                            ref="fileexcelInput"
-                            type="file"
-                            placeholder="请选择.xlsx文件"
-                            @change="loadExcelfile"
-                            style="display: none"
-                        />
+                        <input ref="fileexcelInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcelfile"
+                            style="display: none" />
                         <button class="fill_upload_btn" @click="clickExcelfileInput" style="margin-left: 6px">
                             选择.xlsx文件
                         </button>
@@ -46,13 +36,8 @@
                 </div>
                 <div class="show_box" v-if="fillcsvShow">
                     <div class="fill_upload_btn_box">
-                        <input
-                            ref="filecsvInput"
-                            type="file"
-                            placeholder="请选择.csv文件"
-                            @change="loadCsvfile"
-                            style="display: none"
-                        />
+                        <input ref="filecsvInput" type="file" placeholder="请选择.csv文件" @change="loadCsvfile"
+                            style="display: none" />
                         <button class="fill_upload_btn" @click="clickCsvFileInput" style="margin-left: 6px">
                             选择.csv文件
                         </button>
@@ -188,27 +173,27 @@ const handleExitfill = () => {
             emitter.emit('clearSpread')
             emitter.emit('exitfill')
         })
-        .catch(() => {})
+        .catch(() => { })
 }
 const handleConfirm = () => {
-    console.log('Confirm')
+    console.log('Confirm', fillOptions)
     window.tdFilled = new Map()
     window.tdFilled.clear()
     window.tdCount = 0
     const luckyRange = store.state.luckyRange
-    // if (fillOptions.size != 0) {
-    let options = produceOption(fillOptions)
-    console.log(options)
-    getDbData(function (result) {
-        realData = produceData(result, { ...options })
-        let luckyData = dbTolucky(realData, luckyRange)
-        emitter.emit('setLucky', luckyData)
-        realData.length = 0
-    })
-    // }
+    if (fillOptions.size != 0) {
+        let options = produceOption(fillOptions)
+        console.log("options", options)
+        getDbData(function (result) {
+            realData = produceData(result, { ...options })
+            console.log(realData)
+            let luckyData = dbTolucky(realData, luckyRange)
+            emitter.emit('setLucky', luckyData)
+            realData.length = 0
+        })
+    }
     dbItems.length = 0
     reportData.length = 0
-    fillOptions.clear()
     emitter.emit('clearSpread')
     emitter.emit('exitfill')
 }
@@ -216,10 +201,27 @@ const handleCancel = () => {
     window.tdFilled = new Map()
     window.tdFilled.clear()
     window.tdCount = 0
-    console.log('Cancel')
     dbItems.length = 0
     emitter.emit('clearSpread')
     emitter.emit('exitfill')
+}
+const changecolumnListener = () => {
+    emitter.on('changeColumn', (e) => {
+        if (fillOptions.get(e.drop) !== undefined || fillOptions.get(e.drag) !== undefined) {
+            let storage = fillOptions.get(e.drag)
+            fillOptions.set(e.drag, fillOptions.get(e.drop))
+            fillOptions.set(e.drop, storage)
+        }
+        console.log(e, 'changeColumn', fillOptions)
+    })
+}
+const deletecolumnListener = () => {
+    emitter.on('deleteColumn', (e) => {
+        if (fillOptions.get(e.idIn) !== undefined) {
+            fillOptions.set(e.idIn, null)
+        }
+        console.log(e, 'deleteColumn', fillOptions)
+    })
 }
 const setheadListener = () => {
     const inputList = document.getElementsByClassName('table_input')
@@ -248,15 +250,22 @@ const setFilterListener = () => {
                 column: e.column,
                 spliter: store.state.spliter,
                 filter: store.state.filter,
+                grouper: store.state.grouper,
+                replace: store.state.replace,
+                append: store.state.append,
                 sort: store.state.sort,
             }
         } else {
             obj = fillOptions.get(e.idIn)
             obj.spliter = store.state.spliter
             obj.filter = store.state.filter
+            obj.grouper = store.state.grouper
+            obj.replace = store.state.replace
+            obj.append = store.state.append
             obj.sort = store.state.sort
         }
         fillOptions.set(e.idIn, obj)
+        console.log(fillOptions)
     })
 }
 const filltypeListener = () => {
@@ -283,8 +292,11 @@ onMounted(() => {
     new Drag('fill_report_box', 'fill_header')
     new DragTo('mark', 'table_input')
     filltypeListener()
+    changecolumnListener()
+    deletecolumnListener()
     setheadListener()
     setFilterListener()
+
 })
 </script>
 

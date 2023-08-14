@@ -1,28 +1,7 @@
 <template>
     <div class="report_type">
-        <!-- <el-select
-            class="report_type_select"
-            v-model="filterTypeValue"
-            placeholder="请选择筛选器类型"
-            @change="handleChangtype"
-        >
-            <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
-        </el-select>
-        <div>
-            <el-checkbox label="SUM"></el-checkbox>
-            <el-checkbox label="AVG"></el-checkbox>
-            <el-checkbox label="MAX"></el-checkbox>
-            <el-checkbox label="MIN"></el-checkbox>
-            <el-checkbox label="GAP"></el-checkbox>
-        </div> -->
-
         <el-divider>数据筛选/分离</el-divider>
-        <el-select
-            class="report_type_select"
-            v-model="filterTypeValue"
-            placeholder="请选择筛选器类型"
-            @change="handleChangtype"
-        >
+        <el-select class="report_type_select" v-model="filterTypeValue" placeholder="请选择筛选器类型" @change="handleChangtype">
             <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
         </el-select>
         <div class="type_box">

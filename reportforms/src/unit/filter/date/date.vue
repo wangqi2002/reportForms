@@ -21,8 +21,8 @@
                 <button class="type_confirm" @click="handleConfirmSpliter">确定</button>
             </div>
             <div class="tabs_pane" style="display: block">
-                <el-tabs class="date_tabs" tab-position="left" v-model="dataTabsValues">
-                    <el-tab-pane name="Day" label="日报表">
+                <el-tabs class="date_tabs" tab-position="left" v-model="filterValue" @tab-change="handleChangefilter">
+                    <el-tab-pane name="today" label="日报表">
                         <div class="pane_box">
                             <input id="dayDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
                                 v-model="filterDayDate" @change="handlDatefilter" />
@@ -39,19 +39,19 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList" @change="handleCheck">
-                                    <el-checkbox label="Sum" />
-                                    <el-checkbox label="Max" />
-                                    <el-checkbox label="Min" />
-                                    <el-checkbox label="AVG" />
-                                    <el-checkbox label="GAP" />
+                                    <el-checkbox label="sum" />
+                                    <el-checkbox label="max" />
+                                    <el-checkbox label="min" />
+                                    <el-checkbox label="avg" />
+                                    <el-checkbox label="gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="Month" label="月报表">
+                    <el-tab-pane name="thisMonth" label="月报表">
                         <div class="pane_box">
                             <input id="monthDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterMonthDate" @change="handlDatefilter" />
+                                v-model="filterMonthDate" @change="handlMonthfilter" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
                                 @change="handleChangefilterPet">
                                 <option v-for="(item, index) in filterMonthPetList" :value="item.name">
@@ -64,22 +64,22 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList" @change="handleCheck">
-                                    <el-checkbox label="Sum" />
-                                    <el-checkbox label="Max" />
-                                    <el-checkbox label="Min" />
-                                    <el-checkbox label="AVG" />
-                                    <el-checkbox label="GAP" />
+                                    <el-checkbox label="sum" />
+                                    <el-checkbox label="max" />
+                                    <el-checkbox label="min" />
+                                    <el-checkbox label="avg" />
+                                    <el-checkbox label="gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="Year" label="年报表">
+                    <el-tab-pane name="thisYear" label="年报表">
                         <div class="pane_box">
-                            <input id="yearDate" class="dateInput" type="year" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterMonthDate" @change="handlDatefilter" />
+                            <input id="yearDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterMonthDate" @change="handlMonthfilter" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet"
                                 @change="handleChangefilterPet">
-                                <option v-for="(item, index) in filterYearPetList" :value="item.name">
+                                <option v-for="(item, index) in filterMonthPetList" :value="item.name">
                                     {{ item.value }}
                                 </option>
                             </select>
@@ -89,11 +89,11 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList" @change="handleCheck">
-                                    <el-checkbox label="Sum" />
-                                    <el-checkbox label="Max" />
-                                    <el-checkbox label="Min" />
-                                    <el-checkbox label="AVG" />
-                                    <el-checkbox label="GAP" />
+                                    <el-checkbox label="sum" />
+                                    <el-checkbox label="max" />
+                                    <el-checkbox label="min" />
+                                    <el-checkbox label="avg" />
+                                    <el-checkbox label="gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -107,11 +107,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { date } from '@/unit/filter/date/date'
+import { filters } from '@/unit/filter/filter'
 
 const store = useStore()
 
-const filterValue = ref('')
 const spliterValue = ref('')
 const filterDayDate = ref('')
 const filterMonthDate = ref('')
@@ -120,60 +119,97 @@ const filterMonthPet = ref('')
 //todo
 const filterDayPetList = ref([
     { name: '', value: '选择采样间隔' },
-    { name: 1, value: '2s' },
-    { name: 2, value: '10s' },
-    { name: 3, value: '5m' },
-    { name: 4, value: '10m' },
-    { name: 5, value: '1h' },
-    { name: 5, value: '2h' },
-    { name: 5, value: '4h' },
+    { name: '2s', value: '2s' },
+    { name: '10s', value: '10s' },
+    { name: '5m', value: '5m' },
+    { name: '10m', value: '10m' },
+    { name: '1h', value: '1h' },
+    { name: '2h', value: '2h' },
+    { name: '4h', value: '4h' },
 ])
 const filterMonthPetList = ref([
     { name: '', value: '以此替代月内的数据' },
-    { name: 1, value: 'sum' },
-    { name: 2, value: 'avg' },
-    { name: 3, value: 'max' },
-    { name: 4, value: 'min' },
-    { name: 5, value: 'gap' },
-])
-const filterYearPetList = ref([
-    { name: '', value: '以此替代年内的数据' },
-    { name: 1, value: 'sum' },
-    { name: 2, value: 'avg' },
-    { name: 3, value: 'max' },
-    { name: 4, value: 'min' },
-    { name: 5, value: 'gap' },
+    { name: 'sum', value: 'sum' },
+    { name: 'avg', value: 'avg' },
+    { name: 'max', value: 'max' },
+    { name: 'min', value: 'min' },
+    { name: 'gap', value: 'gap' },
 ])
 const datespliterFrom = ref({ start: '', end: '' })
-const dataTabsValues = ref('Day')
-const checkList = ref(['Sum', 'GAP'])
+const filterValue = ref('today')
+const checkList = ref(['sum', 'gap'])
 let dateConfig = {}
 
 // filter相关
-const handlDatefilter = () => {
-    console.log(filterDayDate.value)
-    // dateConfig.dateRange = {
-    //     date: converDate(datefilterFrom.value.start),
-    //     range: { start: converDate(datefilterFrom.value.start), end: converDate(datefilterFrom.value.end) },
-    // }
+const handleChangefilter = () => {
+    // console.log(filterValue.value)
+    dateConfig.purpose = filterValue.value
+    // 切换时复位
+    filterDayPet.value = ''
+    filterMonthPet.value = ''
 }
-const handleChangefilterPet = () => {
-    console.log(filterMonthPet.value)
+const handlDatefilter = () => {
+    // console.log(filterDayDate.value)
+    dateConfig.purpose = filterValue.value
+    Object.assign(dateConfig, {
+        options: {
+            date: converDate(filterDayDate.value)
+        }
+    })
+    // dateConfig.options.date = converDate(filterDayDate.value)
+}
+const handlMonthfilter = () => {
+    // console.log(filterMonthDate.value)
+    Object.assign(dateConfig, {
+        options: {
+            date: converDate(filterMonthDate.value)
+        }
+    })
+    // dateConfig.options.date = converDate(filterMonthDate.value)
 }
 const handleChangefilterPetday = () => {
-    console.log(filterDayPet.value)
+    // console.log(filterDayPet.value)
+    dateConfig.purpose = filterValue.value
+    Object.assign(dateConfig, {
+        options: {
+            interval: filterDayPet.value,
+            theTopOfTheHour: true
+        }
+    })
+    // dateConfig.options.interval = filterDayPet.value
+    // dateConfig.options.theTopOfTheHour = true
+}
+const handleChangefilterPet = () => {
+    // console.log(filterMonthPet.value)
+    Object.assign(dateConfig, {
+        options: {
+            replace: filterMonthPet.value
+        }
+    })
+    // dateConfig.options.replace = filterMonthPet.value
 }
 const handleCheck = () => {
-    console.log(checkList.value)
+    // console.log(checkList.value)
 }
 const handleClear = () => {
-    console.log('handleClear')
+    checkList.value = []
 }
 const handleConfirm = () => {
-    console.log('handleConfirm')
-    console.log(filterMonthPet.value)
-    console.log(filterDayPet.value)
-    console.log(checkList.value)
+    let replaceList = []
+    for (let item of checkList.value.values()) {
+        replaceList.push(item)
+    }
+    dateConfig.replace = replaceList
+    const func = filters.get('date').configureFilter
+    const { filter, grouper } = func(dateConfig.purpose, dateConfig.options)
+    console.log(filter, '+++', grouper, '+++', dateConfig)
+    store.commit('changeFilter', filter)
+    store.commit('changeGrouper', grouper)
+    if ('replace' in dateConfig.options) {
+        store.commit('changeReplace', dateConfig.options.replace)
+    }
+    store.commit('changeAppend', dateConfig.replace)
+    console.log(store.state)
 }
 
 // spliter相关
@@ -181,20 +217,19 @@ const handleChangespliter = () => {
     dateConfig.purpose = spliterValue.value
 }
 const handlDatespliter = () => {
-    dateConfig.dateRange = {
+    dateConfig.options = {
         dateStart: converDate(datespliterFrom.value.start),
         dateEnd: converDate(datespliterFrom.value.end),
     }
 }
 const handleConfirmSpliter = () => {
-    const func = date.configureSpliter
-    const spliter = func(dateConfig.purpose, dateConfig.dateRange)
+    console.log(dateConfig)
+    const func = filters.get('date').configureSpliter
+    const spliter = func(dateConfig.purpose, dateConfig.options)
     store.commit('changeSpliter', spliter)
     dateConfig = {}
     spliterValue.value = ''
     datespliterFrom.value = { start: '', end: '' }
-    filterValue.value = ''
-    datefilterFrom.value = { start: '', end: '' }
 }
 
 // 功能

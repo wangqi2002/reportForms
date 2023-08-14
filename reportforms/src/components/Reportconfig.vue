@@ -10,7 +10,7 @@
                     <div class="radio_content">
                         数据库导入:
                         <button class="fill_btn" @click="handleDbFill" :disabled="isEffect1" style="margin-left: 6px">
-                            请选择.db文件
+                            点击填充
                         </button>
                     </div>
                 </div>
@@ -21,21 +21,10 @@
                         <input type="radio" v-model="fillType" value="2" label="2" @change="handleChange" />
                     </div>
                     <div class="radio_content">
-                        <input
-                            ref="fileInput"
-                            type="file"
-                            placeholder="请选择.xlsx文件"
-                            @change="loadExcel"
-                            style="display: none"
-                        />
+                        <input ref="fileInput" type="file" placeholder="点击填充" @change="loadExcel" style="display: none" />
                         Excel导入:
-                        <button
-                            class="fill_btn"
-                            @click="handleExcelFill"
-                            :disabled="isEffect2"
-                            style="margin-left: 14px"
-                        >
-                            请选择.xlsx文件
+                        <button class="fill_btn" @click="handleExcelFill" :disabled="isEffect2" style="margin-left: 14px">
+                            点击填充
                         </button>
                     </div>
                 </div>
@@ -48,7 +37,7 @@
                     <div class="radio_content">
                         CSV导入:
                         <button class="fill_btn" @click="handleCsvFill" :disabled="isEffect3" style="margin-left: 18px">
-                            请选择.csv文件
+                            点击填充
                         </button>
                     </div>
                 </div>
@@ -74,7 +63,7 @@ let isEffect2 = ref(true)
 let isEffect3 = ref(true)
 let fillRange = {}
 
-const handleFillbox = inject('handleFillbox', () => {}, false)
+const handleFillbox = inject('handleFillbox', () => { }, false)
 
 const handleChange = () => {
     if (fillType.value === '1') {
