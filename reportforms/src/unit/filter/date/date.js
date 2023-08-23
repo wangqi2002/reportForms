@@ -13,7 +13,7 @@ function generatePattern(raw, params) {
     return eval('`' + raw + '`')
 }
 /**
- * @param {'today'|'thisWeek'|'thisMonth'|'thisYear'|'range'} purpose 用于确定转换到哪个类型
+ * @param {'today'|'thisWeek'|'thisMonth'|'thisYear'|'range'|'byClass'} purpose 用于确定转换到哪个类型
  * - `today` 今天
  * - `thisWeek` 本周
  * - `thisMonth` 本月
@@ -23,9 +23,10 @@ function generatePattern(raw, params) {
  * date?:Date|string,
  * range?:{start:Date|string,end:Date|string},
  * interval?:string,
- * theTopOfTheHour?:boolean
+ * theTopOfTheHour?:boolean,
+ * classRange?:[{start:Date|string,end:Date|string}]
  * }} [options]
- * - `date?:Date|string`
+ * - `date?:Date|string` 用于指定日期
  * - `range?:{start:Date|string,end:Date|string}`用于指定日期范围,仅用于'range'情况
  * @example
  * let filter = configureFilter('today')
@@ -33,130 +34,181 @@ function generatePattern(raw, params) {
  * @returns
  */
 function configureFilter(purpose, options) {
-    let filter = undefined
-    let grouper = undefined
-    let currentDate = options.date ? new Date(options.date) : new Date()
-    let pattern = {}
-    switch (purpose) {
-        case 'today':
-            {
-                pattern = new RegExp(
-                    generatePattern(patternTemplate.today, [
-                        currentDate.getFullYear(),
-                        currentDate.getMonth() + 1,
-                        currentDate.getDate(),
-                    ])
-                )
-                if (options.interval) {
-                    let firstValue = new Map()
-                    let firstTime = undefined
-                    filter = (x) => {
-                        let currentHour = new Date(x)
-                        let interval = undefined
-                        let mis = undefined
-                        let currentValue = undefined
-                        if (!firstTime) {
-                            firstTime = options.theTopOfTheHour
-                                ? new Date(currentHour.toLocaleDateString() + ' 00:00')
-                                : currentHour
+    try {
+        let filter = undefined
+        let grouper = undefined
+        let currentDate = options.date ? new Date(options.date) : new Date()
+        let pattern = {}
+        switch (purpose) {
+            case 'today':
+                {
+                    pattern = new RegExp(
+                        generatePattern(patternTemplate.today, [
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                            currentDate.getDate(),
+                        ])
+                    )
+                    if (options.interval) {
+                        let firstValue = new Map()
+                        let firstTime = undefined
+                        let firstSig = false
+                        let timeWant = new Map()
+                        //决定时间间隔粒度大小的数值,如果数据与想要的时间相差小于这个大小,那么可以认为是有效数据
+                        let particleSize = 999999999
+                        filter = (x) => {
+                            let currentHour = new Date(x)
+                            let interval = undefined
+                            let mis = undefined
+                            let currentValue = undefined
+                            if (firstSig) {
+                                firstSig = false
+                                particleSize = currentHour - firstTime
+                            }
+                            if (!firstTime) {
+                                firstTime = options.theTopOfTheHour
+                                    ? new Date(currentHour.toLocaleDateString() + ' 00:00')
+                                    : currentHour
+                                firstSig = true
+                            }
+                            if (options.interval.endsWith('h')) {
+                                interval = Number(options.interval.replaceAll('h', '')) * 3600
+                                mis = interval * 60
+                                currentValue = currentHour.getHours()
+                            } else if (options.interval.endsWith('m')) {
+                                interval = Number(options.interval.replaceAll('m', '')) * 60
+                                mis = interval * 5
+                                currentValue = currentHour.getHours() + currentHour.getMinutes()
+                            } else {
+                                interval = Number(options.interval.replaceAll('s', ''))
+                                mis = 1
+                                currentValue = currentHour.toLocaleTimeString()
+                            }
+                            if (
+                                pattern.test(x) &&
+                                Math.abs(currentHour - firstTime) % (interval * 1000) < particleSize &&
+                                !firstValue.has(currentValue) &&
+                                !timeWant.has(Math.floor(Math.abs(currentHour - firstTime) / (interval * 1000)))
+                            ) {
+                                firstValue.set(currentValue)
+                                timeWant.set(
+                                    Math.floor(Math.abs(currentHour - firstTime) / (interval * 1000)),
+                                    Math.floor(Math.abs(currentHour - firstTime) / (interval * 1000))
+                                )
+                                return true
+                            } else {
+                                return false
+                            }
                         }
-                        if (options.interval.endsWith('h')) {
-                            interval = Number(options.interval.replaceAll('h', '')) * 3600
-                            mis = interval * 60
-                            currentValue = currentHour.getHours()
-                        } else if (options.interval.endsWith('m')) {
-                            interval = Number(options.interval.replaceAll('m', '')) * 60
-                            mis = interval * 5
-                            currentValue = currentHour.getHours() + currentHour.getMinutes()
-                        } else {
-                            interval = Number(options.interval.replaceAll('s', ''))
-                            mis = 1
-                            currentValue = currentHour.toLocaleTimeString()
-                        }
-                        if (
-                            pattern.test(x) &&
-                            (Math.abs(currentHour - firstTime) / 1000) % interval <= mis &&
-                            !firstValue.has(currentValue)
-                        ) {
-                            firstValue.set(currentValue)
-                            return true
-                        } else {
-                            return false
+                    } else {
+                        filter = (x) => {
+                            return pattern.test(x)
                         }
                     }
-                } else {
-                    filter = (x) => {
-                        return pattern.test(x)
-                    }
                 }
-            }
-            break
-        case 'thisWeek':
-            {
-                //并非使用正则表达式,而是替换了pattern.test方法
-                const oneDayTime = 1000 * 60 * 60 * 24
-                const week = parseInt((parseInt(currentDate.getTime() / oneDayTime) + 4) / 7)
-                pattern.test = (x) => {
-                    let xDate = parseInt(new Date(x).getTime() / oneDayTime)
-                    return parseInt((xDate + 4) / 7) == week
-                }
-                filter = (x) => {
-                    return pattern.test(x)
-                }
-                grouper = (x) => {
-                    return new Date(x).getDay()
-                }
-            }
-            break
-        case 'thisMonth':
-            {
-                pattern = new RegExp(
-                    generatePattern(patternTemplate.thisMonth, [currentDate.getFullYear(), currentDate.getMonth() + 1])
-                )
-                filter = (x) => {
-                    return pattern.test(x)
-                }
-                grouper = (x) => {
-                    return new Date(x).getDate()
-                }
-            }
-            break
-        case 'thisYear':
-            {
-                pattern = new RegExp(generatePattern(patternTemplate.thisYear, [currentDate.getFullYear()]))
-                filter = (x) => {
-                    return pattern.test(x)
-                }
-                grouper = (x) => {
-                    return new Date(x).getMonth()
-                }
-            }
-            break
-        case 'range':
-            {
-                if (options.range) {
-                    const d1 = new Date(options.range.start)
-                    const d2 = new Date(options.range.end)
+                break
+            case 'thisWeek':
+                {
+                    //并非使用正则表达式,而是替换了pattern.test方法
+                    const oneDayTime = 1000 * 60 * 60 * 24
+                    const week = parseInt((parseInt(currentDate.getTime() / oneDayTime) + 4) / 7)
                     pattern.test = (x) => {
-                        let date = new Date(x)
-                        if (date < d2 && date > d1) {
-                            return true
-                        } else {
-                            return false
-                        }
+                        let xDate = parseInt(new Date(x).getTime() / oneDayTime)
+                        return parseInt((xDate + 4) / 7) == week
                     }
                     filter = (x) => {
                         return pattern.test(x)
                     }
+                    grouper = (x) => {
+                        return new Date(x).getDay()
+                    }
                 }
-            }
-            break
-        default:
-            return false
-    }
-    return {
-        filter: filter,
-        grouper: grouper,
+                break
+            case 'thisMonth':
+                {
+                    pattern = new RegExp(
+                        generatePattern(patternTemplate.thisMonth, [
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                        ])
+                    )
+                    filter = (x) => {
+                        return pattern.test(x)
+                    }
+                    grouper = (x) => {
+                        return new Date(x).getDate()
+                    }
+                }
+                break
+            case 'thisYear':
+                {
+                    pattern = new RegExp(generatePattern(patternTemplate.thisYear, [currentDate.getFullYear()]))
+                    filter = (x) => {
+                        return pattern.test(x)
+                    }
+                    grouper = (x) => {
+                        return new Date(x).getMonth()
+                    }
+                }
+                break
+            case 'range':
+                {
+                    if (options.range) {
+                        const d1 = new Date(options.range.start)
+                        const d2 = new Date(options.range.end)
+                        pattern.test = (x) => {
+                            let date = new Date(x)
+                            if (date < d2 && date > d1) {
+                                return true
+                            } else {
+                                return false
+                            }
+                        }
+                        filter = (x) => {
+                            return pattern.test(x)
+                        }
+                    }
+                }
+                break
+            case 'byClass':
+                {
+                    let classRanges = options.classRange
+                    classRanges.forEach((x, index) => {
+                        const d1 = new Date(x.start)
+                        const d2 = new Date(x.end)
+                        classRanges[index] = {
+                            start: d1,
+                            end: d2,
+                        }
+                    })
+                    pattern = new RegExp(
+                        generatePattern(patternTemplate.thisMonth, [
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                        ])
+                    )
+                    filter = (x) => {
+                        return pattern.test(x)
+                    }
+                    grouper = (x) => {
+                        let nowDate = new Date(x)
+                        classRanges.forEach((value, index) => {
+                            if (nowDate <= value.end && nowDate >= value.start) {
+                                return index
+                            }
+                        })
+                    }
+                }
+                break
+            default:
+                return false
+        }
+        return {
+            filter: filter,
+            grouper: grouper,
+        }
+    } catch (e) {
+        throw e
     }
 }
 
@@ -170,7 +222,6 @@ function configureSpliter(purpose, options) {
     let spliter = undefined
     let start = new Date(options.dateStart)
     let end = new Date(options.dateEnd)
-
     switch (purpose) {
         case 'byDay':
             {
@@ -243,11 +294,7 @@ const Datejs = {
     configureSpliter: configureSpliter,
 }
 
-// let { filter, grouper } = configureFilter('thisYear', { replace: 'avg' })
-// console.log(filter('2023/7/8 13:00:00'))
-// console.log(grouper('2023/12/12 13:00:00'))
-// console.log(filter('2023/7/8 14:00:52'))
-// console.log(filter('2023/7/8 14:12:42'))
-// console.log(filter('2023/7/8 15:12:42'))
-// console.log(new Date('2023/7/23 15:12:42').getDate())
 export { Datejs }
+// module.exports = {
+//     configureFilter: Datejs.configureFilter,
+// }
