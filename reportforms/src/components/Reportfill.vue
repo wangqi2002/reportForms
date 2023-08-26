@@ -157,7 +157,6 @@ const handleChangedb = async (e) => {
                 dbTable.push(item)
             })
             let spreadData = dbTospread(dbTable)
-            console.log(spreadData)
             emitter.emit('setSpread', spreadData)
             dbTable.length = 0
         }
@@ -187,7 +186,9 @@ const handleConfirm = () => {
         console.log("options", options)
         getDbData(function (result) {
             realData = produceData(result, { ...options })
-            console.log(realData)
+            // for (let i = 0; i < realData.length; i++) {
+            //     console.log(realData[i])
+            // }
             let luckyData = dbTolucky(realData, luckyRange)
             emitter.emit('setLucky', luckyData)
             realData.length = 0
@@ -266,7 +267,7 @@ const setFilterListener = () => {
             obj.sort = store.state.sort
         }
         fillOptions.set(e.idIn, obj)
-        console.log(fillOptions)
+        // console.log(fillOptions)
     })
 }
 const filltypeListener = () => {

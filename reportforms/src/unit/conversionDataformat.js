@@ -103,16 +103,73 @@ const dbDataConverL = (rangeSpace, index, data) => {
     }
     for (let i = 0; i < data.length; i++) {
         let j = 0
-        for (const item in data[i]) {
-            cellData.push({
-                r: i + rangeSpace.r,
-                c: j + rangeSpace.c,
-                v: data[i][item],
-            })
-            j++
+        let arr = Object.values(data[i])
+        let rsV = arr.length
+        if (rsV > 1) {
+            let flag = arr[0]
+            let result = arr.every(item => item === flag)
+            if (result) {
+                for (const item in data[i]) {
+                    if (j == 0) {
+                        cellData.push({
+                            r: i + rangeSpace.r,
+                            c: j + rangeSpace.c,
+                            v: {
+                                v: data[i][item],
+                                ht: "0",
+                                mc: {
+                                    c: j,
+                                    r: i,
+                                    cs: rsV,
+                                    rs: 1
+                                }
+                            },
+                        })
+                    } else {
+                        cellData.push({
+                            r: i + rangeSpace.r,
+                            c: j + rangeSpace.c,
+                            v: {
+                                ht: "0",
+                                mc: {
+                                    c: j,
+                                    r: i
+                                }
+                            },
+                        })
+                    }
+                    j++
+                }
+            } else {
+                for (const item in data[i]) {
+                    cellData.push({
+                        r: i + rangeSpace.r,
+                        c: j + rangeSpace.c,
+                        v: {
+                            v: data[i][item],
+                            ht: "0",
+                        },
+                    })
+                    j++
+                }
+            }
+        } else {
+            for (const item in data[i]) {
+                cellData.push({
+                    r: i + rangeSpace.r,
+                    c: j + rangeSpace.c,
+                    v: {
+                        v: data[i][item],
+                        ht: "0",
+                    },
+                })
+                j++
+            }
         }
     }
+    console.log(cellData)
     sheet.celldata = cellData
+    console.log(sheet)
     return sheet
 }
 const produceOption = (fillOptions) => {
@@ -142,7 +199,6 @@ const produceOption = (fillOptions) => {
             }
             if (value.append != null) {
                 for (let i = 0; i < value.append.length; i++) {
-                    console.log(value.append[i] in options.appendOptions)
                     if (value.append[i] in options.appendOptions)
                         options.appendOptions[value.append[i]] = true
                 }

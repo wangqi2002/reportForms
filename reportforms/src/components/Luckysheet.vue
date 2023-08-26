@@ -42,6 +42,7 @@ const newLuckysheet = () => {
   luckysheet.create(excelOptions);
 }
 const handleSetdata = (value) => {
+  console.log(value);
   let excelOptions = store.state.luckyOptions;
   excelOptions.data = value;
   luckysheet.create(excelOptions);
