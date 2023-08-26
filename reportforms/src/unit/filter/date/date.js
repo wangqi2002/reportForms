@@ -186,9 +186,22 @@ function configureFilter(purpose, options) {
                             d2 = new Date(d2.setDate(d2.getDate() + 1))
                             crossSig = true
                         }
-                        classRanges[index] = {
-                            start: d1,
-                            end: d2,
+                        let crossSig = false
+                        for (let index = 0; index < classRanges.length; index++) {
+                            let x = classRanges[index]
+                            let d1 = new Date(currentDay + '-' + x.start)
+                            let d2 = new Date(currentDay + '-' + x.end)
+                            if (crossSig) {
+                                d1 = new Date(d1.setDate(d1.getDate() + 1))
+                                d2 = new Date(d2.setDate(d2.getDate() + 1))
+                            } else if (d2 < d1) {
+                                d2 = new Date(d2.setDate(d2.getDate() + 1))
+                                crossSig = true
+                            }
+                            classRanges[index] = {
+                                start: d1,
+                                end: d2,
+                            }
                         }
                     }
                     pattern = new RegExp(
@@ -311,6 +324,17 @@ export { Datejs }
 // module.exports = {
 //     configureFilter: Datejs.configureFilter,
 // }
+
+// let { filter, grouper } = configureFilter('byClass', {
+//     date: '2023/8/23',
+//     classRange: [
+//         { start: '8:00', end: '16:00' },
+//         { start: '16:00', end: '00:00' },
+//         { start: '00:00', end: '8:00' },
+//     ],
+// })
+// let a = grouper('2023/8/24 3:00')
+// console.log(a)
 
 // let { filter, grouper } = configureFilter('byClass', {
 //     date: '2023/8/23',
