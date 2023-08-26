@@ -301,3 +301,13 @@ export { Datejs }
 // })
 // let a = grouper('2023/8/3 0:00')
 // console.log(a)
+
+// let { filter, grouper } = configureFilter('byClass', {
+//     date: '2023/8',
+//     classOption: {
+//         start: '8:00',
+//         gap: 8,
+//     },
+// })
+// let a = grouper('2023/8/24 3:00')
+// console.log(a)
