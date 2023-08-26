@@ -37,6 +37,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -65,6 +66,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -92,6 +94,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -115,6 +118,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -531,10 +535,27 @@ onMounted(() => {
 
                                 .el-checkbox {
                                     width: 40%;
-                                    height: $type_line-height;
+                                    height: calc($type_line-height - 5px);
                                     margin: 0 3% 0 7%;
                                     text-align: left;
                                     float: left;
+                                }
+
+                                .checkbox_card_name {
+                                    .el-checkbox__input {
+                                        display: none;
+                                    }
+
+                                    .el-checkbox__input.is-disabled+span.el-checkbox__label {
+                                        color: #000000;
+                                        cursor: auto;
+                                    }
+
+                                    .el-checkbox__label {
+                                        padding-left: 0;
+                                        font-size: 12px;
+                                        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                                    }
                                 }
                             }
                         }
