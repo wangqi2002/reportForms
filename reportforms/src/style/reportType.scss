@@ -29,12 +29,14 @@
         height: calc(100% - 50px);
         margin: 5px 5px;
         #date_type {
-            width: 85px;
-            height: 30px;
+            width: 50px;
+            height: 24px;
             background-color: transparent;
             position: absolute;
-            left: 5px;
+            left: 19px;
             z-index: 1000;
+            border-radius: 5px;
+            color: #a2a2a2;
         }
     }
 }

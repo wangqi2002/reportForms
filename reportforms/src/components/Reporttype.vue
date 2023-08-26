@@ -44,10 +44,19 @@ const getFiltertype = () => {
     // }
 }
 const handleChangtype = () => {
+    document.querySelector("#date_type").style.border = '1px solid #dcdfe6'
     compName.value = filterTypeValue.value
 }
 
 onMounted(() => {
+    document.querySelector("#date_type").addEventListener('mousedown', (e) => {
+        e.target.innerText = 'option'
+        e.target.style.backgroundColor = 'rgba(185,215,248,0.5)';
+    })
+    document.querySelector("#date_type").addEventListener('mouseup', (e) => {
+        e.target.innerText = ''
+        e.target.style.backgroundColor = 'rgba(185,215,248,0)';
+    })
     getFiltertype()
     getComponents()
     new DragTo('date_type', 'table_input')

@@ -157,6 +157,7 @@ const handleChangedb = async (e) => {
                 dbTable.push(item)
             })
             let spreadData = dbTospread(dbTable)
+            console.log(spreadData)
             emitter.emit('setSpread', spreadData)
             dbTable.length = 0
         }

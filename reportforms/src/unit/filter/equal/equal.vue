@@ -125,7 +125,7 @@ onMounted(() => {
         height: calc($type_line-height);
 
         .type_name {
-            width: 80px;
+            width: 62px;
             height: $type_line-height;
             line-height: calc($type_line-height + 5px);
             color: #60627c;
