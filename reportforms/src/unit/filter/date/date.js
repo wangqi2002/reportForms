@@ -24,7 +24,8 @@ function generatePattern(raw, params) {
  * range?:{start:Date|string,end:Date|string},
  * interval?:string,
  * theTopOfTheHour?:boolean,
- * classRange?:[{start:Date|string,end:Date|string}]
+ * classRange?:[{start:Date|string,end:Date|string}],
+ * classOption?:{start:Date|string,gap:number}
  * }} [options]
  * - `date?:Date|string` 用于指定日期
  * - `range?:{start:Date|string,end:Date|string}`用于指定日期范围,仅用于'range'情况
@@ -172,44 +173,23 @@ function configureFilter(purpose, options) {
                 break
             case 'byClass':
                 {
-                    let currentDay = currentDate.toLocaleDateString()
-                    let classRanges = options.classRange
-                    let crossSig = false
-                    for (let index = 0; index < classRanges.length; index++) {
-                        let x = classRanges[index]
-                        let d1 = new Date(currentDay + '-' + x.start)
-                        let d2 = new Date(currentDay + '-' + x.end)
-                        if (crossSig) {
-                            d1 = new Date(d1.setDate(d1.getDate() + 1))
-                            d2 = new Date(d2.setDate(d2.getDate() + 1))
-                        } else if (d2 < d1) {
-                            d2 = new Date(d2.setDate(d2.getDate() + 1))
-                            crossSig = true
-                        }
-                        classRanges[index] = {
-                            start: d1,
-                            end: d2,
-                        }
-                    }
-                    pattern = new RegExp(
-                        generatePattern(patternTemplate.thisMonth, [
-                            currentDate.getFullYear(),
-                            currentDate.getMonth() + 1,
-                        ])
-                    )
+                    let startDateTime = new Date(options.date + '-' + options.classOption.start)
+                    let nextDate = new Date(options.date + '-' + options.classOption.start)
+                    nextDate.setMonth(nextDate.getMonth() + 1)
                     filter = (x) => {
-                        return pattern.test(x)
+                        let nowDate = new Date(x)
+                        return nowDate >= startDateTime && nowDate < nextDate
                     }
                     grouper = (x) => {
-                        let nowDate = new Date(x)
-                        let result = false
-                        classRanges.forEach((value, index) => {
-                            if (nowDate < value.end && nowDate >= value.start) {
-                                result = index
-                                return undefined
-                            }
-                        })
-                        return result
+                        try {
+                            let nowDate = new Date(x)
+                            let result = false
+                            result = Math.floor((nowDate - startDateTime) / (1000 * 3600) / options.classOption.gap)
+                            return result
+                        } catch (error) {
+                            console.log(error)
+                            return false
+                        }
                     }
                 }
                 break
@@ -313,12 +293,11 @@ export { Datejs }
 // }
 
 // let { filter, grouper } = configureFilter('byClass', {
-//     date: '2023/8/23',
-//     classRange: [
-//         { start: '8:00', end: '16:00' },
-//         { start: '16:00', end: '00:00' },
-//         { start: '00:00', end: '8:00' },
-//     ],
+//     date: '2023/8',
+//     classOption: {
+//         start: '8:00',
+//         gap: 8,
+//     },
 // })
-// let a = grouper('2023/8/24 3:00')
+// let a = grouper('2023/8/3 0:00')
 // console.log(a)
