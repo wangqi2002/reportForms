@@ -1,7 +1,7 @@
 <template>
     <div id="fill_report_box">
         <div id="fill_header" class="fill_header">
-            <span class="fill_title">报表填充</span>
+            <!-- <span class="fill_title">报表填充</span> -->
             <span class="fill_exit" @click="handleExitfill">
                 <img src="@/assets/exit.svg" />
             </span>

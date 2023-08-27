@@ -176,6 +176,7 @@ function configureFilter(purpose, options) {
                     let startDateTime = new Date(options.date + '-' + options.classOption.start)
                     let nextDate = new Date(options.date + '-' + options.classOption.start)
                     nextDate.setMonth(nextDate.getMonth() + 1)
+                    // console.log(startDateTime, nextDate)
                     filter = (x) => {
                         let nowDate = new Date(x)
                         return nowDate >= startDateTime && nowDate < nextDate

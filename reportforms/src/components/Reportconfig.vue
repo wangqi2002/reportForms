@@ -1,6 +1,6 @@
 <template>
     <div class="report_config">
-        <el-divider>数据填充</el-divider>
+        <!-- <el-divider>数据填充</el-divider> -->
         <div style="padding: 0 10px">
             <div class="fill_item db_fill">
                 <div class="radio_defined">

@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="thisClass" label="班报表">
+                    <el-tab-pane name="byClass" label="班报表">
                         <div class="pane_box">
                             <input id="monthDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
                                 v-model="filterClassDate" />
@@ -185,8 +185,8 @@ const filterClassPetList = ref([
 ])
 const filterClassList = ref([
     { name: '', value: '班次' },
-    { name: '1', value: '一天两班' },
-    { name: '2', value: '一天三班' },
+    { name: '2', value: '一天两班' },
+    { name: '3', value: '一天三班' },
 ])
 const filterYearPetList = ref([
     { name: '', value: '以此替代年内的数据' },
@@ -292,7 +292,9 @@ const Confirm = (Config) => {
         store.commit('changeReplace', Config.options.replace)
     }
     store.commit('changeAppend', Config.replace)
-    console.log(filter, '+++', grouper, '+++', Config)
+    console.log(Config)
+    console.log(filter)
+    console.log(grouper)
     console.log(store.state)
 }
 

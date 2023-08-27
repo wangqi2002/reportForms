@@ -1,6 +1,6 @@
 <template>
   <div class="report_style">
-    <el-divider>模版创建</el-divider>
+    <!-- <el-divider>模版创建</el-divider> -->
     <div style="padding: 0 10px">
       <div class="reprot_item new_report">
         <div class="radio_defined">
