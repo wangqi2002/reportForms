@@ -53,14 +53,10 @@ const downloadReport = () => {
     // window.print();
 }
 const printReport = () => {
-    // window.print()
-    // data => celldata  
-    // getSheetData
+    window.print()
 
-    console.log(luckysheet.getSheetData())
-    console.log(luckysheet.transToCellData(luckysheet.getSheetData()))
-    // // celldata => data 
-    // luckysheet.sheetmanage.buildGridData(file)
+    // console.log(luckysheet.getSheetData())
+    // console.log(luckysheet.transToCellData(luckysheet.getSheetData()))
 
 }
 </script>
