@@ -118,8 +118,8 @@ const dbDataConverL = (rangeSpace, index, data) => {
                                 v: data[i][item],
                                 ht: "0",
                                 mc: {
-                                    c: j,
-                                    r: i,
+                                    c: rangeSpace.c,
+                                    r: i + rangeSpace.r,
                                     cs: rsV,
                                     rs: 1
                                 }
@@ -132,8 +132,8 @@ const dbDataConverL = (rangeSpace, index, data) => {
                             v: {
                                 ht: "0",
                                 mc: {
-                                    c: j,
-                                    r: i
+                                    c: rangeSpace.c,
+                                    r: i + rangeSpace.r
                                 }
                             },
                         })
