@@ -245,25 +245,24 @@ const handleConfirmMonth = () => {
 }
 const handleConfirmClass = () => {
     let replaceList = []
-    let range = []
+    let cnt = 1
     for (let item of checkList.value.values()) {
         replaceList.push(item)
     }
-    if (filterClassNum.value == '' || filterClassNum.value == '1') {
-        range.push({ start: '08:00:00', end: '20:00:00' })
-        range.push({ start: '20:00:00', end: '08:00:00' })
-    } else if (filterClassNum.value == '2') {
-        range.push({ start: '08:00:00', end: '16:00:00' })
-        range.push({ start: '16:00:00', end: '00:00:00' })
-        range.push({ start: '00:00:00', end: '08:00:00' })
+    if (filterClassNum.value == '') {
+        cnt = 2
+    } else {
+        cnt = filterClassNum.value
     }
-    console.log(range)
     let Config = {
         purpose: filterValue.value,
         options: {
             date: filterClassDate.value,
             replace: filterClassPet.value,
-            classRange: filterClassNum.value
+            classOption: {
+                start: '8:00',
+                gap: Number(24 / cnt)
+            }
         },
         replace: replaceList
     }
