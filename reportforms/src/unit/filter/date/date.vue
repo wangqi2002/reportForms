@@ -33,7 +33,7 @@
                             </select>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
-                                <button class="option_btn" @click="handleConfirmDay">确认</button>
+                                <button class="option_btn confirm" @click="handleConfirmDay">确认</button>
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
@@ -60,7 +60,7 @@
                                 <button class="option_btn" @click="handleClear">
                                     清空
                                 </button>
-                                <button class="option_btn" @click="handleConfirmMonth">
+                                <button class="option_btn confirm" @click="handleConfirmMonth">
                                     确认
                                 </button>
                             </div>
@@ -88,12 +88,13 @@
                                 <option v-for="(item, index) in filterClassList" :value="item.name">{{ item.value }}
                                 </option>
                             </select>
+                            <input id="monthDate" class="dateInput" v-model="filterClassStart" />
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
-                                <button class="option_btn" @click="handleConfirmClass">确认</button>
+                                <button class="option_btn confirm" @click="handleConfirmClass">确认</button>
                             </div>
                             <div class="checkbox_card">
-                                <el-checkbox-group v-model="checkList">
+                                <el-checkbox-group class="class_type" v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
@@ -114,7 +115,7 @@
                             </select>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
-                                <button class="option_btn" @click="handleConfirmYear">确认</button>
+                                <button class="option_btn confirm" @click="handleConfirmYear">确认</button>
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
@@ -153,6 +154,7 @@ const filterMonthPet = ref('')
 const filterClassDate = ref('')
 const filterClassPet = ref('')
 const filterClassNum = ref('')
+const filterClassStart = ref('8:00')
 
 const filterYearDate = ref('')
 const filterYearPet = ref('')
@@ -209,10 +211,7 @@ const handleChangefilter = () => {
     // filterDayPet.value = ''
     // filterMonthPet.value = ''
 }
-const handleClear = () => {
-    checkList.value = []
-}
-const handleConfirmDay = () => {
+const handleConfirmDay = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
         replaceList.push(item)
@@ -226,7 +225,7 @@ const handleConfirmDay = () => {
         },
         replace: replaceList
     }
-    Confirm(Config)
+    Confirm(Config, e.target)
 }
 const handleConfirmMonth = () => {
     let replaceList = []
@@ -241,7 +240,7 @@ const handleConfirmMonth = () => {
         },
         replace: replaceList
     }
-    Confirm(Config)
+    Confirm(Config, e.target)
 }
 const handleConfirmClass = () => {
     let replaceList = []
@@ -260,13 +259,13 @@ const handleConfirmClass = () => {
             date: filterClassDate.value,
             replace: filterClassPet.value,
             classOption: {
-                start: '8:00',
+                start: filterClassStart.value,
                 gap: Number(24 / cnt)
             }
         },
         replace: replaceList
     }
-    Confirm(Config)
+    Confirm(Config, e.target)
 }
 const handleConfirmYear = () => {
     let replaceList = []
@@ -281,9 +280,10 @@ const handleConfirmYear = () => {
         },
         replace: replaceList
     }
-    Confirm(Config)
+    Confirm(Config, e.target)
 }
-const Confirm = (Config) => {
+const Confirm = (Config, el) => {
+    el.style.backgroundColor = "#07C160"
     const func = filters.get('date').configureFilter
     const { filter, grouper } = func(Config.purpose, Config.options)
     store.commit('changeFilter', filter)
@@ -296,6 +296,17 @@ const Confirm = (Config) => {
     console.log(filter)
     console.log(grouper)
     console.log(store.state)
+}
+const handleClear = () => {
+    checkList.value = []
+    let els = document.querySelectorAll('.option_btn.confirm')
+    for (let i = 0; i < els.length; i++) {
+        els[i].style.backgroundColor = "#f0f0f0"
+    }
+    store.commit('changeAppend', null)
+    store.commit('changeReplace', null)
+    store.commit('changeFilter', null)
+    store.commit('changeGrouper', null)
 }
 
 // spliter相关
@@ -462,7 +473,7 @@ onMounted(() => {
             }
 
             .dateInput {
-                width: calc(100% - 20px);
+                width: calc(100% - 22px);
                 height: calc($type_line-height - 6px);
                 margin-top: 7px;
                 padding: 0 5px;
@@ -537,7 +548,7 @@ onMounted(() => {
                                 .el-checkbox {
                                     width: 40%;
                                     height: calc($type_line-height - 5px);
-                                    margin: 0 3% 0 7%;
+                                    margin: 8px 3% 8px 7%;
                                     text-align: left;
                                     float: left;
                                 }
@@ -557,6 +568,12 @@ onMounted(() => {
                                         font-size: 12px;
                                         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                                     }
+                                }
+                            }
+
+                            .el-checkbox-group.class_type {
+                                .el-checkbox {
+                                    margin: 0 3% 0 7%;
                                 }
                             }
                         }
