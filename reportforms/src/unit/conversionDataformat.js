@@ -103,85 +103,101 @@ const dbDataConverL = (rangeSpace, index, data) => {
     }
     for (let i = 0; i < data.length; i++) {
         let j = 0
-        let arr = Object.values(data[i])
-        let rsV = arr.length
-        if (rsV > 1) {
-            let flag = arr[0]
-            let result = arr.every(item => item === flag)
-            if (result) {
-                for (const item in data[i]) {
-                    if (j == 0) {
-                        cellData.push({
-                            r: i + rangeSpace.r,
-                            c: j + rangeSpace.c,
-                            v: {
-                                v: data[i][item],
-                                ht: "0",
-                                mc: {
-                                    c: rangeSpace.c,
-                                    r: i + rangeSpace.r,
-                                    cs: rsV,
-                                    rs: 1
-                                },
-                                ct: {
-                                    fa: "General",
-                                    t: "n"
-                                }
-                            },
-                        })
-                    } else {
-                        cellData.push({
-                            r: i + rangeSpace.r,
-                            c: j + rangeSpace.c,
-                            v: {
-                                ht: "0",
-                                mc: {
-                                    c: rangeSpace.c,
-                                    r: i + rangeSpace.r
-                                },
-                                ct: {
-                                    fa: "General",
-                                    t: "n"
-                                }
-                            },
-                        })
+        for (const item in data[i]) {
+            cellData.push({
+                r: i + rangeSpace.r,
+                c: j + rangeSpace.c,
+                v: {
+                    v: data[i][item],
+                    ht: "0",
+                    ct: {
+                        fa: "General",
+                        t: "n"
                     }
-                    j++
-                }
-            } else {
-                for (const item in data[i]) {
-                    cellData.push({
-                        r: i + rangeSpace.r,
-                        c: j + rangeSpace.c,
-                        v: {
-                            v: data[i][item],
-                            ht: "0",
-                            ct: {
-                                fa: "General",
-                                t: "n"
-                            }
-                        },
-                    })
-                    j++
-                }
-            }
-        } else {
-            for (const item in data[i]) {
-                cellData.push({
-                    r: i + rangeSpace.r,
-                    c: j + rangeSpace.c,
-                    v: {
-                        v: data[i][item],
-                        ht: "0",
-                        ct: {
-                            fa: "General",
-                            t: "n"
-                        }
-                    },
-                })
-                j++
-            }
+                },
+            })
+            j++
         }
+        //todo: 合并单元格导出有问题，数据格式不正确
+        // let arr = Object.values(data[i])
+        // let rsV = arr.length
+        // if (rsV > 1) {
+        //     let flag = arr[0]
+        //     let result = arr.every(item => item === flag)
+        //     if (result) {
+        //         for (const item in data[i]) {
+        //             if (j == 0) {
+        //                 cellData.push({
+        //                     r: i + rangeSpace.r,
+        //                     c: j + rangeSpace.c,
+        //                     v: {
+        //                         v: data[i][item],
+        //                         ht: "0",
+        //                         mc: {
+        //                             c: rangeSpace.c,
+        //                             r: i + rangeSpace.r,
+        //                             cs: rsV,
+        //                             rs: 1
+        //                         },
+        //                         ct: {
+        //                             fa: "General",
+        //                             t: "n"
+        //                         }
+        //                     },
+        //                 })
+        //             } else {
+        //                 cellData.push({
+        //                     r: i + rangeSpace.r,
+        //                     c: j + rangeSpace.c,
+        //                     v: {
+        //                         ht: "0",
+        //                         mc: {
+        //                             c: rangeSpace.c,
+        //                             r: i + rangeSpace.r
+        //                         },
+        //                         ct: {
+        //                             fa: "General",
+        //                             t: "n"
+        //                         }
+        //                     },
+        //                 })
+        //             }
+        //             j++
+        //         }
+        //     } else {
+        //         for (const item in data[i]) {
+        //             cellData.push({
+        //                 r: i + rangeSpace.r,
+        //                 c: j + rangeSpace.c,
+        //                 v: {
+        //                     v: data[i][item],
+        //                     ht: "0",
+        //                     ct: {
+        //                         fa: "General",
+        //                         t: "n"
+        //                     }
+        //                 },
+        //             })
+        //             j++
+        //         }
+        //     }
+        // } else {
+        //     for (const item in data[i]) {
+        //         cellData.push({
+        //             r: i + rangeSpace.r,
+        //             c: j + rangeSpace.c,
+        //             v: {
+        //                 v: data[i][item],
+        //                 ht: "0",
+        //                 ct: {
+        //                     fa: "General",
+        //                     t: "n"
+        //                 }
+        //             },
+        //         })
+        //         j++
+        //     }
+        // }
     }
     console.log(cellData)
     sheet.celldata = cellData
