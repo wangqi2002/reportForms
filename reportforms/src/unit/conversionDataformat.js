@@ -122,6 +122,10 @@ const dbDataConverL = (rangeSpace, index, data) => {
                                     r: i + rangeSpace.r,
                                     cs: rsV,
                                     rs: 1
+                                },
+                                ct: {
+                                    fa: "General",
+                                    t: "n"
                                 }
                             },
                         })
@@ -134,6 +138,10 @@ const dbDataConverL = (rangeSpace, index, data) => {
                                 mc: {
                                     c: rangeSpace.c,
                                     r: i + rangeSpace.r
+                                },
+                                ct: {
+                                    fa: "General",
+                                    t: "n"
                                 }
                             },
                         })
@@ -148,6 +156,10 @@ const dbDataConverL = (rangeSpace, index, data) => {
                         v: {
                             v: data[i][item],
                             ht: "0",
+                            ct: {
+                                fa: "General",
+                                t: "n"
+                            }
                         },
                     })
                     j++
@@ -161,6 +173,10 @@ const dbDataConverL = (rangeSpace, index, data) => {
                     v: {
                         v: data[i][item],
                         ht: "0",
+                        ct: {
+                            fa: "General",
+                            t: "n"
+                        }
                     },
                 })
                 j++

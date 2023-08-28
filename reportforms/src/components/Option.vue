@@ -49,15 +49,29 @@ const handleChange = () => {
 
 const downloadReport = () => {
     let name = document.getElementById('reportName')
+    // 获取到表格数据 进行双map处理
+    const excelData = window.luckysheet.flowdata();
+    excelData.map(item => {
+        if (item) {
+            item.map(ll => {
+                if (ll) {
+                    ll.v = ll.m;
+                    ll.ct = {
+                        fa: "@",
+                        t: "s"
+                    };
+                }
+            });
+        }
+    });
     exportExcel(luckysheet.getAllSheets(), name.value ? name.value : '万能图表')
-    // window.print();
 }
 const printReport = () => {
-    // window.print()
-
     console.log(luckysheet.getSheetData())
     console.log(luckysheet.transToCellData(luckysheet.getSheetData()))
 
+
+    window.print()
 }
 </script>
 
