@@ -84,18 +84,19 @@ const handleChange = () => {
     }
 }
 const handleDbFill = () => {
+    // 先选中表头
     console.log('fill db')
     let objRange = null
     objRange = luckysheet.getRange()[0]
-    let tableHeadrange = rangeTohead(objRange)
-    objRange.row[2] = objRange.row[1] - objRange.row[0] + 1
-    objRange.column[2] = objRange.column[1] - objRange.column[0] + 1
-    if (tableHeadrange.row != null) {
-        luckysheet.setRangeShow(tableHeadrange)
-        objRange.tableHead = luckysheet.transToCellData(luckysheet.getRangeValue(tableHeadrange))
+    objRange.tableHead = luckysheet.transToCellData(luckysheet.getRangeValue())
+    let target = {
+        column: objRange.column,
+        row: objRange.row,
+        tableHead: objRange.tableHead
     }
-    store.commit('changeLuckyrange', objRange)
-    Object.assign(fillRange, objRange)
+    console.log(target)
+    store.commit('changeLuckyrange', target)
+    Object.assign(fillRange, target)
     handleFillbox('dataBase', fillRange)
     fillRange = {}
 }

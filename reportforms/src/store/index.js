@@ -6,8 +6,10 @@ export default createStore({
         spliter: null,
         filter: null,
         grouper: null,
+        formatter: null,
         replace: null,
         append: null,
+        split: false,
         sort: null,
         luckyRange: null,
         luckyOptions: {
@@ -87,11 +89,17 @@ export default createStore({
         changeGrouper(state, newGrouper) {
             state.grouper = newGrouper
         },
+        changeFormatter(state, newFormatter) {
+            state.formatter = newFormatter
+        },
         changeReplace(state, newReplace) {
             state.replace = newReplace
         },
         changeAppend(state, newAppend) {
             state.append = newAppend
+        },
+        changeSplit(state, newSplit) {
+            state.split = newSplit
         },
         changeSort(state, newSort) {
             state.sort = newSort

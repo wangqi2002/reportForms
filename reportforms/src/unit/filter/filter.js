@@ -13,6 +13,6 @@
 import { Datejs } from './date/date'
 import { Equal } from './equal/equal'
 const filters = new Map()
-filters.set('equal', Equal)
+// filters.set('equal', Equal)
 filters.set('date', Datejs)
 export { filters }

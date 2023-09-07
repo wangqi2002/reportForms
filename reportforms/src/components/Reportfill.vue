@@ -15,10 +15,9 @@
                         <button class="fill_upload_btn" @click="clickDbfileInput" style="margin-left: 6px">
                             选择.db文件
                         </button>
-                        <!-- <button @click="getDbData">CS</button> -->
                     </div>
                     <div class="fill_db_content">
-                        <li class="db_item" v-for="(item, index) in dbItems">
+                        <li class="db_item" v-for="(item, index) in dbItems" :key="index">
                             <span class="li-content" @click="handleChangedb">
                                 {{ item.name }}
                             </span>
@@ -43,41 +42,46 @@
                         </button>
                     </div>
                 </div>
-                <div class="fill_bottom">
-                    <button class="fillBtn confirm" @click="handleConfirm">确认</button>
-                    <button class="fillBtn" @click="handleCancel">取消</button>
+            </div>
+            <div class="option_type">
+                <Reporttype></Reporttype>
+            </div>
+            <div class="report_table">
+                <div class="nid_title">表单元素</div>
+                <div class="nid_card">
+                    <div class="nid_item" draggable="true" @dragstart="handleNidDrag" v-for="(item, index) in nidList"
+                        :key="index" :name="item.value">
+                        {{ item.name }}
+                    </div>
                 </div>
             </div>
-            <div class="sheetBox">
-                <div class="fill_table">
-                    <div id="mark" class="mark" ref="mark"></div>
-                    <Spreadsheet></Spreadsheet>
-                </div>
-                <div id="fill_template" class="fill_template"></div>
+            <div id="fill_table" class="fill_table"></div>
+            <div class="fill_bottom">
+                <button class="fillBtn confirm" @click="handleConfirm">确认</button>
+                <button class="fillBtn" @click="handleCancel">取消</button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import Reporttype from '@/components/Reporttype.vue'
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
-import { ElMessageBox, ElDivider } from 'element-plus'
-import Spreadsheet from '@/components/Spreadsheet.vue'
+import { ElSelect, ElOption, ElMessageBox } from 'element-plus'
 import emitter from '@/unit/mittBus'
 import { Drag, DragTo, creatTab } from '@/unit/Drag'
-import { dbTospread, dbTolucky, produceOption } from '@/unit/conversionDataformat'
+import { dbTolucky, produceOption } from '@/unit/conversionDataformat'
 import { readFromSource, readDbData, produceData } from '@/unit/produce'
 
 const instance = getCurrentInstance()
 const store = useStore()
 
 const dbItems = reactive([])
-const dbTable = reactive([])
-const mark = ref(null)
 const filedbInput = ref(null)
 const fileexcelInput = ref(null)
 const filecsvInput = ref(null)
+const nidList = ref([])
 let filldbShow = ref(false)
 let fillexcelShow = ref(false)
 let fillcsvShow = ref(false)
@@ -93,18 +97,19 @@ const getDbData = (callback) => {
     for (let i = 0; i < childList.length; i++) {
         if (i == 0) {
             if (childList[i].value != '') {
-                attributeString = childList[i].value
+                attributeString = `"${childList[i].value}"`
             }
         } else {
             if (childList[i].value != '') {
                 if (attributeString == '') {
-                    attributeString = childList[i].value
+                    attributeString = `"${childList[i].value}"`
                 } else {
-                    attributeString = attributeString + ',' + childList[i].value
+                    attributeString = attributeString + ',' + `"${childList[i].value}"`
                 }
             }
         }
     }
+    attributeString = attributeString + `,"sourceTimestamp"`
     readDbData(dbFile, tableName, attributeString, function (result) {
         result.forEach((item) => {
             reportData.push(item)
@@ -143,22 +148,40 @@ const loadCsvfile = () => {
     console.log('loadCsvfile')
 }
 
+const handleNidDrag = (e) => {
+    // console.log(e.target.innerText)
+    // console.log(e.target.getAttribute('name'))
+    e.dataTransfer.setData("Text", JSON.stringify({
+        name: e.target.innerText,
+        value: e.target.getAttribute('name'),
+    }));
+}
 const handleChangedb = async (e) => {
     tableName = e.target.innerText
+    console.log(tableName)
     await readFromSource(
         'sqlite',
         dbFile,
         {
             tableName: e.target.innerText,
-            limit: '25',
+            limit: '1',
         },
         function (result) {
-            result.forEach((item) => {
-                dbTable.push(item)
+            nidList.value.length = 0
+            let list = Object.keys(result[0])
+            list = list.filter((item) => {
+                return item != "id" && item != "sourceTimestamp"
+            });
+            for (let i = 0; i < list.length; i++) {
+                nidList.value.push({
+                    name: list[i].match(/##(\S*)/)[1],
+                    value: list[i]
+                })
+            }
+            nidList.value.push({
+                name: 'sourceTimestamp',
+                value: 'sourceTimestamp'
             })
-            let spreadData = dbTospread(dbTable)
-            emitter.emit('setSpread', spreadData)
-            dbTable.length = 0
         }
     )
 }
@@ -170,77 +193,86 @@ const handleExitfill = () => {
     })
         .then(() => {
             dbItems.length = 0
+            nidList.value.length = 0
             emitter.emit('clearSpread')
             emitter.emit('exitfill')
         })
         .catch(() => { })
 }
 const handleConfirm = () => {
-    console.log('Confirm', fillOptions)
-    window.tdFilled = new Map()
-    window.tdFilled.clear()
-    window.tdCount = 0
+    let split = store.state.split
+    let key = null
+    for (let item of fillOptions.entries()) {
+        console.log(item)
+        if (item[1].column == 'sourceTimestamp') {
+            key = item[0]
+        }
+    }
+    if (key == null) {
+        fillOptions.set('input_last', {
+            column: 'sourceTimestamp',
+            spliter: store.state.spliter,
+            filter: store.state.filter,
+            grouper: store.state.grouper,
+            replace: store.state.replace,
+            formatter: store.state.formatter,
+            append: store.state.append,
+            split: split,
+            sort: store.state.sort,
+        })
+    } else {
+        fillOptions.set(key, {
+            column: 'sourceTimestamp',
+            spliter: store.state.spliter,
+            filter: store.state.filter,
+            grouper: store.state.grouper,
+            replace: store.state.replace,
+            formatter: store.state.formatter,
+            append: store.state.append,
+            split: split,
+            sort: store.state.sort,
+        })
+    }
     const luckyRange = store.state.luckyRange
     if (fillOptions.size != 0) {
         let options = produceOption(fillOptions)
         console.log("options", options)
         getDbData(function (result) {
+            console.log(result.length)
+            console.log(result)
             realData = produceData(result, { ...options })
             // for (let i = 0; i < realData.length; i++) {
             //     console.log(realData[i])
             // }
-            let luckyData = dbTolucky(realData, luckyRange)
-            emitter.emit('setLucky', luckyData)
-            realData.length = 0
+            console.log(realData)
+            // let luckyData = dbTolucky(realData, luckyRange)
+            // emitter.emit('setLucky', luckyData)
+            // realData.length = 0
         })
     }
     dbItems.length = 0
     reportData.length = 0
+    nidList.value.length = 0
     emitter.emit('clearSpread')
     emitter.emit('exitfill')
 }
 const handleCancel = () => {
-    window.tdFilled = new Map()
-    window.tdFilled.clear()
-    window.tdCount = 0
     dbItems.length = 0
+    nidList.value.length = 0
     emitter.emit('clearSpread')
     emitter.emit('exitfill')
 }
-const changecolumnListener = () => {
-    emitter.on('changeColumn', (e) => {
-        if (fillOptions.get(e.drop) !== undefined || fillOptions.get(e.drag) !== undefined) {
-            let storage = fillOptions.get(e.drag)
-            fillOptions.set(e.drag, fillOptions.get(e.drop))
-            fillOptions.set(e.drop, storage)
-        }
-        console.log(e, 'changeColumn', fillOptions)
-    })
-}
-const deletecolumnListener = () => {
-    emitter.on('deleteColumn', (e) => {
-        if (fillOptions.get(e.idIn) !== undefined) {
-            fillOptions.set(e.idIn, null)
-        }
-        console.log(e, 'deleteColumn', fillOptions)
-    })
-}
 const setheadListener = () => {
-    const inputList = document.getElementsByClassName('table_input')
     emitter.on('setHead', (e) => {
         let obj = null
+        let cloumnName = e.value
         if (fillOptions.get(e.idIn) == undefined) {
-            obj = { column: store.state.tableHead.title }
+            obj = { column: cloumnName }
         } else {
             obj = fillOptions.get(e.idIn)
-            obj.column = store.state.tableHead.title
+            obj.column = cloumnName
         }
         fillOptions.set(e.idIn, obj)
-        for (let i = 0; i < inputList.length; i++) {
-            if (inputList[i].id === e.idIn) {
-                inputList[i].value = store.state.tableHead.title
-            }
-        }
     })
 }
 const setFilterListener = () => {
@@ -272,7 +304,11 @@ const setFilterListener = () => {
 }
 const filltypeListener = () => {
     emitter.on('filltype', (e) => {
-        creatTab('fill_template', e.range.row[2], e.range.column[2])
+        let tableHead = []
+        for (let i = 0; i < e.range.tableHead.length; i++) {
+            tableHead.push(e.range.tableHead[i].v.v)
+        }
+        creatTab('fill_table', e.range.column[1] + 1, tableHead)
         if (e.type === 'dataBase') {
             filldbShow = true
             fillexcelShow = false
@@ -292,10 +328,7 @@ const filltypeListener = () => {
 
 onMounted(() => {
     new Drag('fill_report_box', 'fill_header')
-    new DragTo('mark', 'table_input')
     filltypeListener()
-    changecolumnListener()
-    deletecolumnListener()
     setheadListener()
     setFilterListener()
 

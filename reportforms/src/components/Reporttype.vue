@@ -5,7 +5,7 @@
             <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
         </el-select>
         <div class="type_box">
-            <span id="date_type"></span>
+            <!-- <span id="date_type"></span> -->
             <component :is="components.get(compName)"></component>
         </div>
     </div>
@@ -13,6 +13,7 @@
 
 <script setup>
 import { ref, shallowRef, reactive, onMounted, defineAsyncComponent } from 'vue'
+import { ElSelect, ElOption } from 'element-plus'
 import { useStore } from 'vuex'
 import { filters } from '@/unit/filter/filter'
 import { DragTo } from '@/unit/Drag'
@@ -23,7 +24,7 @@ const store = useStore()
 const compName = ref('')
 const components = shallowRef(new Map())
 
-const filterTypeValue = ref('')
+const filterTypeValue = ref('date')
 const filterType = reactive([])
 const checks = ref(['sum', 'avg', 'max', 'min', 'gap'])
 
@@ -44,22 +45,13 @@ const getFiltertype = () => {
     // }
 }
 const handleChangtype = () => {
-    document.querySelector("#date_type").style.border = '1px solid #dcdfe6'
     compName.value = filterTypeValue.value
 }
 
 onMounted(() => {
-    document.querySelector("#date_type").addEventListener('mousedown', (e) => {
-        e.target.innerText = 'option'
-        e.target.style.backgroundColor = 'rgba(185,215,248,0.5)';
-    })
-    document.querySelector("#date_type").addEventListener('mouseup', (e) => {
-        e.target.innerText = ''
-        e.target.style.backgroundColor = 'rgba(185,215,248,0)';
-    })
     getFiltertype()
     getComponents()
-    new DragTo('date_type', 'table_input')
+    // new DragTo('date_type', 'table_input')
 })
 </script>
 

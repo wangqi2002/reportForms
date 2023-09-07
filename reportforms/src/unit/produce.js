@@ -1,6 +1,6 @@
-import { DataFrame, toJSON, Series } from 'danfojs'
-// const { DataFrame, toJSON, Series } = require('danfojs')
-// const { configureFilter } = require('./filter/date/date')
+import { DataFrame, toJSON, Series, readCSV } from 'danfojs'
+import { column } from 'element-plus/es/components/table-v2/src/common'
+
 /**
 * @param {'sqlite'|'excel'|'csv'} type 确认是哪种数据类型,目前支持:sqlite,excel,csv
 * @param {string} fileName 文件相对/绝对路径并且携带文件名称和后缀
@@ -72,56 +72,58 @@ function readFromSource(type, file, options, callback) {
 
 /**
 * @param {DataFrame|object[]} data 通常情况下应当是object[]
-* @param {{
-    filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,replace?:'sum'|'avg'|'max'|'min'|'gap'},
-    sortOptions?:{column:string|number,ascending?:boolean},
-    spliterOptions?:{column:string|number,spliter:(x:any)=>number},
-    appendOptions?:{sum?:boolean,avg?:boolean,min?:boolean,max?:boolean,gap?:boolean},
-    otherOptions?:{step?:number}
-}} options
-* 必选参数用于指定filter/sort/spliter
-* - `filterOptions?:{column:string|number,filter:(x:any)=>boolean}` 指定列名和filter
+* @param 
+    {{
+        filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,
+            formatter?:(x:any)=>any,split?:boolean,replace?:'sum'|'avg'|'max'|'min'|'gap'|'first'},
+        sortOptions?:{column:string|number,ascending?:boolean},
+        appendOptions?:{sum?:boolean,avg?:boolean,min?:boolean,max?:boolean,gap?:boolean,
+            printer?:string,printTime?:boolean},
+        otherOptions?:{step?:number},
+    }} options
+* -
+* - `filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,
+        formatter?:(x:any)=>any,split?:boolean,replace?:'sum'|'avg'|'max'|'min'|'gap'|'first'}` 
+            指定列名,并应用filter:用于筛选,grouper用于分类,formatter:用于格式化数据,split:用于决定是否分离数据,
+            replace:用于决定如何替代grouper分类之后的内部数据
 * - `sortOptions?:{column:string|number,ascending?:boolean}` 指定列名和是否升序排列
-* - `spliterOptions?:{column:string|number,spliter:(x:any)=>number}` 指定列名和spliter
+* - `appendOptions?:{sum?:boolean,avg?:boolean,min?:boolean,
+        max?:boolean,gap?:boolean,printer?:string,printTime?:boolean}` 
+            决定在表格末尾添加哪些额外数据,请注意,printer是string格式
 * @example
-* DataProducer.produceData(
-        [
-            { columnName: 1, otherColumn: 'ok' },
-            { columnName: 12, otherColumn: 'nice' },
-            { columnName: 1, otherColumn: 'o' },
-        ],
-        {
-            spliterOptions: {
-                column: 'columnName',
-                spliter: (x) => {
-                    if (x == 1) return 0
-                    return 1
-                },
-            },
-            filterOptions: {
-                column: 'columnName',
-                filter: (x) => {
-                    return x == 1
-                },
-            },
-            sortOptions: {
-                column: 'otherColumn',
-                ascending: false,
-            },
-        }
-        )
-* @returns
+* produceData(data, {
+        filterOptions: {
+            column: 'sourceTimestamp',
+            filter: filter,
+            grouper: grouper,
+            // replace: 'first',
+            formatter: formatter,
+            split: true,
+        },
+        appendOptions: {
+            sum: true,
+            gap: true,
+            avg: true,
+            min: true,
+            max: true,
+            printer: 'me',
+            printTime: true,
+        },
+    })
+* @returns [[any]]
 */
 function produceData(data, options) {
     try {
         let df = new DataFrame(data)
+        let dfList = []
+        let map = new Map()
+        let finalResult = []
         if (
             options.filterOptions &&
             options.filterOptions.filter &&
             df.columns.includes(options.filterOptions.column)
         ) {
-            let map = new Map()
-            // let temp = new DataFrame()
+            df.sortValues(options.filterOptions.column, { inplace: true })
             df.index.forEach((index) => {
                 if (options.otherOptions && options.otherOptions.step) {
                     if (index % options.otherOptions.step != 0) {
@@ -139,25 +141,40 @@ function produceData(data, options) {
                     }
                 }
             })
+        }
+        if (options.filterOptions.split) {
+            let dfKeys = Array.from(map.keys())
+            dfKeys.forEach((value) => {
+                let keys = map.get(value)
+                dfList.push(df.loc({ rows: keys }).resetIndex())
+            })
+        } else {
+            dfList = [df]
+        }
+        dfList.forEach((df) => {
             if (options.filterOptions.grouper && options.filterOptions.replace) {
-                let array = Array.from(map.keys())
+                let array = options.filterOptions.split ? ['ok'] : Array.from(map.keys())
                 array = array.sort()
                 let result = undefined
                 array.forEach((value) => {
                     let keys = map.get(value)
                     let temp = []
-                    let tempDF = df.loc({ rows: keys })
-                    tempDF.columns.forEach((column) => {
-                        if (column == options.filterOptions.column) {
-                            temp.push(tempDF[column].values[0])
-                        } else {
-                            if (tempDF[column].dtypes[0] == 'int32' || tempDF[column].dtypes[0] == 'float32') {
-                                if (options.filterOptions.replace == 'gap') {
-                                    temp.push(
-                                        Number((tempDF[column].values.at(-1) - tempDF[column].values[0]).toFixed(3))
-                                    )
-                                } else {
-                                    eval(`temp.push(
+                    let tempDF = options.filterOptions.split ? df : df.loc({ rows: keys })
+                    tempDF.sortValues(options.filterOptions.column, { inplace: true })
+                    if (options.filterOptions.replace == 'first') {
+                        temp.push(...tempDF.iloc({ rows: [0] }).values[0])
+                    } else {
+                        tempDF.columns.forEach((column) => {
+                            if (column == options.filterOptions.column) {
+                                temp.push(tempDF[column].values[0])
+                            } else {
+                                if (tempDF[column].dtypes[0] == 'int32' || tempDF[column].dtypes[0] == 'float32') {
+                                    if (options.filterOptions.replace == 'gap') {
+                                        temp.push(
+                                            Number((tempDF[column].values.at(-1) - tempDF[column].values[0]).toFixed(3))
+                                        )
+                                    } else {
+                                        eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
                                             .${
@@ -167,12 +184,13 @@ function produceData(data, options) {
                                             }({axis:0})
                                             .round(3).values[0]
                                     )`)
+                                    }
+                                } else {
+                                    temp.push(tempDF[column].values[0])
                                 }
-                            } else {
-                                temp.push(tempDF[column].values[0])
                             }
-                        }
-                    })
+                        })
+                    }
                     result = result
                         ? result.append(new Series(temp), [result.index.at(-1) + 1])
                         : new DataFrame([new Series(temp).values], {
@@ -181,105 +199,139 @@ function produceData(data, options) {
                 })
                 df = result
             }
-        }
-        if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
-            df.sortValues(options.sortOptions.column, {
-                ascending: options.sortOptions.ascending ? options.sortOptions.ascending : null,
-                inplace: true,
-            })
-        }
-        if (options.appendOptions) {
-            let data = []
-            let count = 0
-            if (options.appendOptions.sum) {
-                data.push(new Series(new Array(df.columns.length).fill('sum'), { index: df.columns }))
-                data.push(df.sum({ axis: 0 }))
-                count++
-            }
-            if (options.appendOptions.min) {
-                if (df.dtypes.every((x) => x == 'int32' || x == 'float32')) {
-                    data.push(df.min({ axis: 0 }))
-                } else {
-                    let temp = []
-                    df.columns.forEach((column) => {
-                        if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
-                            temp.push(df[column].min())
-                        } else {
-                            temp.push('')
+            if (options.filterOptions.formatter) {
+                df.applyMap(
+                    (x) => {
+                        let result = x
+                        if (!isNaN(Date.parse(x)) && isNaN(x)) {
+                            result = options.filterOptions.formatter(x)
                         }
-                    })
-                    data.push(new Series(new Array(df.columns.length).fill('min'), { index: df.columns }))
-                    data.push(new Series(temp))
-                }
-                count++
+                        return String(result)
+                    },
+                    { inplace: true }
+                )
             }
-            if (options.appendOptions.max) {
-                if (df.dtypes.every((x) => x == 'int32' || x == 'float32')) {
-                    data.push(df.min({ axis: 0 }))
-                } else {
-                    let temp = []
-                    df.columns.forEach((column) => {
-                        if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
-                            temp.push(df[column].max())
-                        } else {
-                            temp.push('')
-                        }
-                    })
-                    data.push(new Series(new Array(df.columns.length).fill('max'), { index: df.columns }))
-                    data.push(new Series(temp))
-                }
-                count++
-            }
-            if (options.appendOptions.avg) {
-                data.push(new Series(new Array(df.columns.length).fill('avg'), { index: df.columns }))
-                data.push(df.sum({ axis: 0 }).div(df.index.at(-1) + 1))
-                count++
-            }
-            if (options.appendOptions.gap) {
-                let temp = []
-                df.columns.forEach((column) => {
-                    if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
-                        temp.push(df[column].values.at(-1) - df[column].values.at(0))
-                    } else {
-                        temp.push('')
-                    }
+            if (options.sortOptions && options.sortOptions.column && df.columns.includes(options.sortOptions.column)) {
+                df.sortValues(options.sortOptions.column, {
+                    ascending: options.sortOptions.ascending ? options.sortOptions.ascending : null,
+                    inplace: true,
                 })
-                data.push(new Series(new Array(df.columns.length).fill('gap'), { index: df.columns }))
-                data.push(new Series(temp))
-                count++
             }
-            if (count > 0) {
-                let length = df.index.at(-1) + 1
-                for (let index = length; index < length + data.length; index++) {
-                    df = df.append(data[index - length], [index])
+            if (options.appendOptions) {
+                let data = []
+                let count = 0
+                if (options.appendOptions.sum) {
+                    data.push(new Series(new Array(df.columns.length).fill('sum'), { index: df.columns }))
+                    data.push(df.sum({ axis: 0 }))
+                    count++
+                }
+                if (options.appendOptions.min) {
+                    if (df.dtypes.every((x) => x == 'int32' || x == 'float32')) {
+                        data.push(df.min({ axis: 0 }))
+                    } else {
+                        let temp = []
+                        df.columns.forEach((column) => {
+                            if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
+                                temp.push(df[column].min())
+                            } else {
+                                temp.push('')
+                            }
+                        })
+                        data.push(new Series(new Array(df.columns.length).fill('min'), { index: df.columns }))
+                        data.push(new Series(temp))
+                    }
+                    count++
+                }
+                if (options.appendOptions.max) {
+                    if (df.dtypes.every((x) => x == 'int32' || x == 'float32')) {
+                        data.push(df.min({ axis: 0 }))
+                    } else {
+                        let temp = []
+                        df.columns.forEach((column) => {
+                            if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
+                                temp.push(df[column].max())
+                            } else {
+                                temp.push('')
+                            }
+                        })
+                        data.push(new Series(new Array(df.columns.length).fill('max'), { index: df.columns }))
+                        data.push(new Series(temp))
+                    }
+                    count++
+                }
+                if (options.appendOptions.avg) {
+                    data.push(new Series(new Array(df.columns.length).fill('avg'), { index: df.columns }))
+                    data.push(df.sum({ axis: 0 }).div(df.index.at(-1) + 1))
+                    count++
+                }
+                if (options.appendOptions.gap) {
+                    let temp = []
+                    df.columns.forEach((column) => {
+                        if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
+                            temp.push(df[column].values.at(-1) - df[column].values.at(0))
+                        } else {
+                            temp.push('')
+                        }
+                    })
+                    data.push(new Series(new Array(df.columns.length).fill('gap'), { index: df.columns }))
+                    data.push(new Series(temp))
+                    count++
+                }
+                if (options.appendOptions.printer) {
+                    let temp = []
+                    for (let i = 0; i < df.columns.length; i++) {
+                        if (i == df.columns.length - 2) temp.push(options.appendOptions.printer)
+                        else if (i == df.columns.length - 1 && options.appendOptions.printTime)
+                            temp.push(new Date().toLocaleString())
+                        else temp.push('')
+                    }
+                    data.push(new Series(temp))
+                }
+                if (count > 0) {
+                    df.print()
+                    let length = df.index.at(-1) + 1
+                    for (let index = length; index < length + data.length; index++) {
+                        df = df.append(data[index - length], [index])
+                    }
                 }
             }
-        }
-        if (
-            options.spliterOptions &&
-            options.spliterOptions.spliter &&
-            df.columns.includes(options.spliterOptions.column)
-        ) {
-            let map = new Map()
-            df.round(3, { inplace: true })
-            df.index.forEach((index) => {
-                let number = options.spliterOptions.spliter(df.at(index, options.spliterOptions.column))
-                if ((number == undefined) | null | false) {
-                    df.drop({ index: [index], inplace: true })
-                } else {
-                    let group = map.has(number)
-                    group
-                        ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
-                        : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
-                }
-            })
-            return Array.from(map.values())
-        }
-        return toJSON(df)
+            // if (
+            //     options.spliterOptions &&
+            //     options.spliterOptions.spliter &&
+            //     df.columns.includes(options.spliterOptions.column)
+            // ) {
+            //     let map = new Map()
+            //     df.index.forEach((index) => {
+            //         let number = options.spliterOptions.spliter(df.at(index, options.spliterOptions.column))
+            //         if ((number == undefined) | null | false) {
+            //             df.drop({ index: [index], inplace: true })
+            //         } else {
+            //             let group = map.has(number)
+            //             group
+            //                 ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
+            //                 : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
+            //         }
+            //     })
+            //     return Array.from(map.values())
+            // }
+            df.fillNa('', { inplace: true })
+            df.applyMap(
+                (x) => {
+                    if (typeof x === 'number') {
+                        x = parseFloat(x.toFixed(4))
+                    }
+                    return String(x)
+                },
+                { inplace: true }
+            )
+            finalResult.push(toJSON(df))
+        })
+        return finalResult
     } catch (e) {
         console.log(e)
     }
 }
+
 /**
  *
  * @param {file} dataBase
@@ -300,68 +352,5 @@ function readDbData(dataBase, tableName, attributeString, callback) {
         callback(result)
     })
 }
-// let data = [
-//     {
-//         server: 1,
-//         sourceTimestamp: '2023/2/24 14:20:55',
-//     },
-//     {
-//         server: 2,
-//         sourceTimestamp: '2023/2/24 14:25:55',
-//     },
-//     {
-//         server: 2,
-//         sourceTimestamp: '2023/2/24 14:30:55',
-//     },
-//     {
-//         server: 5,
-//         sourceTimestamp: '2023/2/24 14:45:55',
-//     },
-//     {
-//         server: 29,
-//         sourceTimestamp: '2023/2/24 14:35:55',
-//     },
-//     {
-//         server: '31',
-//         sourceTimestamp: '2023/2/24 14:37:55',
-//     },
-//     {
-//         server: '51',
-//         sourceTimestamp: 'sts',
-//     },
-//     {
-//         server: 'niceServer',
-//         sourceTimestamp: 'sts',
-//     },
-//     {
-//         server: '52',
-//         sourceTimestamp: '2023/2/24 14:17:55',
-//     },
-//     {
-//         server: 'niceServer',
-//         sourceTimestamp: 'sts',
-//     },
-//     {
-//         server: 'niceServer',
-//         sourceTimestamp: 'sts',
-//     },
-// ]
-// let { filter, grouper } = configureFilter('today', { date: '2023/2/24', interval: '3m' })
-// console.log(
-//     produceData(data, {
-//         filterOptions: {
-//             column: 'sourceTimestamp',
-//             filter: filter,
-//         },
-//         appendOptions: {
-//             sum: true,
-//             gap: true,
-//             avg: true,
-//             min: true,
-//             max: true,
-//         },
-//     }),
-//     'nice'
-// )
 
 export { readFromSource, produceData, readDbData }

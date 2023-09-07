@@ -2,35 +2,24 @@
     <div id="tabs">
         <div class="tabs_header">
             <span class="type_name">操作：</span>
-            <button class="tabs_btn" style="margin-right: 16px">分离器</button>
-            <button class="tabs_btn active">筛选器</button>
+            <button class="tabs_btn active" style="margin-right: 18px">筛选器</button>
         </div>
         <div class="tabs_content">
-            <div class="tabs_pane" style="display: none">
-                <select class="type_select" name="pets" id="pet-select" v-model="spliterValue"
-                    @change="handleChangespliter">
-                    <option value="">选择spliter类型</option>
-                    <option value="byDay">日报</option>
-                    <option value="byMonth">月报</option>
-                    <option value="byYear">年报</option>
-                </select>
-                <input id="start" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.start"
-                    @change="handlDatespliter" />
-                <input id="end" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}" v-model="datespliterFrom.end"
-                    @change="handlDatespliter" />
-                <button class="type_confirm" @click="handleConfirmSpliter">确定</button>
-            </div>
             <div class="tabs_pane" style="display: block">
                 <el-tabs class="date_tabs" tab-position="left" v-model="filterValue" @tab-change="handleChangefilter">
-                    <el-tab-pane name="today" label="日报表">
+                    <el-tab-pane name="byDay" label="日报表">
                         <div class="pane_box">
                             <input id="dayDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
                                 v-model="filterDayDate" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterDayPet">
-                                <option v-for="(item, index) in filterDayPetList" :value="item.name">
+                                <option v-for="(item, index) in filterDayPetList" :value="item.name" :key="index">
                                     {{ item.value }}
                                 </option>
                             </select>
+                            <div class="check_line">
+                                <input type="checkbox" id="topOfTime" v-model="daytopOfTimeValue" />
+                                <label for="topOfTime" style="margin-left: 5px;">整点</label>
+                            </div>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
                                 <button class="option_btn confirm" @click="handleConfirmDay">确认</button>
@@ -47,12 +36,47 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="thisMonth" label="月报表">
+                    <el-tab-pane name="byClass" label="班报表">
+                        <div class="pane_box">
+                            <input id="monthDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterClassDate" />
+                            <select class="type_select" name="pets" id="pet-select" v-model="filterClassPet">
+                                <option v-for="(item, index) in filterClassPetList" :value="item.name" :key="index">{{
+                                    item.value }}
+                                </option>
+                            </select>
+                            <select class="type_select" name="pets" id="pet-select" v-model="filterClassNum">
+                                <option v-for="(item, index) in filterClassList" :value="item.name" :key="index">{{
+                                    item.value }}
+                                </option>
+                            </select>
+                            <input class="dateInput" v-model="filterClassStart" />
+                            <div class="check_line">
+                                <input type="checkbox" id="topOfTime" v-model="classtopOfTimeValue" />
+                                <label for="topOfTime" style="margin-left: 5px;">整点</label>
+                            </div>
+                            <div class="option_card">
+                                <button class="option_btn" @click="handleClear">清空</button>
+                                <button class="option_btn confirm" @click="handleConfirmClass">确认</button>
+                            </div>
+                            <div class="checkbox_card">
+                                <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
+                                    <el-checkbox label="sum" />
+                                    <el-checkbox label="max" />
+                                    <el-checkbox label="min" />
+                                    <el-checkbox label="avg" />
+                                    <el-checkbox label="gap" />
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane name="byMonth" label="月报表">
                         <div class="pane_box">
                             <input id="monthDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
                                 v-model="filterMonthDate" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet">
-                                <option v-for="(item, index) in filterMonthPetList" :value="item.name">
+                                <option v-for="(item, index) in filterMonthPetList" :value="item.name" :key="index">
                                     {{ item.value }}
                                 </option>
                             </select>
@@ -76,41 +100,14 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane name="byClass" label="班报表">
+                    <el-tab-pane name="byYear" label="年报表">
                         <div class="pane_box">
-                            <input id="monthDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterClassDate" />
-                            <select class="type_select" name="pets" id="pet-select" v-model="filterClassPet">
-                                <option v-for="(item, index) in filterClassPetList" :value="item.name">{{ item.value }}
-                                </option>
-                            </select>
-                            <select class="type_select" name="pets" id="pet-select" v-model="filterClassNum">
-                                <option v-for="(item, index) in filterClassList" :value="item.name">{{ item.value }}
-                                </option>
-                            </select>
-                            <input id="monthDate" class="dateInput" v-model="filterClassStart" />
-                            <div class="option_card">
-                                <button class="option_btn" @click="handleClear">清空</button>
-                                <button class="option_btn confirm" @click="handleConfirmClass">确认</button>
-                            </div>
-                            <div class="checkbox_card">
-                                <el-checkbox-group class="class_type" v-model="checkList">
-                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane name="thisYear" label="年报表">
-                        <div class="pane_box">
-                            <input id="yearDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterYearDate" />
+                            <!-- <input id="yearDate" class="dateInput" type="month" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterYearDate" /> -->
+                            <select id="yearDate" class="type_select" v-model="filterYearDate"></select>
                             <select class="type_select" name="pets" id="pet-select" v-model="filterYearPet">
-                                <option v-for="(item, index) in filterYearPetList" :value="item.name">{{ item.value }}
+                                <option v-for="(item, index) in filterYearPetList" :value="item.name" :key="index">{{
+                                    item.value }}
                                 </option>
                             </select>
                             <div class="option_card">
@@ -137,24 +134,24 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ElTabs, ElTabPane, ElCheckboxGroup, ElCheckbox } from 'element-plus'
 import { useStore } from 'vuex'
 import { filters } from '@/unit/filter/filter'
 
 const store = useStore()
 
-const spliterValue = ref('')
-const datespliterFrom = ref({ start: '', end: '' })
-
 const filterDayDate = ref('')
 const filterDayPet = ref('')
-
-const filterMonthDate = ref('')
-const filterMonthPet = ref('')
+const daytopOfTimeValue = ref(true)
 
 const filterClassDate = ref('')
 const filterClassPet = ref('')
 const filterClassNum = ref('')
 const filterClassStart = ref('8:00')
+const classtopOfTimeValue = ref(true)
+
+const filterMonthDate = ref('')
+const filterMonthPet = ref('')
 
 const filterYearDate = ref('')
 const filterYearPet = ref('')
@@ -199,7 +196,7 @@ const filterYearPetList = ref([
     { name: 'gap', value: 'gap' },
 ])
 
-const filterValue = ref('today')
+const filterValue = ref('byDay')
 const checkList = ref(['sum', 'gap'])
 let dateConfig = {}
 
@@ -221,28 +218,13 @@ const handleConfirmDay = (e) => {
         options: {
             date: filterDayDate.value,
             interval: filterDayPet.value,
-            theTopOfTheHour: true
+            theTopOfTime: daytopOfTimeValue.value
         },
         replace: replaceList
     }
     Confirm(Config, e.target)
 }
-const handleConfirmMonth = () => {
-    let replaceList = []
-    for (let item of checkList.value.values()) {
-        replaceList.push(item)
-    }
-    let Config = {
-        purpose: filterValue.value,
-        options: {
-            date: filterMonthDate.value,
-            replace: filterMonthPet.value
-        },
-        replace: replaceList
-    }
-    Confirm(Config, e.target)
-}
-const handleConfirmClass = () => {
+const handleConfirmClass = (e) => {
     let replaceList = []
     let cnt = 1
     for (let item of checkList.value.values()) {
@@ -258,16 +240,33 @@ const handleConfirmClass = () => {
         options: {
             date: filterClassDate.value,
             replace: filterClassPet.value,
+            theTopOfTime: classtopOfTimeValue.value,
             classOption: {
                 start: filterClassStart.value,
                 gap: Number(24 / cnt)
             }
         },
+        replace: replaceList,
+        split: true
+    }
+    Confirm(Config, e.target)
+}
+const handleConfirmMonth = (e) => {
+    let replaceList = []
+    for (let item of checkList.value.values()) {
+        replaceList.push(item)
+    }
+    let Config = {
+        purpose: filterValue.value,
+        options: {
+            date: filterMonthDate.value,
+            replace: filterMonthPet.value
+        },
         replace: replaceList
     }
     Confirm(Config, e.target)
 }
-const handleConfirmYear = () => {
+const handleConfirmYear = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
         replaceList.push(item)
@@ -285,16 +284,21 @@ const handleConfirmYear = () => {
 const Confirm = (Config, el) => {
     el.style.backgroundColor = "#07C160"
     const func = filters.get('date').configureFilter
-    const { filter, grouper } = func(Config.purpose, Config.options)
+    const { filter, grouper, formatter } = func(Config.purpose, Config.options)
     store.commit('changeFilter', filter)
     store.commit('changeGrouper', grouper)
+    store.commit('changeFormatter', formatter)
     if ('replace' in Config.options) {
         store.commit('changeReplace', Config.options.replace)
+    }
+    if ('split' in Config) {
+        store.commit('changeSplit', Config.split)
     }
     store.commit('changeAppend', Config.replace)
     console.log(Config)
     console.log(filter)
     console.log(grouper)
+    console.log(formatter)
     console.log(store.state)
 }
 const handleClear = () => {
@@ -307,26 +311,6 @@ const handleClear = () => {
     store.commit('changeReplace', null)
     store.commit('changeFilter', null)
     store.commit('changeGrouper', null)
-}
-
-// spliter相关
-const handleChangespliter = () => {
-    dateConfig.purpose = spliterValue.value
-}
-const handlDatespliter = () => {
-    dateConfig.options = {
-        dateStart: converDate(datespliterFrom.value.start),
-        dateEnd: converDate(datespliterFrom.value.end),
-    }
-}
-const handleConfirmSpliter = () => {
-    console.log(dateConfig)
-    const func = filters.get('date').configureSpliter
-    const spliter = func(dateConfig.purpose, dateConfig.options)
-    store.commit('changeSpliter', spliter)
-    dateConfig = {}
-    spliterValue.value = ''
-    datespliterFrom.value = { start: '', end: '' }
 }
 
 // 功能
@@ -385,16 +369,30 @@ const converDate2 = (target = 'day') => {
                 today = yyyy + '-' + MM
                 return today
             }
+        case 'year':
+            {
+                let today = new Date()
+                let year = today.getFullYear()
+                return year
+            }
         default:
             break
     }
 }
+const yearSelectInitialize = () => {
+    var obj = document.getElementById("yearDate");
+    for (var i = 1998; i < new Date().getFullYear() + 1; i++) {
+        var op = new Option(i, i);
+        obj.add(op);
+    }
+}
 onMounted(() => {
     filterDayDate.value = converDate2('day')
+    filterClassDate.value = converDate2('day')
     filterMonthDate.value = converDate2('month')
-    filterClassDate.value = converDate2('month')
-    filterYearDate.value = converDate2('month')
-    new TabSwitch('tabs')
+    filterYearDate.value = converDate2('year')
+    yearSelectInitialize()
+    // new TabSwitch('tabs')
 })
 </script>
 
@@ -438,9 +436,9 @@ onMounted(() => {
     }
 
     .tabs_content {
-        width: calc(100% - 29px);
+        width: calc(100% - 25px);
         height: calc(100% - $type_line-height);
-        margin: 0 15px 0 14px;
+        margin: 0 15px 0 10px;
 
         .tabs_pane {
             width: 100%;
@@ -483,6 +481,13 @@ onMounted(() => {
                 border: 1px solid #d9d9d9;
                 border-radius: 3px;
                 outline: none;
+            }
+
+            .check_line {
+                text-align: left;
+                height: 20px;
+                line-height: 20px;
+                margin: 5px 0 0 6px;
             }
 
             .type_confirm {
@@ -568,12 +573,6 @@ onMounted(() => {
                                         font-size: 12px;
                                         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                                     }
-                                }
-                            }
-
-                            .el-checkbox-group.class_type {
-                                .el-checkbox {
-                                    margin: 0 3% 0 7%;
                                 }
                             }
                         }
