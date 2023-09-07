@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "core-js": "^3.8.3",
-        "danfojs": "^1.1.2",
+        "danfojs": "^0.1.1",
         "element-plus": "^2.3.5",
         "exceljs": "^4.3.0",
         "file-saver": "^2.0.5",
@@ -17,8 +17,7 @@
         "mitt": "^3.0.0",
         "vue": "^3.2.13",
         "vue-router": "^4.0.3",
-        "vuex": "^4.0.0",
-        "x-data-spreadsheet": "^1.1.9"
+        "vuex": "^4.0.0"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~5.0.0",

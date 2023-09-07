@@ -57,7 +57,7 @@ const dbTolucky = (data, range) => {
     let rangeSpace = {}
     if (range.tableHead) {
         rangeSpace = {
-            r: range.row[0],
+            r: range.row[1],
             c: range.column[0],
             data: [...range.tableHead],
         }
@@ -67,6 +67,7 @@ const dbTolucky = (data, range) => {
             c: range.column[0],
         }
     }
+    console.log(rangeSpace)
     let luckyData = []
     if (Array.isArray(data[0])) {
         data.forEach((item) => {
@@ -101,22 +102,24 @@ const dbDataConverL = (rangeSpace, index, data) => {
             cellData.push(item)
         })
     }
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length + 1; i++) {
         let j = 0
         for (const item in data[i]) {
-            cellData.push({
-                r: i + rangeSpace.r,
-                c: j + rangeSpace.c,
-                v: {
-                    v: data[i][item],
-                    ht: "0",
-                    ct: {
-                        fa: "General",
-                        t: "n"
-                    }
-                },
-            })
-            j++
+            if (item != 'sourceTimestamp') {
+                cellData.push({
+                    r: i + rangeSpace.r + 1,
+                    c: j + rangeSpace.c,
+                    v: {
+                        v: data[i][item],
+                        ht: "0",
+                        ct: {
+                            fa: "General",
+                            t: "n"
+                        }
+                    },
+                })
+                j++
+            }
         }
         //todo: 合并单元格导出有问题，数据格式不正确
         // let arr = Object.values(data[i])
@@ -199,6 +202,7 @@ const dbDataConverL = (rangeSpace, index, data) => {
         //     }
         // }
     }
+    console.log(cellData)
     console.log(cellData)
     sheet.celldata = cellData
     console.log(sheet)

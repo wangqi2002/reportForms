@@ -94,7 +94,7 @@
                                 <button class="option_btn confirm" @click="handleConfirmClass">确认</button>
                             </div>
                             <div class="checkbox_card">
-                                <el-checkbox-group class="class_type" v-model="checkList">
+                                <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
@@ -137,6 +137,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { ElTabs, ElTabPane, ElCheckboxGroup, ElCheckbox } from 'element-plus'
 import { useStore } from 'vuex'
 import { filters } from '@/unit/filter/filter'
 
@@ -227,7 +228,7 @@ const handleConfirmDay = (e) => {
     }
     Confirm(Config, e.target)
 }
-const handleConfirmMonth = () => {
+const handleConfirmMonth = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
         replaceList.push(item)
@@ -242,7 +243,7 @@ const handleConfirmMonth = () => {
     }
     Confirm(Config, e.target)
 }
-const handleConfirmClass = () => {
+const handleConfirmClass = (e) => {
     let replaceList = []
     let cnt = 1
     for (let item of checkList.value.values()) {
@@ -267,7 +268,7 @@ const handleConfirmClass = () => {
     }
     Confirm(Config, e.target)
 }
-const handleConfirmYear = () => {
+const handleConfirmYear = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
         replaceList.push(item)
@@ -438,9 +439,9 @@ onMounted(() => {
     }
 
     .tabs_content {
-        width: calc(100% - 29px);
+        width: calc(100% - 25px);
         height: calc(100% - $type_line-height);
-        margin: 0 15px 0 14px;
+        margin: 0 15px 0 10px;
 
         .tabs_pane {
             width: 100%;
@@ -568,12 +569,6 @@ onMounted(() => {
                                         font-size: 12px;
                                         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                                     }
-                                }
-                            }
-
-                            .el-checkbox-group.class_type {
-                                .el-checkbox {
-                                    margin: 0 3% 0 7%;
                                 }
                             }
                         }

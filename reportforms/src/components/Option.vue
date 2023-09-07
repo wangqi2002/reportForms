@@ -7,12 +7,11 @@
             <el-collapse-item title="报表类型" name="2">
                 <Reportconfig></Reportconfig>
             </el-collapse-item>
-            <el-collapse-item title="报表配置" name="3">
+            <!-- <el-collapse-item title="报表配置" name="3">
                 <Reporttype></Reporttype>
-            </el-collapse-item>
+            </el-collapse-item> -->
             <el-collapse-item title="报表导出" name="4">
                 <div class="download_box">
-                    <el-divider>报表导出</el-divider>
                     <input class="report_name" type="text" placeholder="输入文件名" id="reportName" />
                     <button class="download_btn" @click="downloadReport">导出报表</button>
                     <button class="print_btn" @click="printReport">打印报表</button>

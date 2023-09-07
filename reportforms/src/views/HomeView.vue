@@ -62,7 +62,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss">
-$option: 250px;
+$option: 220px;
 
 * {
     padding: 0;
