@@ -165,6 +165,7 @@ const handleChangedb = async (e) => {
         {
             tableName: e.target.innerText,
             limit: '1',
+            limit: '1',
         },
         function (result) {
             nidList.value.length = 0
@@ -234,6 +235,7 @@ const handleConfirm = () => {
         })
     }
     const luckyRange = store.state.luckyRange
+    console.log(luckyRange)
     if (fillOptions.size != 0) {
         let options = produceOption(fillOptions)
         console.log("options", options)
@@ -268,8 +270,10 @@ const setheadListener = () => {
         let cloumnName = e.value
         if (fillOptions.get(e.idIn) == undefined) {
             obj = { column: cloumnName }
+            obj = { column: cloumnName }
         } else {
             obj = fillOptions.get(e.idIn)
+            obj.column = cloumnName
             obj.column = cloumnName
         }
         fillOptions.set(e.idIn, obj)

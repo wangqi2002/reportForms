@@ -177,11 +177,10 @@ function produceData(data, options) {
                                         eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
-                                            .${
-                                                options.filterOptions.replace == 'avg'
-                                                    ? 'mean'
-                                                    : options.filterOptions.replace
-                                            }({axis:0})
+                                            .${options.filterOptions.replace == 'avg'
+                                            ? 'mean'
+                                            : options.filterOptions.replace
+                                        }({axis:0})
                                             .round(3).values[0]
                                     )`)
                                     }
@@ -194,8 +193,8 @@ function produceData(data, options) {
                     result = result
                         ? result.append(new Series(temp), [result.index.at(-1) + 1])
                         : new DataFrame([new Series(temp).values], {
-                              columns: tempDF.columns,
-                          })
+                            columns: tempDF.columns,
+                        })
                 })
                 df = result
             }
