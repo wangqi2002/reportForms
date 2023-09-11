@@ -21,7 +21,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { equal } from '@/unit/filter/equal/equal'
+import { Equal } from '@/unit/filter/equal/equal'
 
 const store = useStore()
 

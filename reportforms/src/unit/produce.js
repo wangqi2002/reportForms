@@ -113,6 +113,7 @@ function readFromSource(type, file, options, callback) {
 * @returns [[any]]
 */
 function produceData(data, options) {
+    console.log(DataFrame)
     try {
         let df = new DataFrame(data)
         let dfList = []
@@ -178,9 +179,9 @@ function produceData(data, options) {
                                         tempDF
                                             .loc({ columns: [column]})
                                             .${options.filterOptions.replace == 'avg'
-                                            ? 'mean'
-                                            : options.filterOptions.replace
-                                        }({axis:0})
+                                                ? 'mean'
+                                                : options.filterOptions.replace
+                                            }({axis:0})
                                             .round(3).values[0]
                                     )`)
                                     }

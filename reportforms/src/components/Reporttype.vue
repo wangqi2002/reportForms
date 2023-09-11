@@ -35,6 +35,7 @@ const getComponents = () => {
             defineAsyncComponent(() => import(`@/unit/filter/${key}/${key}.vue`))
         )
     }
+    compName.value = 'date'
 }
 const getFiltertype = () => {
     filters.forEach((value) => {
