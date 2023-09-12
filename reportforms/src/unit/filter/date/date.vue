@@ -134,7 +134,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElTabs, ElTabPane, ElCheckboxGroup, ElCheckbox } from 'element-plus'
+import { ElTabs, ElTabPane, ElCheckboxGroup, ElCheckbox, ElNotification } from 'element-plus'
 import { useStore } from 'vuex'
 import { filters } from '@/unit/filter/filter'
 
@@ -286,7 +286,11 @@ const handleConfirmYear = (e) => {
     Confirm(Config, e.target)
 }
 const Confirm = (Config, el) => {
-    el.style.backgroundColor = "#07C160"
+    ElNotification({
+        title: 'Success',
+        message: '筛选器设置成功',
+        type: 'success',
+    })
     const func = filters.get('date').configureFilter
     const { filter, grouper, formatter } = func(Config.purpose, Config.options)
     store.commit('changeFilter', filter)
@@ -307,14 +311,15 @@ const Confirm = (Config, el) => {
 }
 const handleClear = () => {
     checkList.value = []
-    let els = document.querySelectorAll('.option_btn.confirm')
-    for (let i = 0; i < els.length; i++) {
-        els[i].style.backgroundColor = "#f0f0f0"
-    }
     store.commit('changeAppend', null)
     store.commit('changeReplace', null)
     store.commit('changeFilter', null)
     store.commit('changeGrouper', null)
+    ElNotification({
+        title: 'Info',
+        message: '已清除',
+        type: 'info',
+    })
 }
 
 // 功能

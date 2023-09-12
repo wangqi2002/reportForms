@@ -54,6 +54,14 @@
                 .fill_upload_btn_box {
                     height: 30px;
                     line-height: 30px;
+                    border-bottom: 1px solid #60627c;
+                    .fill_upload_btn {
+                        width: 100px;
+                        height: 25px;
+                        line-height: 25px;
+                        border: none;
+                        background: none;
+                    }
                 }
                 .fill_db_content {
                     height: calc(100% - 30px);

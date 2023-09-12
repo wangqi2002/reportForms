@@ -12,7 +12,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="filedbInput" type="file" placeholder="请选择.db文件" @change="loadDbfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickDbfileInput" style="margin-left: 6px">
+                        <button class="fill_upload_btn" @click="clickDbfileInput" >
                             选择.db文件
                         </button>
                     </div>
@@ -28,7 +28,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="fileexcelInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcelfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickExcelfileInput" style="margin-left: 6px">
+                        <button class="fill_upload_btn" @click="clickExcelfileInput" >
                             选择.xlsx文件
                         </button>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="filecsvInput" type="file" placeholder="请选择.csv文件" @change="loadCsvfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickCsvFileInput" style="margin-left: 6px">
+                        <button class="fill_upload_btn" @click="clickCsvFileInput" >
                             选择.csv文件
                         </button>
                     </div>
