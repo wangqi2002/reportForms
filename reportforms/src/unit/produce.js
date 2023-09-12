@@ -1,6 +1,6 @@
 import { DataFrame, toJSON, Series, readCSV } from 'danfojs'
 import { column } from 'element-plus/es/components/table-v2/src/common'
-
+ 
 /**
 * @param {'sqlite'|'excel'|'csv'} type 确认是哪种数据类型,目前支持:sqlite,excel,csv
 * @param {string} fileName 文件相对/绝对路径并且携带文件名称和后缀
@@ -113,7 +113,7 @@ function readFromSource(type, file, options, callback) {
 * @returns [[any]]
 */
 function produceData(data, options) {
-    console.log(DataFrame)
+    console.log(options)
     try {
         let df = new DataFrame(data)
         let dfList = []
@@ -153,7 +153,10 @@ function produceData(data, options) {
             dfList = [df]
         }
         dfList.forEach((df) => {
-            if (options.filterOptions.grouper && options.filterOptions.replace) {
+            if (
+                options.filterOptions.grouper &&
+                ['gap', 'sum', 'first', 'avg', 'min', 'max'].includes(options.filterOptions.replace)
+            ) {
                 let array = options.filterOptions.split ? ['ok'] : Array.from(map.keys())
                 array = array.sort()
                 let result = undefined
@@ -178,9 +181,10 @@ function produceData(data, options) {
                                         eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
-                                            .${options.filterOptions.replace == 'avg'
-                                                ? 'mean'
-                                                : options.filterOptions.replace
+                                            .${
+                                                options.filterOptions.replace == 'avg'
+                                                    ? 'mean'
+                                                    : options.filterOptions.replace
                                             }({axis:0})
                                             .round(3).values[0]
                                     )`)
@@ -194,9 +198,10 @@ function produceData(data, options) {
                     result = result
                         ? result.append(new Series(temp), [result.index.at(-1) + 1])
                         : new DataFrame([new Series(temp).values], {
-                            columns: tempDF.columns,
-                        })
+                              columns: tempDF.columns,
+                          })
                 })
+                df.print()
                 df = result
             }
             if (options.filterOptions.formatter) {
@@ -288,7 +293,6 @@ function produceData(data, options) {
                     data.push(new Series(temp))
                 }
                 if (count > 0) {
-                    df.print()
                     let length = df.index.at(-1) + 1
                     for (let index = length; index < length + data.length; index++) {
                         df = df.append(data[index - length], [index])
@@ -326,6 +330,7 @@ function produceData(data, options) {
             )
             finalResult.push(toJSON(df))
         })
+        // console.log(finalResult)
         return finalResult
     } catch (e) {
         console.log(e)

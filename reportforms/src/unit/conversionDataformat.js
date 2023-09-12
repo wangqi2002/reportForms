@@ -51,7 +51,7 @@ const dbTospread = (dataList) => {
     return data
 }
 
-const dbTolucky = (data, range) => {
+const dbTolucky = (data, range, isIn) => {
     let index = 0
     console.log(range)
     let rangeSpace = {}
@@ -71,14 +71,14 @@ const dbTolucky = (data, range) => {
     let luckyData = []
     if (Array.isArray(data[0])) {
         data.forEach((item) => {
-            luckyData.push(dbDataConverL(rangeSpace, index++, item))
+            luckyData.push(dbDataConverL(rangeSpace, index++, item, isIn))
         })
     } else {
-        luckyData.push(dbDataConverL(rangeSpace, index++, data))
+        luckyData.push(dbDataConverL(rangeSpace, index++, data, isIn))
     }
     return luckyData
 }
-const dbDataConverL = (rangeSpace, index, data) => {
+const dbDataConverL = (rangeSpace, index, data, isIn) => {
     let sheet = {
         name: 'Sheet',
         color: '',
@@ -102,10 +102,111 @@ const dbDataConverL = (rangeSpace, index, data) => {
             cellData.push(item)
         })
     }
-    for (let i = 0; i < data.length + 1; i++) {
-        let j = 0
-        for (const item in data[i]) {
-            if (item != 'sourceTimestamp') {
+    if (!isIn) {
+        for (let i = 0; i < data.length + 1; i++) {
+            let j = 0
+            for (const item in data[i]) {
+                if (item != 'sourceTimestamp') {
+                    cellData.push({
+                        r: i + rangeSpace.r + 1,
+                        c: j + rangeSpace.c,
+                        v: {
+                            v: data[i][item],
+                            ht: "0",
+                            ct: {
+                                fa: "General",
+                                t: "n"
+                            }
+                        },
+                    })
+                    j++
+                }
+            }
+            //todo: 合并单元格导出有问题，数据格式不正确
+            // let arr = Object.values(data[i])
+            // let rsV = arr.length
+            // if (rsV > 1) {
+            //     let flag = arr[0]
+            //     let result = arr.every(item => item === flag)
+            //     if (result) {
+            //         for (const item in data[i]) {
+            //             if (j == 0) {
+            //                 cellData.push({
+            //                     r: i + rangeSpace.r,
+            //                     c: j + rangeSpace.c,
+            //                     v: {
+            //                         v: data[i][item],
+            //                         ht: "0",
+            //                         mc: {
+            //                             c: rangeSpace.c,
+            //                             r: i + rangeSpace.r,
+            //                             cs: rsV,
+            //                             rs: 1
+            //                         },
+            //                         ct: {
+            //                             fa: "General",
+            //                             t: "n"
+            //                         }
+            //                     },
+            //                 })
+            //             } else {
+            //                 cellData.push({
+            //                     r: i + rangeSpace.r,
+            //                     c: j + rangeSpace.c,
+            //                     v: {
+            //                         ht: "0",
+            //                         mc: {
+            //                             c: rangeSpace.c,
+            //                             r: i + rangeSpace.r
+            //                         },
+            //                         ct: {
+            //                             fa: "General",
+            //                             t: "n"
+            //                         }
+            //                     },
+            //                 })
+            //             }
+            //             j++
+            //         }
+            //     } else {
+            //         for (const item in data[i]) {
+            //             cellData.push({
+            //                 r: i + rangeSpace.r,
+            //                 c: j + rangeSpace.c,
+            //                 v: {
+            //                     v: data[i][item],
+            //                     ht: "0",
+            //                     ct: {
+            //                         fa: "General",
+            //                         t: "n"
+            //                     }
+            //                 },
+            //             })
+            //             j++
+            //         }
+            //     }
+            // } else {
+            //     for (const item in data[i]) {
+            //         cellData.push({
+            //             r: i + rangeSpace.r,
+            //             c: j + rangeSpace.c,
+            //             v: {
+            //                 v: data[i][item],
+            //                 ht: "0",
+            //                 ct: {
+            //                     fa: "General",
+            //                     t: "n"
+            //                 }
+            //             },
+            //         })
+            //         j++
+            //     }
+            // }
+        }
+    } else {
+        for (let i = 0; i < data.length + 1; i++) {
+            let j = 0
+            for (const item in data[i]) {
                 cellData.push({
                     r: i + rangeSpace.r + 1,
                     c: j + rangeSpace.c,
@@ -119,90 +220,90 @@ const dbDataConverL = (rangeSpace, index, data) => {
                     },
                 })
                 j++
+
             }
+            //todo: 合并单元格导出有问题，数据格式不正确
+            // let arr = Object.values(data[i])
+            // let rsV = arr.length
+            // if (rsV > 1) {
+            //     let flag = arr[0]
+            //     let result = arr.every(item => item === flag)
+            //     if (result) {
+            //         for (const item in data[i]) {
+            //             if (j == 0) {
+            //                 cellData.push({
+            //                     r: i + rangeSpace.r,
+            //                     c: j + rangeSpace.c,
+            //                     v: {
+            //                         v: data[i][item],
+            //                         ht: "0",
+            //                         mc: {
+            //                             c: rangeSpace.c,
+            //                             r: i + rangeSpace.r,
+            //                             cs: rsV,
+            //                             rs: 1
+            //                         },
+            //                         ct: {
+            //                             fa: "General",
+            //                             t: "n"
+            //                         }
+            //                     },
+            //                 })
+            //             } else {
+            //                 cellData.push({
+            //                     r: i + rangeSpace.r,
+            //                     c: j + rangeSpace.c,
+            //                     v: {
+            //                         ht: "0",
+            //                         mc: {
+            //                             c: rangeSpace.c,
+            //                             r: i + rangeSpace.r
+            //                         },
+            //                         ct: {
+            //                             fa: "General",
+            //                             t: "n"
+            //                         }
+            //                     },
+            //                 })
+            //             }
+            //             j++
+            //         }
+            //     } else {
+            //         for (const item in data[i]) {
+            //             cellData.push({
+            //                 r: i + rangeSpace.r,
+            //                 c: j + rangeSpace.c,
+            //                 v: {
+            //                     v: data[i][item],
+            //                     ht: "0",
+            //                     ct: {
+            //                         fa: "General",
+            //                         t: "n"
+            //                     }
+            //                 },
+            //             })
+            //             j++
+            //         }
+            //     }
+            // } else {
+            //     for (const item in data[i]) {
+            //         cellData.push({
+            //             r: i + rangeSpace.r,
+            //             c: j + rangeSpace.c,
+            //             v: {
+            //                 v: data[i][item],
+            //                 ht: "0",
+            //                 ct: {
+            //                     fa: "General",
+            //                     t: "n"
+            //                 }
+            //             },
+            //         })
+            //         j++
+            //     }
+            // }
         }
-        //todo: 合并单元格导出有问题，数据格式不正确
-        // let arr = Object.values(data[i])
-        // let rsV = arr.length
-        // if (rsV > 1) {
-        //     let flag = arr[0]
-        //     let result = arr.every(item => item === flag)
-        //     if (result) {
-        //         for (const item in data[i]) {
-        //             if (j == 0) {
-        //                 cellData.push({
-        //                     r: i + rangeSpace.r,
-        //                     c: j + rangeSpace.c,
-        //                     v: {
-        //                         v: data[i][item],
-        //                         ht: "0",
-        //                         mc: {
-        //                             c: rangeSpace.c,
-        //                             r: i + rangeSpace.r,
-        //                             cs: rsV,
-        //                             rs: 1
-        //                         },
-        //                         ct: {
-        //                             fa: "General",
-        //                             t: "n"
-        //                         }
-        //                     },
-        //                 })
-        //             } else {
-        //                 cellData.push({
-        //                     r: i + rangeSpace.r,
-        //                     c: j + rangeSpace.c,
-        //                     v: {
-        //                         ht: "0",
-        //                         mc: {
-        //                             c: rangeSpace.c,
-        //                             r: i + rangeSpace.r
-        //                         },
-        //                         ct: {
-        //                             fa: "General",
-        //                             t: "n"
-        //                         }
-        //                     },
-        //                 })
-        //             }
-        //             j++
-        //         }
-        //     } else {
-        //         for (const item in data[i]) {
-        //             cellData.push({
-        //                 r: i + rangeSpace.r,
-        //                 c: j + rangeSpace.c,
-        //                 v: {
-        //                     v: data[i][item],
-        //                     ht: "0",
-        //                     ct: {
-        //                         fa: "General",
-        //                         t: "n"
-        //                     }
-        //                 },
-        //             })
-        //             j++
-        //         }
-        //     }
-        // } else {
-        //     for (const item in data[i]) {
-        //         cellData.push({
-        //             r: i + rangeSpace.r,
-        //             c: j + rangeSpace.c,
-        //             v: {
-        //                 v: data[i][item],
-        //                 ht: "0",
-        //                 ct: {
-        //                     fa: "General",
-        //                     t: "n"
-        //                 }
-        //             },
-        //         })
-        //         j++
-        //     }
-        // }
     }
-    console.log(cellData)
     console.log(cellData)
     sheet.celldata = cellData
     console.log(sheet)

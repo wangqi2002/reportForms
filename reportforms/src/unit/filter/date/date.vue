@@ -274,7 +274,7 @@ const handleConfirmYear = (e) => {
     let Config = {
         purpose: filterValue.value,
         options: {
-            date: filterYearDate.value,
+            date: filterYearDate.value.toString(),
             replace: filterYearPet.value
         },
         replace: replaceList

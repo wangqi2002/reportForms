@@ -96,15 +96,15 @@ const getDbData = (callback) => {
     let attributeString = ''
     for (let i = 0; i < childList.length; i++) {
         if (i == 0) {
-            if (childList[i].value != '') {
-                attributeString = `"${childList[i].value}"`
+            if (childList[i].getAttribute('name') != '') {
+                attributeString = `"${childList[i].getAttribute('name')}"`
             }
         } else {
-            if (childList[i].value != '') {
+            if (childList[i].getAttribute('name') != '') {
                 if (attributeString == '') {
-                    attributeString = `"${childList[i].value}"`
+                    attributeString = `"${childList[i].getAttribute('name')}"`
                 } else {
-                    attributeString = attributeString + ',' + `"${childList[i].value}"`
+                    attributeString = attributeString + ',' + `"${childList[i].getAttribute('name')}"`
                 }
             }
         }
@@ -201,6 +201,7 @@ const handleExitfill = () => {
         .catch(() => { })
 }
 const handleConfirm = () => {
+    realData.length = 0
     let split = store.state.split
     let key = null
     for (let item of fillOptions.entries()) {
@@ -243,13 +244,17 @@ const handleConfirm = () => {
             console.log(result.length)
             console.log(result)
             realData = produceData(result, { ...options })
-            // for (let i = 0; i < realData.length; i++) {
-            //     console.log(realData[i])
-            // }
+            for (let i = 0; i < realData[0].length; i++) {
+                console.log(realData[0][i])
+            }
             console.log(realData)
-            // let luckyData = dbTolucky(realData, luckyRange)
-            // emitter.emit('setLucky', luckyData)
-            // realData.length = 0
+            let luckyData = null
+            if (key == null) {
+                luckyData = dbTolucky(realData, luckyRange, false)
+            } else {
+                luckyData = dbTolucky(realData, luckyRange, true)
+            }
+            emitter.emit('setLucky', luckyData)
         })
     }
     dbItems.length = 0
@@ -312,7 +317,7 @@ const filltypeListener = () => {
         for (let i = 0; i < e.range.tableHead.length; i++) {
             tableHead.push(e.range.tableHead[i].v.v)
         }
-        creatTab('fill_table', e.range.column[1] + 1, tableHead)
+        creatTab('fill_table', e.range.column[1] - e.range.column[0] + 1, tableHead)
         if (e.type === 'dataBase') {
             filldbShow = true
             fillexcelShow = false

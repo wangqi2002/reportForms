@@ -1,11 +1,11 @@
 let patternTemplate = {
-    today: '^${params[0]}[/.: -]0?${params[1]}[/.: -]0?${params[2]}',
+    today: '^${params[0]}[/.: -]0?${params[1]}[/.: -T]0?${params[2]}',
     thisMonth: '^${params[0]}[/.: -]0?${params[1]}',
     thisYear: '^${params[0]}',
 } //注意正则表达式中-需要放到边界,否则会被误会为范围
 
 /**
- * @param {string} raw
+ * @param {string} raw 
  * @param {any[]} params
  * @returns
  */
@@ -60,7 +60,7 @@ function configureFilter(purpose, options) {
         let filter = undefined
         let grouper = undefined
         let formatter = undefined
-        let currentDate = options.date ? new Date(options.date) : new Date()
+        let currentDate = options.date ? new Date(String(options.date)) : new Date()
         let pattern = {}
         switch (purpose) {
             case 'byDay':
