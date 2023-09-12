@@ -220,7 +220,6 @@ const dbDataConverL = (rangeSpace, index, data, isIn) => {
                     },
                 })
                 j++
-
             }
             //todo: 合并单元格导出有问题，数据格式不正确
             // let arr = Object.values(data[i])
@@ -319,7 +318,9 @@ const produceOption = (fillOptions) => {
                 avg: false,
                 min: false,
                 max: false,
-                gap: false
+                gap: false,
+                printer: 'admin',
+                printTime: true,
             },
             sortOptions: {},
         }

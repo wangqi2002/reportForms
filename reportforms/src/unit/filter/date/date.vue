@@ -166,29 +166,33 @@ const filterDayPetList = ref([
     { name: '2h', value: '2h' },
     { name: '4h', value: '4h' },
 ])
-const filterMonthPetList = ref([
-    { name: '', value: '以此替代月内的数据' },
-    { name: 'sum', value: 'sum' },
-    { name: 'avg', value: 'avg' },
-    { name: 'max', value: 'max' },
-    { name: 'min', value: 'min' },
-    { name: 'gap', value: 'gap' },
-])
 const filterClassPetList = ref([
-    { name: '', value: '以此替代班次的数据' },
-    { name: 'sum', value: 'sum' },
-    { name: 'avg', value: 'avg' },
-    { name: 'max', value: 'max' },
-    { name: 'min', value: 'min' },
-    { name: 'gap', value: 'gap' },
+    { name: '', value: '选择采样间隔' },
+    { name: '2s', value: '2s' },
+    { name: '10s', value: '10s' },
+    { name: '5m', value: '5m' },
+    { name: '10m', value: '10m' },
+    { name: '1h', value: '1h' },
+    { name: '2h', value: '2h' },
+    { name: '4h', value: '4h' },
 ])
 const filterClassList = ref([
     { name: '', value: '班次' },
     { name: '2', value: '一天两班' },
     { name: '3', value: '一天三班' },
 ])
+const filterMonthPetList = ref([
+    { name: '', value: '以此替代月内的数据' },
+    { name: 'first', value: 'first' },
+    { name: 'sum', value: 'sum' },
+    { name: 'avg', value: 'avg' },
+    { name: 'max', value: 'max' },
+    { name: 'min', value: 'min' },
+    { name: 'gap', value: 'gap' },
+])
 const filterYearPetList = ref([
     { name: '', value: '以此替代年内的数据' },
+    { name: 'first', value: 'first' },
     { name: 'sum', value: 'sum' },
     { name: 'avg', value: 'avg' },
     { name: 'max', value: 'max' },

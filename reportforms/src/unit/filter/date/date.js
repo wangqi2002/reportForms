@@ -17,7 +17,9 @@ function getFormatDate(mode, targetDate) {
     let date = new Date(targetDate),
         year = date.getFullYear(), //获取完整的年份(4位)
         month = date.getMonth() + 1, //获取当前月份(0-11,0代表1月)
-        strDate = date.getDate() // 获取当前日(1-31)
+        strDate = date.getDate(), // 获取当前日(1-31)
+        hour = date.getHours(), // 获取当前日(1-31)
+        minutes = date.getMinutes() // 获取当前日(1-31)
     if (month < 10) month = `0${month}` // 如果月份是个位数，在前面补0
     if (strDate < 10) strDate = `0${strDate}` // 如果日是个位数，在前面补0
     switch (mode) {
@@ -27,6 +29,8 @@ function getFormatDate(mode, targetDate) {
             return `${year}/${month}`
         case 2:
             return `${year}/${month}/${strDate}`
+        case 3:
+            return `${year}/${month}/${strDate}/${hour}:${minutes}`
         default:
             break
     }
@@ -128,6 +132,9 @@ function configureFilter(purpose, options) {
                             return pattern.test(x)
                         }
                     }
+                    formatter = (x) => {
+                        return getFormatDate(3, x)
+                    }
                 }
                 break
             case 'byWeek':
@@ -201,10 +208,10 @@ function configureFilter(purpose, options) {
                 break
             case 'byClass':
                 {
-                    let startDateTime = new Date(options.date + '-' + options.classOption.start)
-                    let nextDate = new Date(options.date + '-' + options.classOption.start)
+                    let startDateTime = new Date(options.date + '/' + options.classOption.start)
+                    let nextDate = new Date(options.date + '/' + options.classOption.start)
                     nextDate.setDate(nextDate.getDate() + 1)
-                    // console.log(startDateTime, nextDate)
+                    console.log(startDateTime, nextDate)
                     if (options.interval) {
                         let firstValue = new Map()
                         let firstTime = undefined
@@ -261,8 +268,9 @@ function configureFilter(purpose, options) {
                         }
                     } else {
                         filter = (x) => {
+                            // console.log(x)
                             let nowDate = new Date(x)
-                            console.log(nowDate >= startDateTime && nowDate < nextDate)
+                            // console.log(nowDate >= startDateTime && nowDate < nextDate)
                             return nowDate >= startDateTime && nowDate < nextDate
                         }
                     }
@@ -271,12 +279,15 @@ function configureFilter(purpose, options) {
                             let nowDate = new Date(x)
                             let result = false
                             result = Math.floor((nowDate - startDateTime) / (1000 * 3600) / options.classOption.gap)
-                            console.log(result)
+                            // console.log(result)
                             return result
                         } catch (error) {
                             console.log(error)
                             return false
                         }
+                    }
+                    formatter = (x) => {
+                        return getFormatDate(3, x)
                     }
                 }
                 break

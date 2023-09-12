@@ -244,10 +244,10 @@ const handleConfirm = () => {
             console.log(result.length)
             console.log(result)
             realData = produceData(result, { ...options })
+            console.log(realData)
             for (let i = 0; i < realData[0].length; i++) {
                 console.log(realData[0][i])
             }
-            console.log(realData)
             let luckyData = null
             if (key == null) {
                 luckyData = dbTolucky(realData, luckyRange, false)
