@@ -1,5 +1,5 @@
 #fill_report_box {
-    $fill_header-height: 20px;
+    $fill_header-height: 15px;
     $fill_bottom-height: 30px;
     width: 60vw;
     min-width: 700px;
@@ -40,17 +40,29 @@
     }
     .fill_content {
         width: 100%;
-        height: calc(100% - $fill_bottom-height);
+        height: calc(100% - $fill_bottom-height + 10px);
         display: grid;
-        grid-template-columns: 150px 5fr 250px;
+        grid-template-columns: 250px 200px 1fr;
         grid-gap: 5px;
         grid-auto-rows: 3fr 1fr $fill_bottom-height;
-        .fill_type {
+        border-radius: 0px 0px 5px 5px;
+        background-color: #dadada;
+        .option_type {
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 3;
-            border-right: 1px solid #60627c;
+            background-color: #ffffff;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .fill_type {
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 2;
+            background-color: #ffffff;
+            border-radius: 5px;
             .show_box {
                 height: 100%;
                 .fill_upload_btn_box {
@@ -80,21 +92,15 @@
                 }
             }
         }
-        .option_type {
+        .report_table {
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
-            grid-row-end: 3;
-            border-left: 1px solid #60627c;
-        }
-        .report_table {
-            grid-column-start: 2;
-            grid-column-end: 3;
-            grid-row-start: 1;
             grid-row-end: 2;
             padding: 10px 5px;
-            border: 1px solid #60627c;
-            border-top: none;
+            background-color: #ffffff;
+            border-radius: 5px;
+            margin-right: 10px;
             .nid_title {
                 height: 30px;
                 line-height: 30px;
@@ -115,20 +121,21 @@
                     border-radius: 5px;
                     background-color: #bdbdbd;
                 }
-                .nid_item:first-child{
+                .nid_item:first-child {
                     background-color: #aad5ff;
                 }
             }
         }
         .fill_table {
             grid-column-start: 2;
-            grid-column-end: 3;
+            grid-column-end: 4;
             grid-row-start: 2;
             grid-row-end: 3;
             overflow: auto;
             padding: 5px;
-            border: 1px solid #60627c;
-            border-bottom: none;
+            background-color: #ffffff;
+            border-radius: 5px;
+            margin-right: 10px;
             .fill_table_name {
                 margin-bottom: 5px;
             }
@@ -143,28 +150,27 @@
                 }
             }
         }
-    }
-    .fill_bottom {
-        grid-column-start: 1;
-        grid-column-end: 4;
-        grid-row-start: 3;
-        grid-row-end: 4;
-        background-color: #dadada;
-        border-radius: 0px 0px 5px 5px;
-        .fillBtn {
-            width: 60px;
-            height: 20px;
-            margin: 5px 10px;
-            background-color: white;
-            border: 1px solid #bdbdbd;
-            float: right;
-            border-radius: 3px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .confirm {
-            margin: 5px 10px;
-            background-color: #77b8fa;
-            border: none;
+        .fill_bottom {
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 3;
+            grid-row-end: 4;
+            background-color: #dadada;
+            border-radius: 0px 0px 5px 5px;
+            .fillBtn {
+                width: 80px;
+                height: 25px;
+                margin: 0px 10px 5px;
+                background-color: white;
+                border: 1px solid #bdbdbd;
+                float: right;
+                border-radius: 3px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .confirm {
+                background-color: #77b8fa;
+                border: none;
+            }
         }
     }
 }

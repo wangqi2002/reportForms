@@ -127,21 +127,41 @@ function checkIn(obj) {
 }
 function creatTab(table, td, thead) {
     var div = document.getElementById(table)
-    var tab = `<div class='fill_table_name'>报表表头:</div>
-    <table class='create_table' border='1' cellspacing='0'>`
-    for (var i = 0; i < 2; i++) {
-        tab = tab + '<tr>'
-        if (i === 0) {
-            for (var j = 0; j < td; j++) {
-                tab += `<td class='create_cell thead'  height='20px'>${thead[j] != undefined ? thead[j] : '列_' + (j + 1)}</td>`
+    var tab = ''
+    if (td < 6) {
+        tab = `<div class='fill_table_name'>报表表头:</div>
+        <table class='create_table' style="width:100%" border='1' cellspacing='0'>`
+        for (var i = 0; i < 2; i++) {
+            tab = tab + '<tr>'
+            if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += `<td class='create_cell thead' style="height:25px">${thead[j] != undefined ? thead[j] : '列_' + (j + 1)}</td>`
+                }
+            } else if (i === 1) {
+                for (var j = 0; j < td; j++) {
+                    tab +=
+                        `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value=''></input></td>`
+                }
             }
-        } else if (i === 1) {
-            for (var j = 0; j < td; j++) {
-                tab +=
-                    `<td class='create_cell' height='20px' ><input id='input_${j}' class='table_input' value=''></input></td>`
-            }
+            tab += `</tr>`
         }
-        tab += `</tr>`
+    } else {
+        tab = `<div class='fill_table_name'>报表表头:</div>
+        <table class='create_table' style="width:${td * 80}px" border='1' cellspacing='0'>`
+        for (var i = 0; i < 2; i++) {
+            tab = tab + '<tr>'
+            if (i === 0) {
+                for (var j = 0; j < td; j++) {
+                    tab += `<td class='create_cell thead' style="width:80px;height:25px">${thead[j] != undefined ? thead[j] : '列_' + (j + 1)}</td>`
+                }
+            } else if (i === 1) {
+                for (var j = 0; j < td; j++) {
+                    tab +=
+                        `<td class='create_cell' style="width:80px;height:30px" ><input id='input_${j}' class='table_input' value=''></input></td>`
+                }
+            }
+            tab += `</tr>`
+        }
     }
     tab += `</table>`
     div.innerHTML = tab

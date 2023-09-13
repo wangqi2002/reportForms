@@ -203,6 +203,9 @@ function configureFilter(purpose, options) {
                         filter = (x) => {
                             return pattern.test(x)
                         }
+                        formatter = (x) => {
+                            return getFormatDate(3, x)
+                        }
                     }
                 }
                 break

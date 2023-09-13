@@ -10,10 +10,12 @@
             .el-collapse-item__header {
                 padding: 5px 10px 0;
                 height: 30px;
-                border-bottom: 1px solid #c5c5c5;
+                // border-bottom: 1px solid #c5c5c5;
+                background-color: aliceblue;
             }
             .el-collapse-item__wrap {
-                border-bottom: 1px solid #cccccd;
+                // border-bottom: 1px solid #cccccd;
+                border-bottom: none;
                 .el-collapse-item__content {
                     padding: 15px 0;
                 }

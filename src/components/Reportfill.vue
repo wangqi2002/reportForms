@@ -1,9 +1,9 @@
 <template>
     <div id="fill_report_box">
         <div id="fill_header" class="fill_header">
-            <span class="fill_exit" @click="handleExitfill">
+            <!-- <span class="fill_exit" @click="handleExitfill">
                 <img src="@/assets/exit.svg" />
-            </span>
+            </span> -->
         </div>
         <div class="fill_content">
             <div class="fill_type">
@@ -184,20 +184,6 @@ const handleChangedb = async (e) => {
             }
         }
     )
-}
-const handleExitfill = () => {
-    ElMessageBox.confirm('确定退出报表内容填充?', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-    })
-        .then(() => {
-            dbItems.length = 0
-            nidList.value.length = 0
-            emitter.emit('clearSpread')
-            emitter.emit('exitfill')
-        })
-        .catch(() => { })
 }
 const handleConfirm = () => {
     realData.length = 0

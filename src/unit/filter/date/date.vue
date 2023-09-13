@@ -126,6 +126,28 @@
                             </div>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane name="byRange" label="自定义">
+                        <div class="pane_box">
+                            <input id="rangeDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterRangeStart" />
+                            <input id="rangeDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
+                                v-model="filterRangeEnd" />
+                            <div class="option_card">
+                                <button class="option_btn" @click="handleClear">清空</button>
+                                <button class="option_btn confirm" @click="handleConfirmRange">确认</button>
+                            </div>
+                            <div class="checkbox_card">
+                                <el-checkbox-group v-model="checkList">
+                                    <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
+                                    <el-checkbox label="sum" />
+                                    <el-checkbox label="max" />
+                                    <el-checkbox label="min" />
+                                    <el-checkbox label="avg" />
+                                    <el-checkbox label="gap" />
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </div>
         </div>
@@ -155,6 +177,9 @@ const filterMonthPet = ref('first')
 
 const filterYearDate = ref('')
 const filterYearPet = ref('first')
+
+const filterRangeStart = ref('')
+const filterRangeEnd = ref('')
 
 const filterDayPetList = ref([
     { name: '', value: '选择采样间隔' },
@@ -201,7 +226,7 @@ const filterYearPetList = ref([
 ])
 
 const filterValue = ref('byDay')
-const checkList = ref(['sum', 'gap'])
+const checkList = ref([])
 let dateConfig = {}
 
 // filter相关
@@ -285,6 +310,22 @@ const handleConfirmYear = (e) => {
     }
     Confirm(Config, e.target)
 }
+const handleConfirmRange = (e) => {
+    let replaceList = []
+    for (let item of checkList.value.values()) {
+        replaceList.push(item)
+    }
+    let Config = {
+        purpose: filterValue.value,
+        options: {
+            start: filterRangeStart.value.toString(),
+            end: filterRangeEnd.value.toString()
+        },
+        replace: replaceList
+    }
+    Confirm(Config, e.target)
+}
+
 const Confirm = (Config, el) => {
     ElNotification({
         title: 'Success',
@@ -400,6 +441,8 @@ onMounted(() => {
     filterClassDate.value = converDate2('day')
     filterMonthDate.value = converDate2('month')
     filterYearDate.value = converDate2('year')
+    filterRangeStart.value = converDate2('day')
+    filterRangeEnd.value = converDate2('day')
     yearSelectInitialize()
     // new TabSwitch('tabs')
 })
