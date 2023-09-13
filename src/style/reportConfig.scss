@@ -1,0 +1,46 @@
+.report_config {
+    $radio_content_item-height: 22px;
+    height: 110px;
+    text-align: center;
+    font-size: 14px;
+    // border-bottom: 1px solid black;
+    .fill_item {
+        height: 30px;
+        line-height: 30px;
+        text-align: start;
+        border-bottom: 1px solid #b8b8b8;
+    }
+    .db_fill {
+        margin-top: 8px;
+        .radio_defined {
+            .radio_content {
+                float: left;
+            }
+        }
+    }
+    .excel_fill {
+        .radio_defined {
+            .radio_content {
+                float: left;
+            }
+        }
+    }
+    .csv_fill {
+        border-bottom: none;
+        .radio_defined {
+            .radio_content {
+                float: left;
+            }
+        }
+    }
+    .fill_btn {
+        height: calc($radio_content_item-height - 4px);
+        line-height: calc($radio_content_item-height - 4px);
+        width: calc(100% - 80px);
+        background-color: #F0F0F0;
+        color: #60627c;
+        font-size: 12px;
+        border: 1px solid transparent;
+        border-radius: 3px;
+    }
+}
