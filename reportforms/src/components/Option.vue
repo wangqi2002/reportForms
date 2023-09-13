@@ -9,7 +9,7 @@
             </el-collapse-item>
             <el-collapse-item title="报表导出" name="3">
                 <div class="download_box">
-                    <input class="report_name" type="text" placeholder="输入文件名" id="reportName" />
+                    <input id="reportName" class="report_name" type="text" value="简易报表"  placeholder="输入文件名" />
                     <button class="download_btn" @click="downloadReport">导出报表</button>
                     <button class="print_btn" @click="printReport">打印报表</button>
                 </div>

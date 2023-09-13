@@ -10,6 +10,7 @@
     font-family: "Times New Roman", Times, serif;
     color: #60627c;
     background-color: #fafafc;
+    border-radius: 5px;
     position: absolute;
     top: 100px;
     right: 100px;
@@ -19,6 +20,7 @@
         height: $fill_header-height;
         line-height: $fill_header-height;
         background-color: #dadada;
+        border-radius: 5px 5px 0px 0px;
         .fill_title {
             height: $fill_header-height;
             line-height: $fill_header-height;
@@ -113,6 +115,9 @@
                     border-radius: 5px;
                     background-color: #bdbdbd;
                 }
+                .nid_item:first-child{
+                    background-color: #aad5ff;
+                }
             }
         }
         .fill_table {
@@ -145,6 +150,7 @@
         grid-row-start: 3;
         grid-row-end: 4;
         background-color: #dadada;
+        border-radius: 0px 0px 5px 5px;
         .fillBtn {
             width: 60px;
             height: 20px;

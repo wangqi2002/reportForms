@@ -1,7 +1,6 @@
 <template>
     <div id="fill_report_box">
         <div id="fill_header" class="fill_header">
-            <!-- <span class="fill_title">报表填充</span> -->
             <span class="fill_exit" @click="handleExitfill">
                 <img src="@/assets/exit.svg" />
             </span>
@@ -12,7 +11,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="filedbInput" type="file" placeholder="请选择.db文件" @change="loadDbfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickDbfileInput" >
+                        <button class="fill_upload_btn" @click="clickDbfileInput">
                             选择.db文件
                         </button>
                     </div>
@@ -28,7 +27,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="fileexcelInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcelfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickExcelfileInput" >
+                        <button class="fill_upload_btn" @click="clickExcelfileInput">
                             选择.xlsx文件
                         </button>
                     </div>
@@ -37,7 +36,7 @@
                     <div class="fill_upload_btn_box">
                         <input ref="filecsvInput" type="file" placeholder="请选择.csv文件" @change="loadCsvfile"
                             style="display: none" />
-                        <button class="fill_upload_btn" @click="clickCsvFileInput" >
+                        <button class="fill_upload_btn" @click="clickCsvFileInput">
                             选择.csv文件
                         </button>
                     </div>
@@ -169,6 +168,10 @@ const handleChangedb = async (e) => {
         },
         function (result) {
             nidList.value.length = 0
+            nidList.value.push({
+                name: 'sourceTimestamp',
+                value: 'sourceTimestamp'
+            })
             let list = Object.keys(result[0])
             list = list.filter((item) => {
                 return item != "id" && item != "sourceTimestamp"
@@ -179,10 +182,6 @@ const handleChangedb = async (e) => {
                     value: list[i]
                 })
             }
-            nidList.value.push({
-                name: 'sourceTimestamp',
-                value: 'sourceTimestamp'
-            })
         }
     )
 }

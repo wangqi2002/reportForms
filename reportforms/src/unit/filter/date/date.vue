@@ -26,7 +26,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
-                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
+                                    <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -61,7 +61,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
-                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
+                                    <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -90,7 +90,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
-                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
+                                    <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -116,7 +116,7 @@
                             </div>
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
-                                    <el-checkbox class="checkbox_card_name" disabled label="替代模式：" />
+                                    <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
                                     <el-checkbox label="sum" />
                                     <el-checkbox label="max" />
                                     <el-checkbox label="min" />
@@ -141,20 +141,20 @@ import { filters } from '@/unit/filter/filter'
 const store = useStore()
 
 const filterDayDate = ref('')
-const filterDayPet = ref('')
+const filterDayPet = ref('1h')
 const daytopOfTimeValue = ref(true)
 
 const filterClassDate = ref('')
-const filterClassPet = ref('')
-const filterClassNum = ref('')
+const filterClassPet = ref('1h')
+const filterClassNum = ref('2')
 const filterClassStart = ref('8:00')
 const classtopOfTimeValue = ref(true)
 
 const filterMonthDate = ref('')
-const filterMonthPet = ref('')
+const filterMonthPet = ref('first')
 
 const filterYearDate = ref('')
-const filterYearPet = ref('')
+const filterYearPet = ref('first')
 
 const filterDayPetList = ref([
     { name: '', value: '选择采样间隔' },
