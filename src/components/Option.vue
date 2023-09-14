@@ -42,6 +42,7 @@ const handleFun = () => {
 }
 
 const handleChange = () => {
+    console.log(window.parent)
     // console.log(activeNames.value)
 }
 

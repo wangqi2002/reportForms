@@ -354,10 +354,10 @@ function readDbData(dataBase, tableName, attributeString, callback) {
                 const row = stmt.getAsObject()
                 result.push(row)
             }
+            callback(result)
         } catch (err) {
             console.log(err)
         }
-        callback(result)
     })
 }
 

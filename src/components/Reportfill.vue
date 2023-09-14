@@ -93,7 +93,11 @@ let fillOptions = new Map()
 const getDbData = (callback) => {
     let childList = document.getElementsByClassName('table_input')
     let attributeString = ''
+    let flag = false
     for (let i = 0; i < childList.length; i++) {
+        if (childList[i].getAttribute('name') == 'sourceTimestamp') {
+            flag = true
+        }
         if (i == 0) {
             if (childList[i].getAttribute('name') != '') {
                 attributeString = `"${childList[i].getAttribute('name')}"`
@@ -108,7 +112,9 @@ const getDbData = (callback) => {
             }
         }
     }
-    attributeString = attributeString + `,"sourceTimestamp"`
+    if (!flag) {
+        attributeString = attributeString + `,"sourceTimestamp"`
+    }
     try {
         readDbData(dbFile, tableName, attributeString, function (result) {
             result.forEach((item) => {
@@ -190,7 +196,7 @@ const handleChangedb = async (e) => {
     )
 }
 const handleConfirm = () => {
-    emitter.emit('openloading')
+    // emitter.emit('openloading')
     realData.length = 0
     let key = null
     for (let item of fillOptions.entries()) {
@@ -226,14 +232,14 @@ const handleConfirm = () => {
     }
     const luckyRange = store.state.luckyRange
     // console.log(luckyRange)
-    if (fillOptions.size != 0) {
-        let printName = store.state.printer
-        let options = produceOption(fillOptions, printName)
-        console.log("options", options)
-        setTimeout(() => {
+    setTimeout(() => {
+        if (fillOptions.size != 0) {
+            let printName = store.state.printer
+            let options = produceOption(fillOptions, printName)
+            console.log("options", options)
             getDbData(function (result) {
-                console.log(result.length)
-                console.log(result)
+                // console.log(result.length)
+                // console.log(result)
                 realData = produceData(result, { ...options })
                 console.log(realData)
                 let luckyData = null
@@ -264,13 +270,13 @@ const handleConfirm = () => {
                 emitter.emit('setLucky', luckyData)
                 emitter.emit('closeloading')
             })
-        }, 200)
-    }
-    dbItems.length = 0
-    reportData.length = 0
-    nidList.value.length = 0
-    emitter.emit('clearSpread')
-    emitter.emit('exitfill')
+        }
+        dbItems.length = 0
+        reportData.length = 0
+        nidList.value.length = 0
+        emitter.emit('clearSpread')
+        emitter.emit('exitfill')
+    }, 200)
 }
 const handleCancel = () => {
     dbItems.length = 0
