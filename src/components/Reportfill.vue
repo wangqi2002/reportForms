@@ -266,11 +266,11 @@ const handleConfirm = () => {
             })
         }, 200)
     }
-    // dbItems.length = 0
-    // reportData.length = 0
-    // nidList.value.length = 0
-    // emitter.emit('clearSpread')
-    // emitter.emit('exitfill')
+    dbItems.length = 0
+    reportData.length = 0
+    nidList.value.length = 0
+    emitter.emit('clearSpread')
+    emitter.emit('exitfill')
 }
 const handleCancel = () => {
     dbItems.length = 0
