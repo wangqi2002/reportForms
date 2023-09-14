@@ -16,9 +16,15 @@
                                     {{ item.value }}
                                 </option>
                             </select>
-                            <div class="check_line">
-                                <input type="checkbox" id="topOfTime" v-model="daytopOfTimeValue" />
-                                <label for="topOfTime" style="margin-left: 5px;">整点</label>
+                            <div class="radio_card">
+                                <div class="radio_line">
+                                    <input type="radio" id="entirety" value="1" v-model="daytopOfTimeValue" />
+                                    <label for="entirety" style="margin-left: 5px;">整点采样</label>
+                                </div>
+                                <div class="radio_line">
+                                    <input type="radio" id="disperse" value="0" v-model="daytopOfTimeValue" />
+                                    <label for="disperse" style="margin-left: 5px;">间隔采样</label>
+                                </div>
                             </div>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
@@ -51,9 +57,15 @@
                                 </option>
                             </select>
                             <input class="dateInput" type="time" v-model="filterClassStart" />
-                            <div class="check_line">
-                                <input type="checkbox" id="topOfTime" v-model="classtopOfTimeValue" />
-                                <label for="topOfTime" style="margin-left: 5px;">整点</label>
+                            <div class="radio_card">
+                                <div class="radio_line">
+                                    <input type="radio" id="entirety" value="1" v-model="classtopOfTimeValue" />
+                                    <label for="entirety" style="margin-left: 5px;">整点采样</label>
+                                </div>
+                                <div class="radio_line">
+                                    <input type="radio" id="disperse" value="0" v-model="classtopOfTimeValue" />
+                                    <label for="disperse" style="margin-left: 5px;">间隔采样</label>
+                                </div>
                             </div>
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
@@ -159,18 +171,19 @@ import { ref, onMounted } from 'vue'
 import { ElTabs, ElTabPane, ElCheckboxGroup, ElCheckbox, ElNotification } from 'element-plus'
 import { useStore } from 'vuex'
 import { filters } from '@/unit/filter/filter'
+import { config } from 'exceljs'
 
 const store = useStore()
 
 const filterDayDate = ref('')
 const filterDayPet = ref('1h')
-const daytopOfTimeValue = ref(true)
+const daytopOfTimeValue = ref('1')
 
 const filterClassDate = ref('')
 const filterClassPet = ref('1h')
 const filterClassNum = ref('2')
 const filterClassStart = ref('08:00')
-const classtopOfTimeValue = ref(true)
+const classtopOfTimeValue = ref('1')
 
 const filterMonthDate = ref('')
 const filterMonthPet = ref('first')
@@ -247,10 +260,11 @@ const handleConfirmDay = (e) => {
         options: {
             date: filterDayDate.value,
             interval: filterDayPet.value,
-            theTopOfTime: daytopOfTimeValue.value
+            theTopOfTime: daytopOfTimeValue.value == '1' ? true : false,
         },
         replace: replaceList
     }
+    // console.log(Config)
     Confirm(Config, e.target)
 }
 const handleConfirmClass = (e) => {
@@ -269,7 +283,7 @@ const handleConfirmClass = (e) => {
         options: {
             date: filterClassDate.value,
             interval: filterClassPet.value,
-            theTopOfTime: classtopOfTimeValue.value,
+            theTopOfTime: classtopOfTimeValue.value == '1' ? true : false,
             classOption: {
                 start: filterClassStart.value,
                 gap: Number(24 / cnt)
@@ -535,9 +549,9 @@ onMounted(() => {
                 outline: none;
             }
 
-            .check_line {
+            .radio_card {
                 text-align: left;
-                height: 20px;
+                height: 36px;
                 line-height: 20px;
                 margin: 5px 0 0 6px;
             }

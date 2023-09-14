@@ -2,6 +2,20 @@
   <div class="report_style">
     <!-- <el-divider>模版创建</el-divider> -->
     <div style="padding: 0 10px">
+      <div class="reprot_item excel_report">
+        <div class="radio_defined">
+          <div class="radio_box">
+            <input type="radio" v-model="reportTemplate" value="3" label="3" @change="handleChange" />
+          </div>
+          <div class="radio_content">
+            <input ref="fileInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcel" style="display: none" />
+            Excel导入:
+            <button class="upload_btn" @click="clickFileIput" :disabled="isEffect3" style="margin-left: 6px">
+              上传
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="reprot_item new_report">
         <div class="radio_defined">
           <div class="radio_box">
@@ -30,20 +44,6 @@
           </div>
         </div>
       </div>
-      <div class="reprot_item excel_report">
-        <div class="radio_defined">
-          <div class="radio_box">
-            <input type="radio" v-model="reportTemplate" value="3" label="3" @change="handleChange" />
-          </div>
-          <div class="radio_content">
-            <input ref="fileInput" type="file" placeholder="请选择.xlsx文件" @change="loadExcel" style="display: none" />
-            Excel导入:
-            <button class="upload_btn" @click="clickFileIput" :disabled="isEffect3" style="margin-left: 6px">
-              上传
-            </button>
-          </div>
-        </div>
-      </div>
       <div class="reprot_item save_report">
         <div style="margin-top: 5px">
           <button class="save_btn" @click="handleSavereport">保存模板</button>
@@ -63,12 +63,12 @@ const instance = getCurrentInstance();
 
 const jsonData = ref({});
 const fileInput = ref();
-const reportTemplate = ref(1);
+const reportTemplate = ref(3);
 const historyValue = ref("");
 const historyReports = ref([]);
-let isEffect1 = ref(false);
+let isEffect1 = ref(true);
 let isEffect2 = ref(true);
-let isEffect3 = ref(true);
+let isEffect3 = ref(false);
 
 const getTemplate = () => {
   for (var i = 0; i < localStorage.length; i++) {

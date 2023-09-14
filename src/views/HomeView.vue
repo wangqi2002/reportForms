@@ -17,6 +17,7 @@
 
 <script setup>
 import { ref, provide, createApp, onMounted } from 'vue'
+import { ElLoading } from 'element-plus'
 import emitter from '@/unit/mittBus'
 
 import Luckysheet from '@/components/Luckysheet.vue'
@@ -50,6 +51,23 @@ provide('handleFillbox', handleFillbox)
 onMounted(() => {
     emitter.on('exitfill', (e) => {
         handleRemovefillbox()
+    })
+    emitter.on('openloading', (e) => {
+        const loadingInstance = ElLoading.service({
+            fullscreen: true,
+            lock: true,
+            text: 'Loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+    })
+    emitter.on('closeloading', (e) => {
+        const loadingInstance = ElLoading.service({
+            fullscreen: true,
+            lock: true,
+            text: 'Loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+        loadingInstance.close()
     })
     //todo 在打包的时候放开注释
     // window.parent.ishow.windowEvent.on('leftBar:created.easy-report', () => {

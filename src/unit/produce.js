@@ -1,6 +1,6 @@
 import { DataFrame, toJSON, Series, readCSV } from 'danfojs'
 import { column } from 'element-plus/es/components/table-v2/src/common'
- 
+
 /**
 * @param {'sqlite'|'excel'|'csv'} type 确认是哪种数据类型,目前支持:sqlite,excel,csv
 * @param {string} fileName 文件相对/绝对路径并且携带文件名称和后缀
@@ -181,10 +181,9 @@ function produceData(data, options) {
                                         eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
-                                            .${
-                                                options.filterOptions.replace == 'avg'
-                                                    ? 'mean'
-                                                    : options.filterOptions.replace
+                                            .${options.filterOptions.replace == 'avg'
+                                                ? 'mean'
+                                                : options.filterOptions.replace
                                             }({axis:0})
                                             .round(3).values[0]
                                     )`)
@@ -198,8 +197,8 @@ function produceData(data, options) {
                     result = result
                         ? result.append(new Series(temp), [result.index.at(-1) + 1])
                         : new DataFrame([new Series(temp).values], {
-                              columns: tempDF.columns,
-                          })
+                            columns: tempDF.columns,
+                        })
                 })
                 df.print()
                 df = result
@@ -348,11 +347,15 @@ function produceData(data, options) {
 function readDbData(dataBase, tableName, attributeString, callback) {
     initSqlJs(config).then(function (SQL) {
         const result = []
-        const db = new SQL.Database(dataBase)
-        let stmt = db.prepare(`select ${attributeString} from ${tableName}`)
-        while (stmt.step()) {
-            const row = stmt.getAsObject()
-            result.push(row)
+        try {
+            const db = new SQL.Database(dataBase)
+            let stmt = db.prepare(`select ${attributeString} from ${tableName}`)
+            while (stmt.step()) {
+                const row = stmt.getAsObject()
+                result.push(row)
+            }
+        } catch (err) {
+            console.log(err)
         }
         callback(result)
     })

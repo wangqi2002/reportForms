@@ -67,7 +67,7 @@
 import Reporttype from '@/components/Reporttype.vue'
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
-import { ElSelect, ElOption, ElMessageBox } from 'element-plus'
+import { ElSelect, ElOption, ElMessageBox, ElNotification } from 'element-plus'
 import emitter from '@/unit/mittBus'
 import { Drag, DragTo, creatTab } from '@/unit/Drag'
 import { dbTolucky, produceOption } from '@/unit/conversionDataformat'
@@ -109,12 +109,16 @@ const getDbData = (callback) => {
         }
     }
     attributeString = attributeString + `,"sourceTimestamp"`
-    readDbData(dbFile, tableName, attributeString, function (result) {
-        result.forEach((item) => {
-            reportData.push(item)
+    try {
+        readDbData(dbFile, tableName, attributeString, function (result) {
+            result.forEach((item) => {
+                reportData.push(item)
+            })
+            callback(reportData)
         })
-        callback(reportData)
-    })
+    } catch (e) {
+        console.log(e)
+    }
 }
 const clickDbfileInput = () => {
     filedbInput.value?.click()
@@ -186,6 +190,7 @@ const handleChangedb = async (e) => {
     )
 }
 const handleConfirm = () => {
+    emitter.emit('openloading')
     realData.length = 0
     let key = null
     for (let item of fillOptions.entries()) {
@@ -225,28 +230,47 @@ const handleConfirm = () => {
         let printName = store.state.printer
         let options = produceOption(fillOptions, printName)
         console.log("options", options)
-        getDbData(function (result) {
-            console.log(result.length)
-            console.log(result)
-            realData = produceData(result, { ...options })
-            console.log(realData)
-            // for (let i = 0; i < realData[0].length; i++) {
-            //     console.log(realData[0][i])
-            // }
-            let luckyData = null
-            if (key == null) {
-                luckyData = dbTolucky(realData, luckyRange, false)
-            } else {
-                luckyData = dbTolucky(realData, luckyRange, true)
-            }
-            emitter.emit('setLucky', luckyData)
-        })
+        setTimeout(() => {
+            getDbData(function (result) {
+                console.log(result.length)
+                console.log(result)
+                realData = produceData(result, { ...options })
+                console.log(realData)
+                let luckyData = null
+                if (realData != undefined && realData != null) {
+                    if (realData.length == 0) {
+                        ElNotification({
+                            title: 'Info',
+                            message: '该筛选条件下获得数据为空',
+                            type: 'info',
+                        })
+                    } else {
+                        // for (let i = 0; i < realData[0].length; i++) {
+                        //     console.log(realData[0][i])
+                        // }
+                        if (key == null) {
+                            luckyData = dbTolucky(realData, luckyRange, false)
+                        } else {
+                            luckyData = dbTolucky(realData, luckyRange, true)
+                        }
+                    }
+                } else {
+                    ElNotification({
+                        title: 'Info',
+                        message: '该筛选条件下获得数据为空',
+                        type: 'info',
+                    })
+                }
+                emitter.emit('setLucky', luckyData)
+                emitter.emit('closeloading')
+            })
+        }, 200)
     }
-    dbItems.length = 0
-    reportData.length = 0
-    nidList.value.length = 0
-    emitter.emit('clearSpread')
-    emitter.emit('exitfill')
+    // dbItems.length = 0
+    // reportData.length = 0
+    // nidList.value.length = 0
+    // emitter.emit('clearSpread')
+    // emitter.emit('exitfill')
 }
 const handleCancel = () => {
     dbItems.length = 0

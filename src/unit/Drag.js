@@ -181,7 +181,7 @@ function drop(ev) {
     let obj = JSON.parse(ev.dataTransfer.getData("Text"))
     ev.target.value = obj.name;
     ev.target.name = obj.value;
-    console.log(ev)
+    // console.log(ev)
     emitter.emit('setHead', { idIn: ev.target.id, value: obj.value })
 }
 
