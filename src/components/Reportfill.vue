@@ -187,7 +187,6 @@ const handleChangedb = async (e) => {
 }
 const handleConfirm = () => {
     realData.length = 0
-    let split = store.state.split
     let key = null
     for (let item of fillOptions.entries()) {
         console.log(item)
@@ -204,7 +203,7 @@ const handleConfirm = () => {
             replace: store.state.replace,
             formatter: store.state.formatter,
             append: store.state.append,
-            split: split,
+            split: store.state.split,
             sort: store.state.sort,
         })
     } else {
@@ -216,23 +215,24 @@ const handleConfirm = () => {
             replace: store.state.replace,
             formatter: store.state.formatter,
             append: store.state.append,
-            split: split,
+            split: store.state.split,
             sort: store.state.sort,
         })
     }
     const luckyRange = store.state.luckyRange
-    console.log(luckyRange)
+    // console.log(luckyRange)
     if (fillOptions.size != 0) {
-        let options = produceOption(fillOptions)
+        let printName = store.state.printer
+        let options = produceOption(fillOptions, printName)
         console.log("options", options)
         getDbData(function (result) {
             console.log(result.length)
             console.log(result)
             realData = produceData(result, { ...options })
             console.log(realData)
-            for (let i = 0; i < realData[0].length; i++) {
-                console.log(realData[0][i])
-            }
+            // for (let i = 0; i < realData[0].length; i++) {
+            //     console.log(realData[0][i])
+            // }
             let luckyData = null
             if (key == null) {
                 luckyData = dbTolucky(realData, luckyRange, false)
@@ -298,11 +298,16 @@ const setFilterListener = () => {
 }
 const filltypeListener = () => {
     emitter.on('filltype', (e) => {
+        let tdLength = e.range.column[1] - e.range.column[0] + 1
         let tableHead = []
-        for (let i = 0; i < e.range.tableHead.length; i++) {
-            tableHead.push(e.range.tableHead[i].v.v)
+        for (let i = e.range.tableHead.length - tdLength; i < e.range.tableHead.length; i++) {
+            try {
+                tableHead.push(e.range.tableHead[i].v.v)
+            } catch (e) {
+                console.log(e)
+            }
         }
-        creatTab('fill_table', e.range.column[1] - e.range.column[0] + 1, tableHead)
+        creatTab('fill_table', tdLength, tableHead)
         if (e.type === 'dataBase') {
             filldbShow = true
             fillexcelShow = false

@@ -11,6 +11,7 @@ export default createStore({
         append: null,
         split: false,
         sort: null,
+        printer: '',
         luckyRange: null,
         luckyOptions: {
             container: 'luckysheet',
@@ -103,6 +104,9 @@ export default createStore({
         },
         changeSort(state, newSort) {
             state.sort = newSort
+        },
+        changePrinter(state, newPrinter) {
+            state.printer = newPrinter
         },
         changeLuckyrange(state, newLuckyrange) {
             state.luckyRange = newLuckyrange

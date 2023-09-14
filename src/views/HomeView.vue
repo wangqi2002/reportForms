@@ -52,9 +52,9 @@ onMounted(() => {
         handleRemovefillbox()
     })
     //todo 在打包的时候放开注释
-    // window.parent.uniclient.windowEvent.on('leftBar:created.easy-report', () => {
+    // window.parent.ishow.windowEvent.on('leftBar:created.easy-report', () => {
     //     // console.log('接到了')
-    //     window.parent.uniclient.windowEvent.emit('mainTab:change', 'easy-report')
+    //     window.parent.ishow.windowEvent.emit('mainTab:change', 'easy-report')
     //     let box = document.getElementById('option_box')
     //     box.style.display = box.style.display == 'none' ? 'block' : 'none'
     //     window.luckysheet.refresh();

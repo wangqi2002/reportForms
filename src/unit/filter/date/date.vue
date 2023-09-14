@@ -50,7 +50,7 @@
                                     item.value }}
                                 </option>
                             </select>
-                            <input class="dateInput" v-model="filterClassStart" />
+                            <input class="dateInput" type="time" v-model="filterClassStart" />
                             <div class="check_line">
                                 <input type="checkbox" id="topOfTime" v-model="classtopOfTimeValue" />
                                 <label for="topOfTime" style="margin-left: 5px;">整点</label>
@@ -129,9 +129,9 @@
                     <el-tab-pane name="byRange" label="自定义">
                         <div class="pane_box">
                             <input id="rangeDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterRangeStart" />
+                                :max="filterRangeStart" v-model="filterRangeStart" />
                             <input id="rangeDate" class="dateInput" type="date" pattern="\d{4}/\d{2}/\d{2}"
-                                v-model="filterRangeEnd" />
+                                :max="filterRangeEnd" v-model="filterRangeEnd" />
                             <div class="option_card">
                                 <button class="option_btn" @click="handleClear">清空</button>
                                 <button class="option_btn confirm" @click="handleConfirmRange">确认</button>
@@ -169,7 +169,7 @@ const daytopOfTimeValue = ref(true)
 const filterClassDate = ref('')
 const filterClassPet = ref('1h')
 const filterClassNum = ref('2')
-const filterClassStart = ref('8:00')
+const filterClassStart = ref('08:00')
 const classtopOfTimeValue = ref(true)
 
 const filterMonthDate = ref('')
@@ -268,7 +268,7 @@ const handleConfirmClass = (e) => {
         purpose: filterValue.value,
         options: {
             date: filterClassDate.value,
-            replace: filterClassPet.value,
+            interval: filterClassPet.value,
             theTopOfTime: classtopOfTimeValue.value,
             classOption: {
                 start: filterClassStart.value,

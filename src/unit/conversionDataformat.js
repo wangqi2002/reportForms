@@ -308,7 +308,7 @@ const dbDataConverL = (rangeSpace, index, data, isIn) => {
     console.log(sheet)
     return sheet
 }
-const produceOption = (fillOptions) => {
+const produceOption = (fillOptions, printer) => {
     if (fillOptions) {
         let options = {
             spliterOptions: {},
@@ -341,6 +341,9 @@ const produceOption = (fillOptions) => {
                 for (let i = 0; i < value.append.length; i++) {
                     if (value.append[i] in options.appendOptions)
                         options.appendOptions[value.append[i]] = true
+                }
+                if (printer) {
+                    options.appendOptions.printer = printer
                 }
             }
             if (value.sort != null) {
