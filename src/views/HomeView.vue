@@ -75,7 +75,7 @@ onMounted(() => {
     //     window.parent.ishow.windowEvent.emit('mainTab:change', 'easy-report')
     //     let box = document.getElementById('option_box')
     //     box.style.display = box.style.display == 'none' ? 'block' : 'none'
-    //     window.luckysheet.refresh();
+    //     luckysheet.resize();
     // })
 })
 </script>
