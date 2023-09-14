@@ -196,7 +196,7 @@ const handleChangedb = async (e) => {
     )
 }
 const handleConfirm = () => {
-    // emitter.emit('openloading')
+    emitter.emit('openloading')
     realData.length = 0
     let key = null
     for (let item of fillOptions.entries()) {
