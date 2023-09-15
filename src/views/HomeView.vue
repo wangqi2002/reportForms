@@ -6,7 +6,7 @@
         <!--            <el-input placeholder="请输入密码" />-->
         <!--            //todo 生成人名/编辑时间表头,软件激活码使用时候还会改动-->
         <!--        </el-dialog>-->
-        <el-aside class="option_box" id="option_box" >
+        <el-aside class="option_box" id="option_box">
             <Option></Option>
         </el-aside>
         <el-main class="content_box">
@@ -75,7 +75,7 @@ onMounted(() => {
     //     window.parent.ishow.windowEvent.emit('mainTab:change', 'easy-report')
     //     let box = document.getElementById('option_box')
     //     box.style.display = box.style.display == 'none' ? 'block' : 'none'
-    //     luckysheet.resize();
+    //     luckysheet.resize()
     // })
 })
 </script>

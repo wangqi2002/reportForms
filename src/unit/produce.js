@@ -113,7 +113,6 @@ function readFromSource(type, file, options, callback) {
 * @returns [[any]]
 */
 function produceData(data, options) {
-    console.log(options)
     try {
         let df = new DataFrame(data)
         let dfList = []
@@ -153,6 +152,7 @@ function produceData(data, options) {
             dfList = [df]
         }
         dfList.forEach((df) => {
+            df.resetIndex()
             if (
                 options.filterOptions.grouper &&
                 ['gap', 'sum', 'first', 'avg', 'min', 'max'].includes(options.filterOptions.replace)
@@ -181,9 +181,10 @@ function produceData(data, options) {
                                         eval(`temp.push(
                                         tempDF
                                             .loc({ columns: [column]})
-                                            .${options.filterOptions.replace == 'avg'
-                                                ? 'mean'
-                                                : options.filterOptions.replace
+                                            .${
+                                                options.filterOptions.replace == 'avg'
+                                                    ? 'mean'
+                                                    : options.filterOptions.replace
                                             }({axis:0})
                                             .round(3).values[0]
                                     )`)
@@ -197,8 +198,8 @@ function produceData(data, options) {
                     result = result
                         ? result.append(new Series(temp), [result.index.at(-1) + 1])
                         : new DataFrame([new Series(temp).values], {
-                            columns: tempDF.columns,
-                        })
+                              columns: tempDF.columns,
+                          })
                 })
                 df.print()
                 df = result
@@ -225,8 +226,8 @@ function produceData(data, options) {
                 let data = []
                 let count = 0
                 if (options.appendOptions.sum) {
-                    data.push(new Series(new Array(df.columns.length).fill('sum'), { index: df.columns }))
-                    data.push(df.sum({ axis: 0 }))
+                    // data.push(new Series(new Array(df.columns.length).fill('sum'), { index: df.columns }))
+                    data.push(df.sum({ axis: 0 }).fillNa('sum'))
                     count++
                 }
                 if (options.appendOptions.min) {
@@ -238,10 +239,10 @@ function produceData(data, options) {
                             if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
                                 temp.push(df[column].min())
                             } else {
-                                temp.push('')
+                                temp.push('min')
                             }
                         })
-                        data.push(new Series(new Array(df.columns.length).fill('min'), { index: df.columns }))
+                        // data.push(new Series(new Array(df.columns.length).fill('min'), { index: df.columns }))
                         data.push(new Series(temp))
                     }
                     count++
@@ -255,17 +256,23 @@ function produceData(data, options) {
                             if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
                                 temp.push(df[column].max())
                             } else {
-                                temp.push('')
+                                temp.push('max')
                             }
                         })
-                        data.push(new Series(new Array(df.columns.length).fill('max'), { index: df.columns }))
+                        // data.push(new Series(new Array(df.columns.length).fill('max'), { index: df.columns }))
                         data.push(new Series(temp))
                     }
                     count++
                 }
                 if (options.appendOptions.avg) {
-                    data.push(new Series(new Array(df.columns.length).fill('avg'), { index: df.columns }))
-                    data.push(df.sum({ axis: 0 }).div(df.index.at(-1) + 1))
+                    // data.push(new Series(new Array(df.columns.length).fill('avg'), { index: df.columns }))
+                    console.log(df.index.at(-1) + 1)
+                    data.push(
+                        df
+                            .sum({ axis: 0 })
+                            .div(df.index.at(-1) + 1)
+                            .fillNa('avg')
+                    )
                     count++
                 }
                 if (options.appendOptions.gap) {
@@ -274,22 +281,34 @@ function produceData(data, options) {
                         if (df[column].dtypes[0] == 'int32' || df[column].dtypes[0] == 'float32') {
                             temp.push(df[column].values.at(-1) - df[column].values.at(0))
                         } else {
-                            temp.push('')
+                            temp.push('gap')
                         }
                     })
-                    data.push(new Series(new Array(df.columns.length).fill('gap'), { index: df.columns }))
+                    // data.push(new Series(new Array(df.columns.length).fill('gap'), { index: df.columns }))
                     data.push(new Series(temp))
                     count++
                 }
                 if (options.appendOptions.printer) {
-                    let temp = []
-                    for (let i = 0; i < df.columns.length; i++) {
-                        if (i == df.columns.length - 2) temp.push(options.appendOptions.printer)
-                        else if (i == df.columns.length - 1 && options.appendOptions.printTime)
-                            temp.push(new Date().toLocaleString())
-                        else temp.push('')
+                    // let temp = []
+                    // let printCount = 0
+                    // for (let i = 0; i < df.columns.length; i++) {
+                    //     if (i == df.columns.length - 2) temp.push(options.appendOptions.printer)
+                    //     else if (i == df.columns.length - 1 && options.appendOptions.printTime)
+                    //         temp.push(new Date().toLocaleString())
+                    //     else if (printCount == 0) {
+                    //         printCount++
+                    //         temp.push('printer')
+                    //     } else temp.push('')
+                    // }
+                    let temp = ['打印人:', options.appendOptions.printer]
+                    let temp2 = ['打印时间:', new Date().toLocaleString()]
+                    for (let i = 0; i < df.columns.length - 2; i++) {
+                        temp.push('')
+                        temp2.push('')
                     }
+                    data.push(new Array(df.columns.length).fill(''))
                     data.push(new Series(temp))
+                    data.push(new Series(temp2))
                 }
                 if (count > 0) {
                     let length = df.index.at(-1) + 1
@@ -329,7 +348,7 @@ function produceData(data, options) {
             )
             finalResult.push(toJSON(df))
         })
-        // console.log(finalResult)
+        console.log(finalResult)
         return finalResult
     } catch (e) {
         console.log(e)

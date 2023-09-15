@@ -5,7 +5,7 @@ let patternTemplate = {
 } //注意正则表达式中-需要放到边界,否则会被误会为范围
 
 /**
- * @param {string} raw 
+ * @param {string} raw
  * @param {any[]} params
  * @returns
  */
@@ -26,15 +26,15 @@ function getFormatDate(mode, targetDate) {
         case 0:
             return `${year}`
         case 1:
-            return `${year}/${month}`
+            return `${year}-${month}`
         case 2:
-            return `${year}/${month}/${strDate}`
+            return `${year}-${month}-${strDate}`
         case 3:
-            return `${year}/${month}/${strDate}/${hour}:${minutes}`
+            return date.toLocaleString()
         default:
             break
     }
-    return `${year}/${month}/${strDate}`
+    return `${year}-${month}-${strDate}`
 }
 
 /**
