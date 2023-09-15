@@ -139,8 +139,13 @@ function creatTab(table, td, thead) {
                 }
             } else if (i === 1) {
                 for (var j = 0; j < td; j++) {
-                    tab +=
-                        `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value=''></input></td>`
+                    if (j == 0) {
+                        tab +=
+                            `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value='sourceTimestamp' name='sourceTimestamp'></input></td>`
+                    } else {
+                        tab +=
+                            `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value=''></input></td>`
+                    }
                 }
             }
             tab += `</tr>`
@@ -156,8 +161,13 @@ function creatTab(table, td, thead) {
                 }
             } else if (i === 1) {
                 for (var j = 0; j < td; j++) {
-                    tab +=
-                        `<td class='create_cell' style="width:80px;height:30px" ><input id='input_${j}' class='table_input' value=''></input></td>`
+                    if (j == 0) {
+                        tab +=
+                            `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value='sourceTimestamp' name='sourceTimestamp'></input></td>`
+                    } else {
+                        tab +=
+                            `<td class='create_cell' style="height:30px"><input id='input_${j}' class='table_input' value=''></input></td>`
+                    }
                 }
             }
             tab += `</tr>`

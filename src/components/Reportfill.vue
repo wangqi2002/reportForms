@@ -115,6 +115,7 @@ const getDbData = (callback) => {
     if (!flag) {
         attributeString = attributeString + `,"sourceTimestamp"`
     }
+    console.log(attributeString)
     try {
         readDbData(dbFile, tableName, attributeString, function (result) {
             result.forEach((item) => {
@@ -230,6 +231,7 @@ const handleConfirm = () => {
             sort: store.state.sort,
         })
     }
+    console.log(fillOptions)
     const luckyRange = store.state.luckyRange
     // console.log(luckyRange)
     setTimeout(() => {
@@ -255,7 +257,7 @@ const handleConfirm = () => {
                         //     console.log(realData[0][i])
                         // }
                         if (key == null) {
-                            luckyData = dbTolucky(realData, luckyRange, false)
+                            luckyData = dbTolucky(realData, luckyRange, true)
                         } else {
                             luckyData = dbTolucky(realData, luckyRange, true)
                         }
