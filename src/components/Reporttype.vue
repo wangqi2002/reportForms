@@ -1,6 +1,8 @@
 <template>
     <div class="report_type">
-        <!-- <el-divider>数据筛选/分离</el-divider> -->
+        <div style="text-align: left; margin: 10px 0 0 20px;">
+            筛选策略：
+        </div>
         <el-select class="report_type_select" v-model="filterTypeValue" placeholder="请选择筛选器类型" @change="handleChangtype">
             <el-option v-for="item in filterType" :key="item.type" :label="item.type" :value="item.type" />
         </el-select>
@@ -24,7 +26,7 @@ const store = useStore()
 const compName = ref('')
 const components = shallowRef(new Map())
 
-const filterTypeValue = ref('date')
+const filterTypeValue = ref('BaseOnTime')
 const filterType = reactive([])
 const checks = ref(['sum', 'avg', 'max', 'min', 'gap'])
 
@@ -35,7 +37,7 @@ const getComponents = () => {
             defineAsyncComponent(() => import(`@/unit/filter/${key}/${key}.vue`))
         )
     }
-    compName.value = 'date'
+    compName.value = 'BaseOnTime'
 }
 const getFiltertype = () => {
     filters.forEach((value) => {

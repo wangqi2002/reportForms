@@ -10,9 +10,9 @@
 //     })
 // })
 
-import { Datejs } from './date/date'
+import { Datejs } from './BaseOnTime/BaseOnTime'
 import { Equal } from './equal/equal'
 const filters = new Map()
 // filters.set('equal', Equal)
-filters.set('date', Datejs)
+filters.set('BaseOnTime', Datejs)
 export { filters }

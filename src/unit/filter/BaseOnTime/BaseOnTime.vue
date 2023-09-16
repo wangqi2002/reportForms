@@ -33,11 +33,11 @@
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="Avg" />
+                                    <el-checkbox label="Gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -74,11 +74,11 @@
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="Avg" />
+                                    <el-checkbox label="Gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                 v-model="filterMonthDate" />
                             <select class="type_select" name="pets" id="pet-select" v-model="filterMonthPet">
                                 <option v-for="(item, index) in filterMonthPetList" :value="item.name" :key="index">
-                                    {{ item.value }}
+                                    {{ item.value }} — {{ item.label }}
                                 </option>
                             </select>
                             <div class="option_card">
@@ -103,11 +103,11 @@
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="Avg" />
+                                    <el-checkbox label="Gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                             <select id="yearDate" class="type_select" v-model="filterYearDate"></select>
                             <select class="type_select" name="pets" id="pet-select" v-model="filterYearPet">
                                 <option v-for="(item, index) in filterYearPetList" :value="item.name" :key="index">{{
-                                    item.value }}
+                                    item.value }} — {{ item.label }}
                                 </option>
                             </select>
                             <div class="option_card">
@@ -129,11 +129,11 @@
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="Avg" />
+                                    <el-checkbox label="Gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -151,11 +151,11 @@
                             <div class="checkbox_card">
                                 <el-checkbox-group v-model="checkList">
                                     <el-checkbox class="checkbox_card_name" disabled label="聚类分析：" />
-                                    <el-checkbox label="sum" />
-                                    <el-checkbox label="max" />
-                                    <el-checkbox label="min" />
-                                    <el-checkbox label="avg" />
-                                    <el-checkbox label="gap" />
+                                    <el-checkbox label="Sum" />
+                                    <el-checkbox label="Max" />
+                                    <el-checkbox label="Min" />
+                                    <el-checkbox label="Avg" />
+                                    <el-checkbox label="Gap" />
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -186,10 +186,10 @@ const filterClassStart = ref('08:00')
 const classtopOfTimeValue = ref('1')
 
 const filterMonthDate = ref('')
-const filterMonthPet = ref('first')
+const filterMonthPet = ref('First')
 
 const filterYearDate = ref('')
-const filterYearPet = ref('first')
+const filterYearPet = ref('First')
 
 const filterRangeStart = ref('')
 const filterRangeEnd = ref('')
@@ -220,22 +220,22 @@ const filterClassList = ref([
     { name: '3', value: '一天三班' },
 ])
 const filterMonthPetList = ref([
-    { name: '', value: '以此替代月内的数据' },
-    { name: 'first', value: 'first' },
-    { name: 'sum', value: 'sum' },
-    { name: 'avg', value: 'avg' },
-    { name: 'max', value: 'max' },
-    { name: 'min', value: 'min' },
-    { name: 'gap', value: 'gap' },
+    { name: '', value: '请选择数据采样点' },
+    { name: 'First', value: 'First', label: '第一条数据' },
+    { name: 'Sum', value: 'Sum', label: '数据和' },
+    { name: 'Avg', value: 'Avg', label: '数据平均值' },
+    { name: 'Max', value: 'Max', label: '数据最大值' },
+    { name: 'Min', value: 'Min', label: '数据最小值' },
+    { name: 'Gap', value: 'Gap', label: '数据间隔' },
 ])
 const filterYearPetList = ref([
-    { name: '', value: '以此替代年内的数据' },
-    { name: 'first', value: 'first' },
-    { name: 'sum', value: 'sum' },
-    { name: 'avg', value: 'avg' },
-    { name: 'max', value: 'max' },
-    { name: 'min', value: 'min' },
-    { name: 'gap', value: 'gap' },
+    { name: '', value: '请选择数据采样点' },
+    { name: 'First', value: 'First', label: '第一条数据' },
+    { name: 'Sum', value: 'Sum', label: '数据和' },
+    { name: 'Avg', value: 'Avg', label: '数据平均值' },
+    { name: 'Max', value: 'Max', label: '数据最大值' },
+    { name: 'Min', value: 'Min', label: '数据最小值' },
+    { name: 'Gap', value: 'Gap', label: '数据间隔' },
 ])
 
 const filterValue = ref('byDay')
@@ -253,7 +253,7 @@ const handleChangefilter = () => {
 const handleConfirmDay = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
-        replaceList.push(item)
+        replaceList.push(item.toLowerCase())
     }
     let Config = {
         purpose: filterValue.value,
@@ -271,7 +271,7 @@ const handleConfirmClass = (e) => {
     let replaceList = []
     let cnt = 1
     for (let item of checkList.value.values()) {
-        replaceList.push(item)
+        replaceList.push(item.toLowerCase())
     }
     if (filterClassNum.value == '') {
         cnt = 2
@@ -297,13 +297,13 @@ const handleConfirmClass = (e) => {
 const handleConfirmMonth = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
-        replaceList.push(item)
+        replaceList.push(item.toLowerCase())
     }
     let Config = {
         purpose: filterValue.value,
         options: {
             date: filterMonthDate.value,
-            replace: filterMonthPet.value
+            replace: filterMonthPet.value.toLowerCase()
         },
         replace: replaceList
     }
@@ -312,13 +312,13 @@ const handleConfirmMonth = (e) => {
 const handleConfirmYear = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
-        replaceList.push(item)
+        replaceList.push(item.toLowerCase())
     }
     let Config = {
         purpose: filterValue.value,
         options: {
             date: filterYearDate.value.toString(),
-            replace: filterYearPet.value
+            replace: filterYearPet.value.toLowerCase()
         },
         replace: replaceList
     }
@@ -327,7 +327,7 @@ const handleConfirmYear = (e) => {
 const handleConfirmRange = (e) => {
     let replaceList = []
     for (let item of checkList.value.values()) {
-        replaceList.push(item)
+        replaceList.push(item.toLowerCase())
     }
     let Config = {
         purpose: filterValue.value,
@@ -346,7 +346,7 @@ const Confirm = (Config, el) => {
         message: '筛选器设置成功',
         type: 'success',
     })
-    const func = filters.get('date').configureFilter
+    const func = filters.get('BaseOnTime').configureFilter
     const { filter, grouper, formatter } = func(Config.purpose, Config.options)
     store.commit('changeFilter', filter)
     store.commit('changeGrouper', grouper)
