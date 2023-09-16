@@ -384,7 +384,7 @@ function configureFilter(purpose, options) {
 //     return spliter
 // }
 const Datejs = {
-    type: 'date',
+    type: 'BaseOnTime',
     configureFilter: configureFilter,
     // configureSpliter: configureSpliter,
 }
