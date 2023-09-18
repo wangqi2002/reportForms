@@ -72,7 +72,7 @@ function readFromSource(type, file, options, callback) {
 
 /**
 * @param {DataFrame|object[]} data 通常情况下应当是object[]
-* @param 
+* @param
     {{
         filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,
             formatter?:(x:any)=>any,split?:boolean,replace?:'sum'|'avg'|'max'|'min'|'gap'|'first'},
@@ -83,12 +83,12 @@ function readFromSource(type, file, options, callback) {
     }} options
 * -
 * - `filterOptions?:{column:string|number,filter:(x:any)=>boolean,grouper?:(x:any)=>number,
-        formatter?:(x:any)=>any,split?:boolean,replace?:'sum'|'avg'|'max'|'min'|'gap'|'first'}` 
+        formatter?:(x:any)=>any,split?:boolean,replace?:'sum'|'avg'|'max'|'min'|'gap'|'first'}`
             指定列名,并应用filter:用于筛选,grouper用于分类,formatter:用于格式化数据,split:用于决定是否分离数据,
             replace:用于决定如何替代grouper分类之后的内部数据
 * - `sortOptions?:{column:string|number,ascending?:boolean}` 指定列名和是否升序排列
 * - `appendOptions?:{sum?:boolean,avg?:boolean,min?:boolean,
-        max?:boolean,gap?:boolean,printer?:string,printTime?:boolean}` 
+        max?:boolean,gap?:boolean,printer?:string,printTime?:boolean}`
             决定在表格末尾添加哪些额外数据,请注意,printer是string格式
 * @example
 * produceData(data, {
@@ -114,23 +114,26 @@ function readFromSource(type, file, options, callback) {
 */
 function produceData(data, options) {
     try {
+        console.log(data)
         let df = new DataFrame(data)
         let dfList = []
         let map = new Map()
         let finalResult = []
+
         if (
             options.filterOptions &&
             options.filterOptions.filter &&
             df.columns.includes(options.filterOptions.column)
         ) {
             df.sortValues(options.filterOptions.column, { inplace: true })
+            let rowsToSelect = []
             df.index.forEach((index) => {
                 if (options.otherOptions && options.otherOptions.step) {
-                    if (index % options.otherOptions.step != 0) {
-                        df.drop({ index: [index], inplace: true })
+                    if (index % options.otherOptions.step == 0) {
+                        rowsToSelect.push(index)
                     }
-                } else if (!options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
-                    df.drop({ index: [index], inplace: true })
+                } else if (options.filterOptions.filter(df.at(index, options.filterOptions.column))) {
+                    rowsToSelect.push(index)
                 } else if (options.filterOptions.grouper) {
                     let result = options.filterOptions.grouper(df.at(index, options.filterOptions.column))
                     let value = map.get(result)
@@ -141,7 +144,9 @@ function produceData(data, options) {
                     }
                 }
             })
+            df = df.loc({ rows: rowsToSelect })
         }
+
         if (options.filterOptions.split) {
             let dfKeys = Array.from(map.keys())
             dfKeys.forEach((value) => {
@@ -151,6 +156,7 @@ function produceData(data, options) {
         } else {
             dfList = [df]
         }
+
         dfList.forEach((df) => {
             df.resetIndex()
             if (
@@ -201,7 +207,6 @@ function produceData(data, options) {
                               columns: tempDF.columns,
                           })
                 })
-                df.print()
                 df = result
             }
             if (options.filterOptions.formatter) {
@@ -289,17 +294,6 @@ function produceData(data, options) {
                     count++
                 }
                 if (options.appendOptions.printer) {
-                    // let temp = []
-                    // let printCount = 0
-                    // for (let i = 0; i < df.columns.length; i++) {
-                    //     if (i == df.columns.length - 2) temp.push(options.appendOptions.printer)
-                    //     else if (i == df.columns.length - 1 && options.appendOptions.printTime)
-                    //         temp.push(new Date().toLocaleString())
-                    //     else if (printCount == 0) {
-                    //         printCount++
-                    //         temp.push('printer')
-                    //     } else temp.push('')
-                    // }
                     let temp = ['打印人:', options.appendOptions.printer]
                     let temp2 = ['打印时间:', new Date().toLocaleString()]
                     for (let i = 0; i < df.columns.length - 2; i++) {
@@ -317,25 +311,6 @@ function produceData(data, options) {
                     }
                 }
             }
-            // if (
-            //     options.spliterOptions &&
-            //     options.spliterOptions.spliter &&
-            //     df.columns.includes(options.spliterOptions.column)
-            // ) {
-            //     let map = new Map()
-            //     df.index.forEach((index) => {
-            //         let number = options.spliterOptions.spliter(df.at(index, options.spliterOptions.column))
-            //         if ((number == undefined) | null | false) {
-            //             df.drop({ index: [index], inplace: true })
-            //         } else {
-            //             let group = map.has(number)
-            //             group
-            //                 ? map.get(number).push(...toJSON(df.loc({ rows: [index] })))
-            //                 : map.set(number, [...toJSON(df.loc({ rows: [index] }))])
-            //         }
-            //     })
-            //     return Array.from(map.values())
-            // }
             df.fillNa('', { inplace: true })
             df.applyMap(
                 (x) => {
@@ -348,7 +323,7 @@ function produceData(data, options) {
             )
             finalResult.push(toJSON(df))
         })
-        console.log(finalResult)
+
         return finalResult
     } catch (e) {
         console.log(e)
