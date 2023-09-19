@@ -303,6 +303,7 @@ function produceData(data, options) {
                     data.push(new Array(df.columns.length).fill(''))
                     data.push(new Series(temp))
                     data.push(new Series(temp2))
+                    count++
                 }
                 if (count > 0) {
                     let length = df.index.at(-1) + 1
