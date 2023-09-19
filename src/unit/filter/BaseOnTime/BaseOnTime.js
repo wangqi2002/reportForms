@@ -30,7 +30,7 @@ function getFormatDate(mode, targetDate) {
         case 2:
             return `${year}-${month}-${strDate}`
         case 3:
-            return date.toLocaleString()
+            return date.toLocaleString() + '.' + date.getMilliseconds()
         default:
             break
     }
@@ -79,40 +79,48 @@ function configureFilter(purpose, options) {
                     if (options.interval) {
                         let firstValue = new Map()
                         let firstTime = undefined
-                        let firstSig = false
+                        let intervalValue = undefined
+                        let firstSig = 0
                         let timeWant = new Map()
+                        let interval = undefined
+                        let mis = undefined
                         //决定时间间隔粒度大小的数值,如果数据与想要的时间相差小于这个大小,那么可以认为是有效数据
                         let particleSize = 999999999
+                        if (options.interval.endsWith('h')) {
+                            interval = Number(options.interval.replaceAll('h', '')) * 3600
+                        } else if (options.interval.endsWith('m')) {
+                            interval = Number(options.interval.replaceAll('m', '')) * 60
+                            mis = interval * 5
+                        } else {
+                            interval = Number(options.interval.replaceAll('s', ''))
+                            mis = 1
+                        }
                         filter = (x) => {
                             let currentHour = new Date(x)
-                            let interval = undefined
-                            let mis = undefined
                             let currentValue = undefined
-                            if (firstSig) {
-                                firstSig = false
-                                particleSize = currentHour - firstTime
+                            if (firstSig == 1 && currentHour - intervalValue != 0) {
+                                particleSize = currentHour - intervalValue
+                            }
+                            if (firstSig < 1) {
+                                firstSig += 1
+                                if (firstSig == 1) {
+                                    intervalValue = new Date(currentHour)
+                                }
                             }
                             if (!firstTime) {
                                 firstTime = options.theTopOfTime
                                     ? new Date(currentHour.toLocaleDateString() + ' 00:00')
                                     : currentHour
-                                firstSig = true
                             }
                             if (options.interval.endsWith('h')) {
-                                interval = Number(options.interval.replaceAll('h', '')) * 3600
-                                mis = interval * 60
                                 currentValue = currentHour.getHours()
                             } else if (options.interval.endsWith('m')) {
-                                interval = Number(options.interval.replaceAll('m', '')) * 60
-                                mis = interval * 5
                                 currentValue = currentHour.getHours() + currentHour.getMinutes()
                             } else {
-                                interval = Number(options.interval.replaceAll('s', ''))
-                                mis = 1
                                 currentValue = currentHour.toLocaleTimeString()
                             }
                             if (
-                                pattern.test(x) &&
+                                pattern.test(currentHour.toLocaleString()) &&
                                 Math.abs(currentHour - firstTime) % (interval * 1000) < particleSize &&
                                 !firstValue.has(currentValue) &&
                                 !timeWant.has(Math.floor(Math.abs(currentHour - firstTime) / (interval * 1000)))
