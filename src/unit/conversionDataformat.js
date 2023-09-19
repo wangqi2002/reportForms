@@ -342,9 +342,9 @@ const produceOption = (fillOptions, printer) => {
                     if (value.append[i] in options.appendOptions)
                         options.appendOptions[value.append[i]] = true
                 }
-                if (printer) {
-                    options.appendOptions.printer = printer
-                }
+            }
+            if (printer) {
+                options.appendOptions.printer = printer
             }
             if (value.sort != null) {
                 options.sortOptions.column = value.column

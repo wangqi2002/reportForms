@@ -99,21 +99,17 @@ const getDbData = (callback) => {
             flag = true
         }
         if (i == 0) {
-            if (childList[i].getAttribute('name') != '') {
+            if (childList[i].getAttribute('name') != '' && childList[i].getAttribute('name') != null) {
                 attributeString = `"${childList[i].getAttribute('name')}"`
             }
         } else {
-            if (childList[i].getAttribute('name') != '') {
-                if (attributeString == '') {
-                    attributeString = `"${childList[i].getAttribute('name')}"`
-                } else {
-                    attributeString = attributeString + ',' + `"${childList[i].getAttribute('name')}"`
-                }
+            if (childList[i].getAttribute('name') != '' && childList[i].getAttribute('name') != null) {
+                attributeString = attributeString + ',' + `"${childList[i].getAttribute('name')}"`
             }
         }
     }
     if (!flag) {
-        attributeString = attributeString + `,"sourceTimestamp"`
+        attributeString = `"sourceTimestamp",` + attributeString
     }
     console.log(attributeString)
     try {
